@@ -8,9 +8,14 @@ h1, p, div {
     text-align: center;
 }
 
+.newBlock
+{
+    text-align: center;
+}
+
 .questions
 {
-     text-align: center
+     display:inline-block;
 }
 
 .questions p.q1
