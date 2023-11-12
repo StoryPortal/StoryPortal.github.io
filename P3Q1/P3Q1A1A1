@@ -2,18 +2,17 @@
 
 <body>
   <h1>P3Q1A1A1</h1>
-  <p> You have another pastry. It's even more delicious than the last. The witch offers you another - strawberries
-and whipped cream. Do you: 
+  <p> You have another pastry. It's even more delicious than the last. The witch offers you another pastry. Do you: 
   </p>
 
   <div class = "newBlock">
     <div class = "questions">
   <p class = "q1">
-    <a href="https://StoryPortal.github.io/P3Q1/P3Q1A1A1A1.html"> A) Eat another pastry. No ragrets. </a>
+    <a href="https://StoryPortal.github.io/P3Q1/P3Q1A1A1.html"> A) Eat another pastry. No ragrets. </a>
   </p>
       
   <p class = "q1">
-    <a href="https://StoryPortal.github.io/P3Q1/P3Q1A1A1A2.html"> B) Decline. This is going too far. </a>
+    <a href="https://StoryPortal.github.io/P3Q1/P3Q1A2.html"> B) Decline. This is going too far... </a>
   </p>
 
 </div>
