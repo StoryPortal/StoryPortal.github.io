@@ -1,0 +1,29 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+h1, p, div {
+    text-align: center;
+}
+
+.newBlock
+{
+    text-align: center;
+}
+
+.questions
+{
+     display:inline-block;
+}
+
+.questions p.q1
+{
+    text-align: left;
+}
+<style> 
+
+*{ Color : #fff; 
+  Background : #000;} 
+</style> 
