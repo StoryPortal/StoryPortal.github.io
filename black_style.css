@@ -8,16 +8,19 @@ html, body {
 
 h1, p, div {
     text-align: center;
+    color: white;
 }
 
 .newBlock
 {
     text-align: center;
+    color: white;
 }
 
 .questions
 {
      display:inline-block;
+    color: white;
 }
 
 .questions p.q1
