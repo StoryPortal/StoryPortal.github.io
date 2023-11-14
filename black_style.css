@@ -32,3 +32,10 @@ a {
     color: white; 
 }
 
+.bottom-right-link {
+    position: fixed;
+    bottom: 10px; /* Adjust the distance from the bottom */
+    right: 10px; /* Adjust the distance from the right */
+    color: white; /* Set the text color */
+    text-decoration: none; /* Remove underline */
+}
