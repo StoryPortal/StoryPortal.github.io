@@ -23,5 +23,10 @@ h1, p, div {
     text-align: left;
 }
 
-
+.bottom-right-link {
+    position: fixed;
+    bottom: 10px; /* Adjust the distance from the bottom */
+    right: 10px; /* Adjust the distance from the right */
+    color: black; /* Set the text color */
+    text-decoration: none; /* Remove underline */
 
