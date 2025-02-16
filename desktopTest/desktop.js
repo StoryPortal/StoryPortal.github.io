@@ -87,7 +87,8 @@ const MessageWindow = ({ onClose }) => {
   const [messages] = useState([
     { id: 1, sender: 'Alex', content: 'Hey, did you see that weird email?', time: '2:45 PM' },
     { id: 2, sender: 'You', content: 'No, what email?', time: '2:46 PM' },
-    { id: 3, sender: 'Alex', content: 'Check your inbox...', time: '2:46 PM' }
+    { id: 3, sender: 'Alex', content: 'Check your inbox...', time: '2:46 PM' },
+    { id: 4, sender: 'You', content: 'https://www.google.com', time: '1:50 PM' }
   ]);
 
   const Message = ({ message }) => (
