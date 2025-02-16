@@ -1,5 +1,5 @@
 // Get React hooks from the global React object
-const { useState, useEffect } = React;
+import React, { useState } from 'react';
 
 // Message Icon Component
 const MessageIcon = () => React.createElement('svg', {
