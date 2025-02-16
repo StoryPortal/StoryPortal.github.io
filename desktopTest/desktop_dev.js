@@ -75,7 +75,8 @@ const DraggableWindow = ({ children, initialPosition = { x: 100, y: 50 }, onClos
       position: 'absolute',
       left: `${position.x}px`,
       top: `${position.y}px`,
-      cursor: isDragging ? 'grabbing' : 'default'
+      cursor: isDragging ? 'grabbing' : 'default',
+      width: '800px'  // Added fixed width for message window
     },
     onMouseDown: handleMouseDown,
     className: 'bg-white rounded-lg shadow-xl border border-gray-200'
@@ -317,7 +318,6 @@ const NotesWindow = ({ onClose }) => {
     onClose,
     initialPosition: { x: 150, y: 100 }
   }, [
-    // Window Title Bar
     React.createElement('div', {
       key: 'titlebar',
       className: 'window-titlebar flex items-center justify-between bg-gray-100 p-2 rounded-t-lg border-b'
@@ -350,7 +350,6 @@ const NotesWindow = ({ onClose }) => {
       ])
     ),
     
-    // Notes Content
     React.createElement('textarea', {
       key: 'content',
       className: 'w-96 h-64 p-4 focus:outline-none resize-none',
@@ -438,4 +437,4 @@ const DesktopInterface = () => {
 // Render the app
 ReactDOM.createRoot(document.getElementById('root')).render(
   React.createElement(DesktopInterface)
-);-700 group-hover:text-gray
+);
