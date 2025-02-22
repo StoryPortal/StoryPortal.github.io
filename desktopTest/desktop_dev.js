@@ -299,3 +299,8 @@ const DesktopInterface = () => {
         key: 'notes-icon',
         className: 'flex flex-col items-center w-20 group cursor-pointer',
         onClick: () => setIsNotesOpen(true)
+
+        ReactDOM.render(
+          React.createElement(DesktopInterface),
+          document.getElementById('root')
+        );
