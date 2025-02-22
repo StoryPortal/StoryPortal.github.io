@@ -91,20 +91,20 @@ const MessageWindow = ({ onClose }) => {
       name: 'Naomi, Robert',
       lastMessage: 'Ok! See you at 12 ʕ·͡ᴥ·ʔ',
       messages: [
-        { id: 1, sender: 'You', content: 'Friends!! You know how weve been talking about doing a friends getaway/artist's retreat/psyche bath thing? Well…let's do it!! This weekend? Next weekend? Whenever you're all free…I'm thinking of taking some time off work so I can be pretty available. And don't worry nothing's wrong I just have a toon of PTO saved that I need to use by the end of the year. I can make time. For you. God, I haven't taken a vacation in years. I really want to spend more quality time with yall and just get away from liiifee and chill. For the rest of my life haha. I have so much to tell you. ', time: '4:03 AM' },
-        { id: 2, sender: 'You', content: '(ok I reread my texts and Im panicking because I sound crazy. I swear Im not drunk. Or on any drugs. Totally sober... unless you count Cherry Coke Zero.)', time: '4:10 AM' },
-        { id: 3, sender: 'You', content: 'Sorry for all the texts I'm just so excited. I think it's best if we talk tomorrow in person about this. Are you free for coffee or lunch to discuss? Zomg let's go to Sea Wolf… I would kill for a savory croissant right now.', time: '4:15 AM' }
-        { id: 4, sender: 'Robert', content: 'just gt off work. im frd. fried. , time: '7:07 AM' }
-        { id: 5, sender: 'Robert', content: 'wtf????', time: '7:30 AM' }
-        { id: 6, sender: 'Robert', content: 'im down', time: '7:32 AM' }
-        { id: 7, sender: 'Naomi', content: 'Hello friends! An artist's retreat sounds amazing. I'm always in. The farmhouse is available this weekend. We had a cancellation due to the “bad weather”  I could plan something amazing really quickly! On a serious note…Noam are you doing okay? I'm in the studio all day, but why don't we meet at the cafe nearby at 12?', time: '9:00 AM' }
+        { id: 1, sender: 'You', content: 'Friends!! You know how weve been talking about doing a friends getaway/artist\'s retreat/psyche bath thing? Well…let\'s do it!! This weekend? Next weekend? Whenever you\'re all free…I'm thinking of taking some time off work so I can be pretty available. And don't worry nothing\'s wrong I just have a toon of PTO saved that I need to use by the end of the year. I can make time. For you. God, I haven\'t taken a vacation in years. I really want to spend more quality time with yall and just get away from liiifee and chill. For the rest of my life haha. I have so much to tell you. ', time: '4:03 AM' },
+        { id: 2, sender: 'You', content: '(ok I reread my texts and I\'m panicking because I sound crazy. I swear I\'m not drunk. Or on any drugs. Totally sober... unless you count Cherry Coke Zero.)', time: '4:10 AM' },
+        { id: 3, sender: 'You', content: 'Sorry for all the texts I\'m just so excited. I think it\'s best if we talk tomorrow in person about this. Are you free for coffee or lunch to discuss? Zomg let\'s go to Sea Wolf… I would kill for a savory croissant right now.', time: '4:15 AM' },
+        { id: 4, sender: 'Robert', content: 'just gt off work. im frd. fried.', time: '7:07 AM'},
+        { id: 5, sender: 'Robert', content: 'wtf????', time: '7:30 AM' },
+        { id: 6, sender: 'Robert', content: 'im down', time: '7:32 AM' },
+        { id: 7, sender: 'Naomi', content: 'Hello friends! An artist\'s retreat sounds amazing. I\'m always in. The farmhouse is available this weekend. We had a cancellation due to the “bad weather.” Hehe. I could plan something amazing really quickly! On a serious note…Alex are you doing okay? I\'m in the studio all day, but why don\'t we meet at the cafe nearby at 12?', time: '9:00 AM' },
         { id: 8, sender: 'You', content: 'Ok! See you at 12 ʕ·͡ᴥ·ʔ', time: '9:05 AM' }
       ]
     },
     {
       id: 2,
       name: 'Naomi Rosalyn',
-      lastMessage: ''Hello there! I am getting the farmhouse rooms sorted for our retreat this weekend. Did you want to take the Sun Room or the Stars Room? Also, how did things go at the doctor?',
+      lastMessage: 'Hello there! I am getting the farmhouse rooms sorted for our retreat this weekend. Did you want to take the Sun Room or the Stars Room? Also, how did things go at the doctor?',
       messages: [
         { id: 1, sender: 'Naomi Rosalyn', content: 'Hello there! I am getting the farmhouse rooms sorted for our retreat this weekend. Did you want to take the Sun Room or the Stars Room? Also, how did things go at the doctor? ', time: '1:30 PM' },
       ]
