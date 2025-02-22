@@ -104,9 +104,9 @@ const MessageWindow = ({ onClose }) => {
     {
       id: 2,
       name: 'Naomi Rosalyn',
-      lastMessage: 'See you tomorrow!',
+      lastMessage: ''Hello there! I am getting the farmhouse rooms sorted for our retreat this weekend. Did you want to take the Sun Room or the Stars Room? Also, how did things go at the doctor?',
       messages: [
-        { id: 1, sender: 'Sarah Johnson', content: 'Hello there! I am getting the farmhouse rooms sorted for our retreat this weekend. Did you want to take the Sun Room or the Stars Room? Also, how did things go at the doctor? ', time: '1:30 PM' },
+        { id: 1, sender: 'Naomi Rosalyn', content: 'Hello there! I am getting the farmhouse rooms sorted for our retreat this weekend. Did you want to take the Sun Room or the Stars Room? Also, how did things go at the doctor? ', time: '1:30 PM' },
       ]
     }
   ]);
