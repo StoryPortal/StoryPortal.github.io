@@ -91,7 +91,7 @@ const MessageWindow = ({ onClose }) => {
       name: 'Naomi, Robert',
       lastMessage: 'Ok! See you at 12 ʕ·͡ᴥ·ʔ',
       messages: [
-        { id: 1, sender: 'You', content: 'Friends!! You know how weve been talking about doing a friends getaway/artist\'s retreat/psyche bath thing? Well…let\'s do it!! This weekend? Next weekend? Whenever you\'re all free…I'm thinking of taking some time off work so I can be pretty available. And don't worry nothing\'s wrong I just have a toon of PTO saved that I need to use by the end of the year. I can make time. For you. God, I haven\'t taken a vacation in years. I really want to spend more quality time with yall and just get away from liiifee and chill. For the rest of my life haha. I have so much to tell you. ', time: '4:03 AM' },
+        { id: 1, sender: 'You', content: 'Friends!! You know how weve been talking about doing a friends getaway/artist\'s retreat/psyche bath thing? Well…let\'s do it!! This weekend? Next weekend? Whenever you\'re all free…I'm thinking of taking some time off work so I can be pretty available. And don\'t worry nothing\'s wrong I just have a toon of PTO saved that I need to use by the end of the year. I can make time. For you. God, I haven\'t taken a vacation in years. I really want to spend more quality time with yall and just get away from liiifee and chill. For the rest of my life haha. I have so much to tell you. ', time: '4:03 AM' },
         { id: 2, sender: 'You', content: '(ok I reread my texts and I\'m panicking because I sound crazy. I swear I\'m not drunk. Or on any drugs. Totally sober... unless you count Cherry Coke Zero.)', time: '4:10 AM' },
         { id: 3, sender: 'You', content: 'Sorry for all the texts I\'m just so excited. I think it\'s best if we talk tomorrow in person about this. Are you free for coffee or lunch to discuss? Zomg let\'s go to Sea Wolf… I would kill for a savory croissant right now.', time: '4:15 AM' },
         { id: 4, sender: 'Robert', content: 'just gt off work. im frd. fried.', time: '7:07 AM'},
@@ -99,14 +99,6 @@ const MessageWindow = ({ onClose }) => {
         { id: 6, sender: 'Robert', content: 'im down', time: '7:32 AM' },
         { id: 7, sender: 'Naomi', content: 'Hello friends! An artist\'s retreat sounds amazing. I\'m always in. The farmhouse is available this weekend. We had a cancellation due to the “bad weather.” Hehe. I could plan something amazing really quickly! On a serious note…Alex are you doing okay? I\'m in the studio all day, but why don\'t we meet at the cafe nearby at 12?', time: '9:00 AM' },
         { id: 8, sender: 'You', content: 'Ok! See you at 12 ʕ·͡ᴥ·ʔ', time: '9:05 AM' }
-      ]
-    },
-    {
-      id: 2,
-      name: 'Naomi Rosalyn',
-      lastMessage: 'Hello there! I am getting the farmhouse rooms sorted for our retreat this weekend. Did you want to take the Sun Room or the Stars Room? Also, how did things go at the doctor?',
-      messages: [
-        { id: 1, sender: 'Naomi Rosalyn', content: 'Hello there! I am getting the farmhouse rooms sorted for our retreat this weekend. Did you want to take the Sun Room or the Stars Room? Also, how did things go at the doctor? ', time: '1:30 PM' },
       ]
     }
   ]);
@@ -136,48 +128,6 @@ const MessageWindow = ({ onClose }) => {
         className: `text-xs mt-1 ${message.sender === 'You' ? 'text-blue-100' : 'text-gray-500'}`,
         key: 'time'
       }, message.time)
-    ])
-  );
-
-  const ConversationItem = ({ conversation }) => React.createElement('div', {
-    className: `p-3 cursor-pointer hover:bg-gray-100 ${
-      selectedConversation.id === conversation.id ? 'bg-gray-100' : ''
-    }`,
-    onClick: () => setSelectedConversation(conversation)
-  },
-    React.createElement('div', {
-      className: 'flex items-center space-x-3'
-    }, [
-      React.createElement('div', {
-        key: 'avatar',
-        className: 'w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center'
-      },
-        React.createElement('span', {
-          className: 'text-white text-lg'
-        }, conversation.name[0])
-      ),
-      React.createElement('div', {
-        key: 'info',
-        className: 'flex-1 min-w-0'
-      }, [
-        React.createElement('div', {
-          key: 'header',
-          className: 'flex justify-between items-baseline'
-        }, [
-          React.createElement('h3', {
-            key: 'name',
-            className: 'text-sm font-medium truncate'
-          }, conversation.name),
-          React.createElement('span', {
-            key: 'time',
-            className: 'text-xs text-gray-500'
-          }, conversation.messages[conversation.messages.length - 1].time)
-        ]),
-        React.createElement('p', {
-          key: 'preview',
-          className: 'text-sm text-gray-500 truncate'
-        }, conversation.lastMessage)
-      ])
     ])
   );
 
@@ -215,24 +165,6 @@ const MessageWindow = ({ onClose }) => {
       React.createElement('div', {
         className: 'flex items-center space-x-2'
       }, [
-        React.createElement('div', {
-          key: 'buttons',
-          className: 'flex space-x-2'
-        }, [
-          React.createElement('button', {
-            key: 'close',
-            className: 'w-3 h-3 rounded-full bg-red-500',
-            onClick: onClose
-          }),
-          React.createElement('div', {
-            key: 'minimize',
-            className: 'w-3 h-3 rounded-full bg-yellow-500'
-          }),
-          React.createElement('div', {
-            key: 'maximize',
-            className: 'w-3 h-3 rounded-full bg-green-500'
-          })
-        ]),
         React.createElement('span', {
           key: 'title',
           className: 'text-sm font-medium'
@@ -320,24 +252,6 @@ const NotesWindow = ({ onClose }) => {
       React.createElement('div', {
         className: 'flex items-center space-x-2'
       }, [
-        React.createElement('div', {
-          key: 'buttons',
-          className: 'flex space-x-2'
-        }, [
-          React.createElement('button', {
-            key: 'close',
-            className: 'w-3 h-3 rounded-full bg-red-500',
-            onClick: onClose
-          }),
-          React.createElement('div', {
-            key: 'minimize',
-            className: 'w-3 h-3 rounded-full bg-yellow-500'
-          }),
-          React.createElement('div', {
-            key: 'maximize',
-            className: 'w-3 h-3 rounded-full bg-green-500'
-          })
-        ]),
         React.createElement('span', {
           key: 'title',
           className: 'text-sm font-medium'
@@ -385,50 +299,3 @@ const DesktopInterface = () => {
         key: 'notes-icon',
         className: 'flex flex-col items-center w-20 group cursor-pointer',
         onClick: () => setIsNotesOpen(true)
-      }, [
-        React.createElement('div', {
-          className: 'w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center'
-        }, React.createElement(NotesIcon)),
-        React.createElement('span', {
-          className: 'mt-1 text-xs text-center text-gray-700 group-hover:text-gray-900'
-        }, 'Notes')
-      ])
-    ]),
-
-    // Windows
-    isMessageOpen && React.createElement(MessageWindow, {
-      key: 'message-window',
-      onClose: () => setIsMessageOpen(false)
-    }),
-    
-    isNotesOpen && React.createElement(NotesWindow, {
-      key: 'notes-window',
-      onClose: () => setIsNotesOpen(false)
-    }),
-
-    // Dock/Taskbar
-    React.createElement('div', {
-      key: 'dock',
-      className: 'absolute bottom-0 w-full bg-white bg-opacity-80 backdrop-blur-sm border-t border-gray-200'
-    },
-      React.createElement('div', {
-        className: 'max-w-screen-lg mx-auto p-2 flex items-center justify-center space-x-2'
-      }, [
-        React.createElement('button', {
-          key: 'dock-messages',
-          className: 'w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center hover:bg-blue-600 transition-colors',
-          onClick: () => setIsMessageOpen(true)
-        }, React.createElement(MessageIcon)),
-        React.createElement('button', {
-          key: 'dock-notes',
-          className: 'w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center hover:bg-blue-600 transition-colors',
-          onClick: () => setIsNotesOpen(true)
-        }, React.createElement(NotesIcon))
-      ])
-    )
-  ]);
-};
-
-// Render the app
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(React.createElement(DesktopInterface));
