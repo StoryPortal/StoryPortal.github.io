@@ -31,6 +31,21 @@ const NotesIcon = () => React.createElement('svg', {
   })
 );
 
+// Conversation Item Component
+const ConversationItem = ({ conversation, onSelect }) => {
+  return React.createElement('div', {
+    className: 'cursor-pointer p-2 hover:bg-gray-200',
+    onClick: () => onSelect(conversation)
+  }, [
+    React.createElement('div', {
+      className: 'font-medium text-sm'
+    }, conversation.name),
+    React.createElement('div', {
+      className: 'text-xs text-gray-500'
+    }, conversation.lastMessage)
+  ]);
+};
+
 // Draggable Window Component
 const DraggableWindow = ({ children, initialPosition = { x: 100, y: 50 }, onClose }) => {
   const [position, setPosition] = useState(initialPosition);
@@ -185,7 +200,8 @@ const MessageWindow = ({ onClose }) => {
         conversations.map(conversation => 
           React.createElement(ConversationItem, {
             key: conversation.id,
-            conversation
+            conversation,
+            onSelect: setSelectedConversation
           })
         )
       ),
@@ -299,8 +315,20 @@ const DesktopInterface = () => {
         key: 'notes-icon',
         className: 'flex flex-col items-center w-20 group cursor-pointer',
         onClick: () => setIsNotesOpen(true)
+      }, [
+        React.createElement('div', {
+          className: 'w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center'
+        }, React.createElement(NotesIcon)),
+        React.createElement('span', {
+          className: 'mt-1 text-xs text-center text-gray-700 group-hover:text-gray-900'
+        }, 'Notes')
+      ])
+    ])
+  ]);
+};
 
-        ReactDOM.render(
-          React.createElement(DesktopInterface),
-          document.getElementById('root')
-        );
+// Render the Desktop Interface component to the root element
+ReactDOM.render(
+  React.createElement(DesktopInterface),
+  document.getElementById('root')
+);
