@@ -42,13 +42,19 @@ export const LookoutWindow = ({ onClose }) => {
             onClick: onClose,
           }),
           // Add minimize and maximize buttons...
-          e('div', {
+          e('button', {
             key: 'minimize',
-            className: 'w-3 h-3 rounded-full bg-yellow-500'
+            className: 'w-3 h-3 rounded-full bg-yellow-500',
+            onClick: (e) => {
+              e.stopPropagation();
+            }
           }),
-          e('div', {
+          e('button', {
             key: 'maximize',
-            className: 'w-3 h-3 rounded-full bg-green-500'
+            className: 'w-3 h-3 rounded-full bg-green-500',
+            onClick: (e) => {
+              e.stopPropagation();
+            }
           })
         ]),
         e('span', {
