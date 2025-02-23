@@ -16,7 +16,7 @@ const DesktopInterface = () => {
   const [isMessageOpen, setIsMessageOpen] = useState(true);
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [isPhotoAlbumOpen, setIsPhotoAlbumOpen] = useState(false);
-  const [isLookoutOpen, setIsLookoutOpen] = useState(false);
+  const [isLookoutOpen, setIsLookoutOpen] = useState(true);
 
   return e('div', {
     className: 'relative w-full h-screen bg-gradient-to-br from-blue-50 to-indigo-100'
@@ -64,7 +64,7 @@ const DesktopInterface = () => {
         e('span', {
           className: 'mt-1 text-xs text-center text-gray-700 group-hover:text-gray-900'
         }, 'Photos')
-      ])
+      ]),
       // Lookout Icon
     e('div', {
       key: 'lookout-icon',
@@ -77,7 +77,7 @@ const DesktopInterface = () => {
       e('span', {
         className: 'mt-1 text-xs text-center text-gray-700 group-hover:text-gray-900',
       }, 'Lookout'),
-    ]),
+    ])
   ]),
 
     // Windows
@@ -123,12 +123,12 @@ const DesktopInterface = () => {
           key: 'dock-photos',
           className: 'w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center hover:bg-blue-600 transition-colors',
           onClick: () => setIsPhotoAlbumOpen(true)
-        }, e(PhotoIcon))
+        }, e(PhotoIcon)),
         e('button', {
           key: 'dock-lookout',
           className: 'w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center hover:bg-blue-600 transition-colors',
-          onClick: () => setIsLookoutOpen(true),
-        }, e(LookoutIcon)),
+          onClick: () => setIsLookoutOpen(true)
+        }, e(LookoutIcon))
       ])
     )
   ]);
