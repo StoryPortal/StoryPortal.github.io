@@ -1,5 +1,6 @@
 desktopTest/
 ├── desktop_dev.html
+├── Pictures/
 ├── js/
 │   ├── components/
 │   │   ├── MessageWindow.js
