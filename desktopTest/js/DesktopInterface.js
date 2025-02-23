@@ -11,26 +11,56 @@ import { NotesIcon } from './icons/NotesIcon.js';
 import { PhotoIcon } from './icons/PhotoIcon.js';
 import { LookoutIcon } from './icons/LookoutIcon.js';
 
+// Dock icon component for better visual feedback
+const DockIcon = ({ icon: Icon, isOpen, isMinimized, onClick }) => {
+  return e('button', {
+    className: `relative w-12 h-12 rounded-lg 
+      ${isMinimized ? 'bg-blue-700' : isOpen ? 'bg-blue-600' : 'bg-blue-500'} 
+      flex items-center justify-center hover:bg-blue-600 transition-colors group`,
+    onClick: onClick
+  }, [
+    e(Icon),
+    (isOpen || isMinimized) && e('div', {
+      key: 'indicator',
+      className: `absolute -bottom-1 left-1/2 transform -translate-x-1/2 
+        ${isMinimized ? 'w-4 h-1' : 'w-1 h-1'} 
+        bg-white rounded-full transition-all duration-200`
+    }),
+    isMinimized && e('div', {
+      key: 'tooltip',
+      className: 'absolute bottom-full mb-2 px-2 py-1 bg-black bg-opacity-75 text-white text-xs rounded hidden group-hover:block whitespace-nowrap',
+    }, 'Click to restore')
+  ]);
+};
 
 const DesktopInterface = () => {
-  const [isMessageOpen, setIsMessageOpen] = useState(true);
-  const [isNotesOpen, setIsNotesOpen] = useState(false);
-  const [isPhotoAlbumOpen, setIsPhotoAlbumOpen] = useState(false);
-  const [isLookoutOpen, setIsLookoutOpen] = useState(true);
+  // Track both open and minimized state for each window
+  const [messageState, setMessageState] = useState({ isOpen: true, isMinimized: false });
+  const [notesState, setNotesState] = useState({ isOpen: false, isMinimized: false });
+  const [photoAlbumState, setPhotoAlbumState] = useState({ isOpen: false, isMinimized: false });
+  const [lookoutState, setLookoutState] = useState({ isOpen: true, isMinimized: false });
   const [backgroundImage, setBackgroundImage] = useState('./Pictures/spirl.jpg');
 
-  
-  //e('div', {
-    //below changes background color/image
-    //className: 'relative w-full h-screen bg-gradient-to-br from-purple-100 to-pink-200'
- // }
- return e('div', {
-  className: 'relative w-full h-screen bg-cover bg-center',
-  style: {
-    backgroundImage: `url(${backgroundImage})`,
-    backgroundSize: 'cover', // Ensures image covers entire screen
-    backgroundPosition: 'center' // Centers the image
-  }
+  // Helper functions for window states
+  const createWindowStateHelpers = (setState) => ({
+    open: () => setState({ isOpen: true, isMinimized: false }),
+    close: () => setState({ isOpen: false, isMinimized: false }),
+    minimize: () => setState(prev => ({ ...prev, isMinimized: true })),
+    restore: () => setState(prev => ({ ...prev, isMinimized: false }))
+  });
+
+  const messageHelpers = createWindowStateHelpers(setMessageState);
+  const notesHelpers = createWindowStateHelpers(setNotesState);
+  const photoAlbumHelpers = createWindowStateHelpers(setPhotoAlbumState);
+  const lookoutHelpers = createWindowStateHelpers(setLookoutState);
+
+  return e('div', {
+    className: 'relative w-full h-screen bg-cover bg-center',
+    style: {
+      backgroundImage: `url(${backgroundImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }
   }, [
     // Desktop Icons
     e('div', {
@@ -41,7 +71,7 @@ const DesktopInterface = () => {
       e('div', {
         key: 'messages-icon',
         className: 'flex flex-col items-center w-20 group cursor-pointer',
-        onClick: () => setIsMessageOpen(true)
+        onClick: messageHelpers.open
       }, [
         e('div', {
           className: 'w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center'
@@ -54,7 +84,7 @@ const DesktopInterface = () => {
       e('div', {
         key: 'notes-icon',
         className: 'flex flex-col items-center w-20 group cursor-pointer',
-        onClick: () => setIsNotesOpen(true)
+        onClick: notesHelpers.open
       }, [
         e('div', {
           className: 'w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center'
@@ -65,9 +95,9 @@ const DesktopInterface = () => {
       ]),
       // Photo Album Icon
       e('div', {
-        key: 'photo-album-icon',
+        key: 'photoalbum-icon',
         className: 'flex flex-col items-center w-20 group cursor-pointer',
-        onClick: () => setIsPhotoAlbumOpen(true)
+        onClick: photoAlbumHelpers.open
       }, [
         e('div', {
           className: 'w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center'
@@ -75,44 +105,43 @@ const DesktopInterface = () => {
         e('span', {
           className: 'mt-1 text-xs text-center text-gray-700 group-hover:text-gray-900'
         }, 'Photos')
-      ]),
-      // Lookout Icon
-    e('div', {
-      key: 'lookout-icon',
-      className: 'flex flex-col items-center w-20 group cursor-pointer',
-      onClick: () => setIsLookoutOpen(true),
-    }, [
-      e('div', {
-        className: 'w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center',
-      }, e(LookoutIcon)),
-      e('span', {
-        className: 'mt-1 text-xs text-center text-gray-700 group-hover:text-gray-900',
-      }, 'Lookout'),
-    ])
-  ]),
+      ])
+    ]),
 
     // Windows
-    isMessageOpen && e(MessageWindow, {
+    messageState.isOpen && e(MessageWindow, {
       key: 'message-window',
-      onClose: () => setIsMessageOpen(false)
+      onClose: messageHelpers.close,
+      onMinimize: messageHelpers.minimize,
+      isMinimized: messageState.isMinimized,
+      handleMaximize: () => {} // Placeholder for maximize functionality
     }),
-    
-    isNotesOpen && e(NotesWindow, {
+
+    notesState.isOpen && e(NotesWindow, {
       key: 'notes-window',
-      onClose: () => setIsNotesOpen(false)
+      onClose: notesHelpers.close,
+      onMinimize: notesHelpers.minimize,
+      isMinimized: notesState.isMinimized,
+      handleMaximize: () => {} // Placeholder for maximize functionality
     }),
 
-    isPhotoAlbumOpen && e(PhotoAlbumWindow, {
-      key: 'photo-album-window',
-      onClose: () => setIsPhotoAlbumOpen(false)
+    photoAlbumState.isOpen && e(PhotoAlbumWindow, {
+      key: 'photoalbum-window',
+      onClose: photoAlbumHelpers.close,
+      onMinimize: photoAlbumHelpers.minimize,
+      isMinimized: photoAlbumState.isMinimized,
+      handleMaximize: () => {} // Placeholder for maximize functionality
     }),
 
-    isLookoutOpen && e(LookoutWindow, {
+    lookoutState.isOpen && e(LookoutWindow, {
       key: 'lookout-window',
-      onClose: () => setIsLookoutOpen(false),
+      onClose: lookoutHelpers.close,
+      onMinimize: lookoutHelpers.minimize,
+      isMinimized: lookoutState.isMinimized,
+      handleMaximize: () => {} // Placeholder for maximize functionality
     }),
 
-    // Dock/Taskbar
+    // Enhanced dock with better minimize indicators
     e('div', {
       key: 'dock',
       className: 'absolute bottom-0 w-full bg-white bg-opacity-80 backdrop-blur-sm border-t border-gray-200'
@@ -120,26 +149,34 @@ const DesktopInterface = () => {
       e('div', {
         className: 'max-w-screen-lg mx-auto p-2 flex items-center justify-center space-x-2'
       }, [
-        e('button', {
+        e(DockIcon, {
           key: 'dock-messages',
-          className: 'w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center hover:bg-blue-600 transition-colors',
-          onClick: () => setIsMessageOpen(true)
-        }, e(MessageIcon)),
-        e('button', {
+          icon: MessageIcon,
+          isOpen: messageState.isOpen,
+          isMinimized: messageState.isMinimized,
+          onClick: () => messageState.isMinimized ? messageHelpers.restore() : messageHelpers.open()
+        }),
+        e(DockIcon, {
           key: 'dock-notes',
-          className: 'w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center hover:bg-blue-600 transition-colors',
-          onClick: () => setIsNotesOpen(true)
-        }, e(NotesIcon)),
-        e('button', {
-          key: 'dock-photos',
-          className: 'w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center hover:bg-blue-600 transition-colors',
-          onClick: () => setIsPhotoAlbumOpen(true)
-        }, e(PhotoIcon)),
-        e('button', {
+          icon: NotesIcon,
+          isOpen: notesState.isOpen,
+          isMinimized: notesState.isMinimized,
+          onClick: () => notesState.isMinimized ? notesHelpers.restore() : notesHelpers.open()
+        }),
+        e(DockIcon, {
+          key: 'dock-photoalbum',
+          icon: PhotoIcon,
+          isOpen: photoAlbumState.isOpen,
+          isMinimized: photoAlbumState.isMinimized,
+          onClick: () => photoAlbumState.isMinimized ? photoAlbumHelpers.restore() : photoAlbumHelpers.open()
+        }),
+        e(DockIcon, {
           key: 'dock-lookout',
-          className: 'w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center hover:bg-blue-600 transition-colors',
-          onClick: () => setIsLookoutOpen(true)
-        }, e(LookoutIcon))
+          icon: LookoutIcon,
+          isOpen: lookoutState.isOpen,
+          isMinimized: lookoutState.isMinimized,
+          onClick: () => lookoutState.isMinimized ? lookoutHelpers.restore() : lookoutHelpers.open()
+        })
       ])
     )
   ]);

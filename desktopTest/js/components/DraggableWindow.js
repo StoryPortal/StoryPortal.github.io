@@ -1,12 +1,18 @@
-const DraggableWindow = ({ children, initialPosition = { x: 100, y: 50 }, onClose }) => {
+const { useState, useEffect } = React;
+const { createElement: e } = React;
+
+export const DraggableWindow = ({ 
+  children, 
+  initialPosition = { x: 100, y: 50 }, 
+  onClose,
+  onMinimize,
+  isMinimized 
+}) => {
   const [position, setPosition] = useState(initialPosition);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  
-  // New state for window management
   const [isMaximized, setIsMaximized] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
-  const [originalSize, setOriginalSize] = useState({ width: 800, height: 400 });
+  const [previousPosition, setPreviousPosition] = useState(initialPosition);
 
   const handleMouseDown = (e) => {
     if (!e.target.closest('.window-titlebar')) return;
@@ -19,7 +25,7 @@ const DraggableWindow = ({ children, initialPosition = { x: 100, y: 50 }, onClos
   };
   
   const handleMouseMove = (e) => {
-    if (!isDragging) return;
+    if (!isDragging || isMaximized) return;
     setPosition({
       x: e.clientX - dragOffset.x,
       y: e.clientY - dragOffset.y
@@ -30,28 +36,14 @@ const DraggableWindow = ({ children, initialPosition = { x: 100, y: 50 }, onClos
     setIsDragging(false);
   };
 
-  // Maximize functionality
   const handleMaximize = () => {
     if (isMaximized) {
-      // Restore to original size
-      setPosition(initialPosition);
-      setIsMaximized(false);
+      setPosition(previousPosition);
     } else {
-      // Store current size before maximizing
-      setOriginalSize({
-        width: window.innerWidth,
-        height: window.innerHeight
-      });
-      
-      // Maximize to full screen
+      setPreviousPosition(position);
       setPosition({ x: 0, y: 0 });
-      setIsMaximized(true);
     }
-  };
-
-  // Minimize functionality
-  const handleMinimize = () => {
-    setIsMinimized(!isMinimized);
+    setIsMaximized(!isMaximized);
   };
   
   useEffect(() => {
@@ -65,10 +57,26 @@ const DraggableWindow = ({ children, initialPosition = { x: 100, y: 50 }, onClos
     };
   }, [isDragging]);
 
-  // If minimized, don't render the window content
   if (isMinimized) {
     return null;
   }
+
+  // Create childrenWithProps by mapping over array children or handling single child
+  const childrenWithProps = React.Children.map(children, child => {
+    if (!React.isValidElement(child)) {
+      return child;
+    }
+    
+    if (child.key === 'titlebar') {
+      return React.cloneElement(child, {
+        handleMaximize,
+        isMaximized,  // Pass isMaximized state
+        onClose,
+        onMinimize
+      });
+    }
+    return React.cloneElement(child, { isMaximized });  // Pass isMaximized to all children
+  });
 
   return e('div', {
     style: {
@@ -76,11 +84,12 @@ const DraggableWindow = ({ children, initialPosition = { x: 100, y: 50 }, onClos
       left: `${position.x}px`,
       top: `${position.y}px`,
       cursor: isDragging ? 'grabbing' : 'default',
-      width: isMaximized ? '100%' : '800px',
-      height: isMaximized ? '100%' : 'auto',
-      zIndex: 10 // Ensure window is above other elements
+      width: isMaximized ? '100vw' : '800px',
+      height: isMaximized ? '100vh' : 'auto',
+      zIndex: 10,
+      transition: isDragging ? 'none' : 'all 0.3s ease'
     },
     onMouseDown: handleMouseDown,
     className: 'bg-white rounded-lg shadow-xl border border-gray-200'
-  }, children);
+  }, childrenWithProps);
 };

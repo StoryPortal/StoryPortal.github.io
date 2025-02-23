@@ -1,4 +1,3 @@
-// js/components/LookoutWindow.js
 const { useState } = React;
 const { createElement: e } = React;
 
@@ -16,58 +15,78 @@ const initialEmails = [
   // Add more sample emails...
 ];
 
-export const LookoutWindow = ({ onClose }) => {
+// Separate TitleBar component (similar to MessageWindow)
+const TitleBar = ({ onClose, onMinimize, handleMaximize }) => {
+  return e('div', {
+    className: 'window-titlebar flex items-center justify-between bg-gray-100 p-2 rounded-t-lg border-b'
+  }, 
+    e('div', {
+      className: 'flex items-center space-x-2'
+    }, [
+      e('div', {
+        key: 'buttons',
+        className: 'flex space-x-2'
+      }, [
+        e('button', {
+          key: 'close',
+          className: 'w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 transition-colors',
+          onClick: (e) => {
+            e.stopPropagation();
+            onClose();
+          },
+          title: 'Close'
+        }),
+        e('button', {
+          key: 'minimize',
+          className: 'w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-600 transition-colors',
+          onClick: (e) => {
+            e.stopPropagation();
+            onMinimize();
+          },
+          title: 'Minimize'
+        }),
+        e('button', {
+          key: 'maximize',
+          className: 'w-3 h-3 rounded-full bg-green-500 hover:bg-green-600 transition-colors',
+          onClick: (e) => {
+            e.stopPropagation();
+            if (typeof handleMaximize === 'function') {
+              handleMaximize();
+            }
+          },
+          title: 'Maximize'
+        })
+      ]),
+      e('span', {
+        key: 'title',
+        className: 'text-sm font-medium ml-2'
+      }, 'Lookout')
+    ])
+  );
+};
+
+export const LookoutWindow = ({ onClose, onMinimize, isMinimized, handleMaximize, isMaximized }) => {
   const [emails] = useState(initialEmails);
   const [selectedEmail, setSelectedEmail] = useState(null);
 
   return e(DraggableWindow, {
     onClose,
+    onMinimize,
+    isMinimized,
     initialPosition: { x: 250, y: 150 },
   }, [
     // Window Title Bar
-    e('div', {
+    e(TitleBar, {
       key: 'titlebar',
-      className: 'window-titlebar flex items-center justify-between bg-gray-100 p-2 rounded-t-lg border-b',
-    },
-      e('div', {
-        className: 'flex items-center space-x-2',
-      }, [
-        e('div', {
-          key: 'buttons',
-          className: 'flex space-x-2',
-        }, [
-          e('button', {
-            key: 'close',
-            className: 'w-3 h-3 rounded-full bg-red-500',
-            onClick: onClose,
-          }),
-          // Add minimize and maximize buttons...
-          e('button', {
-            key: 'minimize',
-            className: 'w-3 h-3 rounded-full bg-yellow-500',
-            onClick: (e) => {
-              e.stopPropagation();
-            }
-          }),
-          e('button', {
-            key: 'maximize',
-            className: 'w-3 h-3 rounded-full bg-green-500',
-            onClick: (e) => {
-              e.stopPropagation();
-            }
-          })
-        ]),
-        e('span', {
-          key: 'title',
-          className: 'text-sm font-medium',
-        }, 'Lookout'),
-      ]),
-    ),
+      onClose,
+      onMinimize,
+      handleMaximize
+    }),
 
     // Email List
     e('div', {
       key: 'email-list',
-      className: 'p-4 overflow-y-auto h-96',
+      className: `p-4 overflow-y-auto ${isMaximized ? 'h-[calc(100vh-48px)]' : 'h-96'}`
     },
       e('ul', {
         className: 'space-y-2',
@@ -106,4 +125,4 @@ export const LookoutWindow = ({ onClose }) => {
       }, selectedEmail.body),
     ]),
   ]);
-};
+}

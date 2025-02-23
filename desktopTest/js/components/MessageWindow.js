@@ -27,6 +27,56 @@ const initialConversations = [
   }
 ];
 
+// Separate TitleBar component
+const TitleBar = ({ onClose, onMinimize, handleMaximize }) => {
+  return e('div', {
+    className: 'window-titlebar flex items-center justify-between bg-gray-100 p-2 rounded-t-lg border-b'
+  }, 
+    e('div', {
+      className: 'flex items-center space-x-2'
+    }, [
+      e('div', {
+        key: 'buttons',
+        className: 'flex space-x-2'
+      }, [
+        e('button', {
+          key: 'close',
+          className: 'w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 transition-colors',
+          onClick: (e) => {
+            e.stopPropagation();
+            onClose();
+          },
+          title: 'Close'
+        }),
+        e('button', {
+          key: 'minimize',
+          className: 'w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-600 transition-colors',
+          onClick: (e) => {
+            e.stopPropagation();
+            onMinimize();
+          },
+          title: 'Minimize'
+        }),
+        e('button', {
+          key: 'maximize',
+          className: 'w-3 h-3 rounded-full bg-green-500 hover:bg-green-600 transition-colors',
+          onClick: (e) => {
+            e.stopPropagation();
+            if (typeof handleMaximize === 'function') {
+              handleMaximize();
+            }
+          },
+          title: 'Maximize'
+        })
+      ]),
+      e('span', {
+        key: 'title',
+        className: 'text-sm font-medium ml-2'
+      }, 'Messages')
+    ])
+  );
+};
+
 const Message = ({ message }) => e('div', {
   className: `flex mb-4 ${message.sender === 'You' ? 'justify-end' : 'justify-start'}`
 },
@@ -92,7 +142,73 @@ const ConversationItem = ({ conversation, isSelected, onClick }) => e('div', {
   ])
 );
 
-export const MessageWindow = ({ onClose }) => {
+const MessageWindowContent = ({ isMaximized, conversations, selectedConversation, setSelectedConversation, newMessage, setNewMessage, handleSendMessage }) => {
+  return e('div', {
+    key: 'content',
+    className: `flex ${isMaximized ? 'h-[calc(100vh-48px)]' : 'h-96'}`
+  }, [
+    // Conversations Sidebar
+    e('div', {
+      key: 'sidebar',
+      className: `w-72 border-r border-gray-200 overflow-y-auto ${isMaximized ? 'h-full' : ''}`
+    },
+      conversations.map(conversation => 
+        e(ConversationItem, {
+          key: conversation.id,
+          conversation,
+          isSelected: selectedConversation.id === conversation.id,
+          onClick: () => setSelectedConversation(conversation)
+        })
+      )
+    ),
+    
+    // Chat Area
+    e('div', {
+      key: 'chat',
+      className: `flex-1 flex flex-col ${isMaximized ? 'h-full' : ''}`
+    }, [
+      // Messages Container
+      e('div', {
+        key: 'messages',
+        className: 'flex-1 p-4 overflow-y-auto'
+      },
+        selectedConversation.messages.map(message => 
+          e(Message, {
+            key: message.id,
+            message
+          })
+        )
+      ),
+      
+      // Input Area
+      e('form', {
+        key: 'input-form',
+        className: 'p-4 border-t bg-white',
+        onSubmit: handleSendMessage
+      },
+        e('div', {
+          className: 'flex items-center space-x-2'
+        }, [
+          e('input', {
+            key: 'text-input',
+            type: 'text',
+            value: newMessage,
+            onChange: (e) => setNewMessage(e.target.value),
+            placeholder: 'Type a message...',
+            className: 'flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
+          }),
+          e('button', {
+            key: 'send-button',
+            type: 'submit',
+            className: 'px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500'
+          }, 'Send')
+        ])
+      )
+    ])
+  ]);
+};
+
+export const MessageWindow = ({ onClose, onMinimize, isMinimized, handleMaximize, isMaximized }) => {
   const [conversations] = useState(initialConversations);
   const [selectedConversation, setSelectedConversation] = useState(conversations[0]);
   const [newMessage, setNewMessage] = useState('');
@@ -121,104 +237,25 @@ export const MessageWindow = ({ onClose }) => {
 
   return e(DraggableWindow, {
     onClose,
+    onMinimize,
+    isMinimized,
     initialPosition: { x: 100, y: 50 }
   }, [
-    // Window Title Bar
-    e('div', {
+    e(TitleBar, {
       key: 'titlebar',
-      className: 'window-titlebar flex items-center justify-between bg-gray-100 p-2 rounded-t-lg border-b'
-    }, 
-      e('div', {
-        className: 'flex items-center space-x-2'
-      }, [
-        e('div', {
-          key: 'buttons',
-          className: 'flex space-x-2'
-        }, [
-          e('button', {
-            key: 'close',
-            className: 'w-3 h-3 rounded-full bg-red-500',
-            onClick: onClose
-          }),
-          e('div', {
-            key: 'minimize',
-            className: 'w-3 h-3 rounded-full bg-yellow-500'
-          }),
-          e('div', {
-            key: 'maximize',
-            className: 'w-3 h-3 rounded-full bg-green-500'
-          })
-        ]),
-        e('span', {
-          key: 'title',
-          className: 'text-sm font-medium'
-        }, 'Messages')
-      ])
-    ),
-    
-    // Main Content Area
-    e('div', {
-      key: 'content',
-      className: 'flex h-96'
-    }, [
-      // Conversations Sidebar
-      e('div', {
-        key: 'sidebar',
-        className: 'w-72 border-r border-gray-200 overflow-y-auto'
-      },
-        conversations.map(conversation => 
-          e(ConversationItem, {
-            key: conversation.id,
-            conversation,
-            isSelected: selectedConversation.id === conversation.id,
-            onClick: () => setSelectedConversation(conversation)
-          })
-        )
-      ),
-      
-      // Chat Area
-      e('div', {
-        key: 'chat',
-        className: 'flex-1 flex flex-col'
-      }, [
-        // Messages Container
-        e('div', {
-          key: 'messages',
-          className: 'flex-1 p-4 overflow-y-auto'
-        },
-          selectedConversation.messages.map(message => 
-            e(Message, {
-              key: message.id,
-              message
-            })
-          )
-        ),
-        
-        // Input Area
-        e('form', {
-          key: 'input-form',
-          className: 'p-4 border-t',
-          onSubmit: handleSendMessage
-        },
-          e('div', {
-            className: 'flex items-center space-x-2'
-          }, [
-            e('input', {
-              key: 'text-input',
-              type: 'text',
-              value: newMessage,
-              onChange: (e) => setNewMessage(e.target.value),
-              placeholder: 'Type a message...',
-              className: 'flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
-            }),
-            e('button', {
-              key: 'send-button',
-              type: 'submit',
-              className: 'px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500'
-            }, 'Send')
-          ])
-        )
-      ])
-    ])
+      onClose,
+      onMinimize,
+      handleMaximize // Pass it through from props
+    }),
+    e(MessageWindowContent, {
+      key: 'window-content',
+      isMaximized: false, // Will be filled in by DraggableWindow
+      conversations,
+      selectedConversation,
+      setSelectedConversation,
+      newMessage,
+      setNewMessage,
+      handleSendMessage
+    })
   ]);
 };
