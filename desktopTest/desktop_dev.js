@@ -355,6 +355,7 @@ const NotesWindow = ({ onClose }) => {
 const DesktopInterface = () => {
   const [isMessageOpen, setIsMessageOpen] = useState(true);
   const [isNotesOpen, setIsNotesOpen] = useState(false);
+  const [isPhotoAlbumOpen, setIsPhotoAlbumOpen] = useState(false);
 
   return React.createElement('div', {
     className: 'relative w-full h-screen bg-gradient-to-br from-blue-50 to-indigo-100'
@@ -390,6 +391,18 @@ const DesktopInterface = () => {
           className: 'mt-1 text-xs text-center text-gray-700 group-hover:text-gray-900'
         }, 'Notes')
       ])
+      React.createElement('div', {
+        key: 'photo-album-icon',
+        className: 'flex flex-col items-center w-20 group cursor-pointer',
+        onClick: () => setIsPhotoAlbumOpen(true)
+      }, [
+        React.createElement('div', {
+          className: 'w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center'
+        }, React.createElement(PhotoIcon)),
+        React.createElement('span', {
+          className: 'mt-1 text-xs text-center text-gray-700 group-hover:text-gray-900'
+        }, 'Photos')
+      ])
     ]),
 
     // Windows
@@ -402,6 +415,11 @@ const DesktopInterface = () => {
       key: 'notes-window',
       onClose: () => setIsNotesOpen(false)
     }),
+
+    isPhotoAlbumOpen && React.createElement(PhotoAlbumWindow, {
+     key: 'photo-album-window',
+     onClose: () => setIsPhotoAlbumOpen(false)
+    })
 
     // Dock/Taskbar
     React.createElement('div', {
@@ -421,6 +439,11 @@ const DesktopInterface = () => {
           className: 'w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center hover:bg-blue-600 transition-colors',
           onClick: () => setIsNotesOpen(true)
         }, React.createElement(NotesIcon))
+        React.createElement('button', {
+          key: 'dock-photos',
+          className: 'w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center hover:bg-blue-600 transition-colors',
+          onClick: () => setIsPhotoAlbumOpen(true)
+        }, React.createElement(PhotoIcon))
       ])
     )
   ]);
