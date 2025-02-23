@@ -31,27 +31,11 @@ const NotesIcon = () => React.createElement('svg', {
   })
 );
 
-// Conversation Item Component
-const ConversationItem = ({ conversation, onSelect }) => {
-  return React.createElement('div', {
-    className: 'cursor-pointer p-2 hover:bg-gray-200',
-    onClick: () => onSelect(conversation)
-  }, [
-    React.createElement('div', {
-      className: 'font-medium text-sm'
-    }, conversation.name),
-    React.createElement('div', {
-      className: 'text-xs text-gray-500'
-    }, conversation.lastMessage)
-  ]);
-};
-
 // Draggable Window Component
 const DraggableWindow = ({ children, initialPosition = { x: 100, y: 50 }, onClose }) => {
   const [position, setPosition] = useState(initialPosition);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const foo = 1;
   
   const handleMouseDown = (e) => {
     if (!e.target.closest('.window-titlebar')) return;
@@ -152,6 +136,48 @@ const MessageWindow = ({ onClose }) => {
     ])
   );
 
+  const ConversationItem = ({ conversation }) => React.createElement('div', {
+    className: `p-3 cursor-pointer hover:bg-gray-100 ${
+      selectedConversation.id === conversation.id ? 'bg-gray-100' : ''
+    }`,
+    onClick: () => setSelectedConversation(conversation)
+  },
+    React.createElement('div', {
+      className: 'flex items-center space-x-3'
+    }, [
+      React.createElement('div', {
+        key: 'avatar',
+        className: 'w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center'
+      },
+        React.createElement('span', {
+          className: 'text-white text-lg'
+        }, conversation.name[0])
+      ),
+      React.createElement('div', {
+        key: 'info',
+        className: 'flex-1 min-w-0'
+      }, [
+        React.createElement('div', {
+          key: 'header',
+          className: 'flex justify-between items-baseline'
+        }, [
+          React.createElement('h3', {
+            key: 'name',
+            className: 'text-sm font-medium truncate'
+          }, conversation.name),
+          React.createElement('span', {
+            key: 'time',
+            className: 'text-xs text-gray-500'
+          }, conversation.messages[conversation.messages.length - 1].time)
+        ]),
+        React.createElement('p', {
+          key: 'preview',
+          className: 'text-sm text-gray-500 truncate'
+        }, conversation.lastMessage)
+      ])
+    ])
+  );
+
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
@@ -186,6 +212,24 @@ const MessageWindow = ({ onClose }) => {
       React.createElement('div', {
         className: 'flex items-center space-x-2'
       }, [
+        React.createElement('div', {
+          key: 'buttons',
+          className: 'flex space-x-2'
+        }, [
+          React.createElement('button', {
+            key: 'close',
+            className: 'w-3 h-3 rounded-full bg-red-500',
+            onClick: onClose
+          }),
+          React.createElement('div', {
+            key: 'minimize',
+            className: 'w-3 h-3 rounded-full bg-yellow-500'
+          }),
+          React.createElement('div', {
+            key: 'maximize',
+            className: 'w-3 h-3 rounded-full bg-green-500'
+          })
+        ]),
         React.createElement('span', {
           key: 'title',
           className: 'text-sm font-medium'
@@ -206,8 +250,7 @@ const MessageWindow = ({ onClose }) => {
         conversations.map(conversation => 
           React.createElement(ConversationItem, {
             key: conversation.id,
-            conversation,
-            onSelect: setSelectedConversation
+            conversation
           })
         )
       ),
@@ -274,6 +317,24 @@ const NotesWindow = ({ onClose }) => {
       React.createElement('div', {
         className: 'flex items-center space-x-2'
       }, [
+        React.createElement('div', {
+          key: 'buttons',
+          className: 'flex space-x-2'
+        }, [
+          React.createElement('button', {
+            key: 'close',
+            className: 'w-3 h-3 rounded-full bg-red-500',
+            onClick: onClose
+          }),
+          React.createElement('div', {
+            key: 'minimize',
+            className: 'w-3 h-3 rounded-full bg-yellow-500'
+          }),
+          React.createElement('div', {
+            key: 'maximize',
+            className: 'w-3 h-3 rounded-full bg-green-500'
+          })
+        ]),
         React.createElement('span', {
           key: 'title',
           className: 'text-sm font-medium'
@@ -323,18 +384,48 @@ const DesktopInterface = () => {
         onClick: () => setIsNotesOpen(true)
       }, [
         React.createElement('div', {
-          className: 'w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center'
+          className: 'w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center'
         }, React.createElement(NotesIcon)),
         React.createElement('span', {
           className: 'mt-1 text-xs text-center text-gray-700 group-hover:text-gray-900'
         }, 'Notes')
       ])
-    ])
+    ]),
+
+    // Windows
+    isMessageOpen && React.createElement(MessageWindow, {
+      key: 'message-window',
+      onClose: () => setIsMessageOpen(false)
+    }),
+    
+    isNotesOpen && React.createElement(NotesWindow, {
+      key: 'notes-window',
+      onClose: () => setIsNotesOpen(false)
+    }),
+
+    // Dock/Taskbar
+    React.createElement('div', {
+      key: 'dock',
+      className: 'absolute bottom-0 w-full bg-white bg-opacity-80 backdrop-blur-sm border-t border-gray-200'
+    },
+      React.createElement('div', {
+        className: 'max-w-screen-lg mx-auto p-2 flex items-center justify-center space-x-2'
+      }, [
+        React.createElement('button', {
+          key: 'dock-messages',
+          className: 'w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center hover:bg-blue-600 transition-colors',
+          onClick: () => setIsMessageOpen(true)
+        }, React.createElement(MessageIcon)),
+        React.createElement('button', {
+          key: 'dock-notes',
+          className: 'w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center hover:bg-blue-600 transition-colors',
+          onClick: () => setIsNotesOpen(true)
+        }, React.createElement(NotesIcon))
+      ])
+    )
   ]);
 };
 
-// Render the Desktop Interface component to the root element
-ReactDOM.render(
-  React.createElement(DesktopInterface),
-  document.getElementById('root')
-);
+// Render the app
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(React.createElement(DesktopInterface));
