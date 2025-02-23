@@ -9,12 +9,15 @@ const initialEmails = [
     id: 1,
     from: 'sanguisMD@kaiser.com',
     subject: 'Results',
-    body: `Dear Mr. Pell, your bloodwork analysis is completed.  I've looked them over, and I think it's best for you to 
-    come in for an in-person consultation.  Let's schedule that for as soon as possible -- maybe this Thursday?
-    Thanks,
-    Dr. Sanguis, MD
-    Hematology
-    Kaiser Hemostatic Center`,
+    body: `Dear Mr. Pell,
+
+Your bloodwork analysis is completed. You can review the report in the attachment I've provided here. 
+Please let me know if you have any questions.
+
+Thanks,  
+Dr. Sanguis, MD  
+Hematology  
+Kaiser Hemostatic Center`,
     date: '2025-01-07',
   },
   // Add more sample emails...
@@ -124,9 +127,13 @@ export const LookoutWindow = ({ onClose, onMinimize, isMinimized, handleMaximize
         key: 'subject',
         className: 'text-xl font-medium mb-2',
       }, selectedEmail.subject),
+      e('div', {
+        key: 'from',
+        className: 'text-sm text-gray-600 mb-2'
+      }, `From: ${selectedEmail.from}`),
       e('p', {
         key: 'body',
-        className: 'text-sm',
+        className: 'text-sm whitespace-pre-line',
       }, selectedEmail.body),
     ]),
   ]);
