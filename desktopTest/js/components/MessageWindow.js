@@ -8,11 +8,11 @@ const initialConversations = [
   {
     id: 1,
     name: 'Banana Bonanza Bros',
-    participants: ['Rob Blanchettey', 'Naomi Rosalyn', 'Bilbo Baggins'],
-    lastMessage: `lol i'm down`,
+    participants: ['Rob', 'Naomi Rosalyn'],
+    lastMessage: `Ok!!! See you at 12.    ʕ·͡ᴥ·ʔ`,
     messages: [
       { 
-        id: 4123214, 
+        id: 1, 
         sender: 'You', 
         content: `Friends!! You know how we’ve been talking 
          'about doing a friends getaway/artist’s retreat/psyche bath thing?  
@@ -23,58 +23,93 @@ const initialConversations = [
         taken a vacation in years. I really want to spend more quality time with 
         y’all and just get away from liiifee and chill. For the rest of my life 
         haha. I have so much to tell you.`, 
-        time: '7:27 PM' 
+        time: '4:03 AM' 
       },
       { 
-        id: 132532, 
+        id: 2, 
+        sender: 'You', 
+        content: `(ok I reread my texts and I’m panicking because I sound crazy.
+         I swear I’m not drunk. Or on any drugs. Totally sober - unless you count Diet Coke.).`, 
+        time: '4:10 AM' 
+      },
+      { 
+        id: 3, 
+        sender: 'You', 
+        content: `A few ideas for our getaway trip....check your email.`, 
+        time: '4:11 AM' 
+      },
+      { 
+        id: 4, 
+        sender: 'You', 
+        content: `Sorry for all the texts I’m just so excited.
+         I think it’s best if we talk tomorrow in person about this.
+          Are you free for coffee or lunch to discuss? 
+          Zomg let’s go to Sea Wolf… I would kill for a savory croissant right now. `, 
+        time: '4:15 AM' 
+      },
+      { 
+        id: 5, 
         sender: 'Rob', 
-        content: 'jst off wrk. im fred.', 
-        time: '7:27 PM' 
+        content: 'jst got off work. im fred.', 
+        time: '7:07 AM' 
       },
       { 
-        id: 1122, 
+        id: 6, 
         sender: 'Rob', 
-        content: 'fried ', 
-        time: '7:28 PM' 
+        content: 'fried.', 
+        time: '7:07 AM' 
       },
       { 
-        id: 424242, 
-        sender: 'Naomi Rosalyn', 
+        id: 7, 
+        sender: 'Rob', 
         content: 'wtf????? ', 
-        time: '7:30 PM' 
+        time: '7:30 AM' 
       },
       { 
-        id: 12421, 
+        id: 8, 
         sender: 'Rob', 
-        content: `lol i'm down`, 
-        time: '12:00 AM' 
+        content: `lol i'm down `, 
+        time: '7:31 AM' 
+      },
+      { 
+        id: 9, 
+        sender: 'Naomi Rosalyn', 
+        content: `Hello friends! An artist’s retreat sounds amazing. 
+        I’m always in. The farmhouse is available this weekend. 
+        We had a cancellation due to the “bad weather”  
+        I could plan something amazing really quickly! 
+        On a serious note...Alex are you doing okay bud? 
+        I’m in the studio all day, but why don’t we meet at the cafe nearby at 12? `, 
+        time: '9:00 AM' 
+      },
+      { 
+        id: 10, 
+        sender: 'You', 
+        content: `Ok!!! See you at 12.   ʕ·͡ᴥ·ʔ`, 
+        time: '9:01 AM' 
       }
       
     ]
   },
   {
     id: 2,
-    name: 'Family Chat',
-    participants: ['Mom', 'Dad', 'Sister', 'Brother'],
-    lastMessage: 'shut up',
+    name: 'Naomi Rosalyn',
+    participants: ['Naomi Rosalyn'],
+    lastMessage: ':-)',
     messages: [
       { 
         id: 1, 
-        sender: 'Mom', 
-        content: 'Who\'s cooking tonight?', 
+        sender: 'Naomi Rosalyn', 
+        content: `Hello there! I am getting the farmhouse rooms sorted for our retreat this weekend.
+         Did you want to take the Sun Room or the Stars Room? 
+         Also, how did things go at the doctor? `, 
         time: '1:30 PM' 
       },
       { 
         id: 2, 
-        sender: 'Sister', 
-        content: 'I can order pizza', 
-        time: '1:35 PM' 
-      },
-      { 
-        id: 3, 
-        sender: 'Dad', 
-        content: 'Whooaaa', 
-        time: '1:36 PM' 
+        sender: 'Naomi Rosalyn', 
+        content: ':-)', 
+        time: '1:31 PM' 
       }
     ]
   },
@@ -157,6 +192,9 @@ const TitleBar = ({ onClose, onMinimize, handleMaximize }) => {
 
 // Updated Message component to show sender in group chats
 const Message = ({ message, isGroup }) => {
+  console.log('Message:', message);
+  console.log('isGroup:', isGroup);
+
   return e('div', {
     className: `flex mb-4 ${message.sender === 'You' ? 'justify-end' : 'justify-start'}`
   },
@@ -187,7 +225,7 @@ const Message = ({ message, isGroup }) => {
 // Updated ConversationItem to show participants in group chats
 const ConversationItem = ({ conversation, isSelected, onClick }) => {
   // Generate avatar based on first letters of participants or first participant
-  const avatarText = conversation.participants.length > 2 
+  const avatarText = conversation.participants.length > 1
     ? conversation.participants.slice(0, 2).map(p => p[0]).join('')
     : conversation.participants[0][0];
 
@@ -228,7 +266,7 @@ const ConversationItem = ({ conversation, isSelected, onClick }) => {
           key: 'preview',
           className: 'text-sm text-gray-500 truncate'
         }, 
-          conversation.participants.length > 2 
+          conversation.participants.length > 1
             ? `${conversation.messages[conversation.messages.length - 1].sender}: ${conversation.lastMessage}`
             : conversation.lastMessage
         )
@@ -280,7 +318,7 @@ const MessageWindowContent = ({
           e(Message, {
             key: message.id,
             message,
-            isGroup: selectedConversation.participants.length > 2
+            isGroup: selectedConversation.participants.length > 1 // Ensure isGroup is set correctly
           })
         )
       ),
