@@ -5,14 +5,18 @@ const { createElement: e } = React;
 import { MessageWindow } from './components/MessageWindow.js';
 import { NotesWindow } from './components/NotesWindow.js';
 import { PhotoAlbumWindow } from './components/PhotoAlbumWindow.js';
+import { LookoutWindow } from './components/LookoutWindow.js';
 import { MessageIcon } from './icons/MessageIcon.js';
 import { NotesIcon } from './icons/NotesIcon.js';
 import { PhotoIcon } from './icons/PhotoIcon.js';
+import { LookoutIcon } from './icons/LookoutIcon.js';
+
 
 const DesktopInterface = () => {
   const [isMessageOpen, setIsMessageOpen] = useState(true);
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [isPhotoAlbumOpen, setIsPhotoAlbumOpen] = useState(false);
+  const [isLookoutOpen, setIsLookoutOpen] = useState(false);
 
   return e('div', {
     className: 'relative w-full h-screen bg-gradient-to-br from-blue-50 to-indigo-100'
@@ -61,7 +65,20 @@ const DesktopInterface = () => {
           className: 'mt-1 text-xs text-center text-gray-700 group-hover:text-gray-900'
         }, 'Photos')
       ])
+      // Lookout Icon
+    e('div', {
+      key: 'lookout-icon',
+      className: 'flex flex-col items-center w-20 group cursor-pointer',
+      onClick: () => setIsLookoutOpen(true),
+    }, [
+      e('div', {
+        className: 'w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center',
+      }, e(LookoutIcon)),
+      e('span', {
+        className: 'mt-1 text-xs text-center text-gray-700 group-hover:text-gray-900',
+      }, 'Lookout'),
     ]),
+  ]),
 
     // Windows
     isMessageOpen && e(MessageWindow, {
@@ -77,6 +94,11 @@ const DesktopInterface = () => {
     isPhotoAlbumOpen && e(PhotoAlbumWindow, {
       key: 'photo-album-window',
       onClose: () => setIsPhotoAlbumOpen(false)
+    }),
+
+    isLookoutOpen && e(LookoutWindow, {
+      key: 'lookout-window',
+      onClose: () => setIsLookoutOpen(false),
     }),
 
     // Dock/Taskbar
@@ -102,6 +124,11 @@ const DesktopInterface = () => {
           className: 'w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center hover:bg-blue-600 transition-colors',
           onClick: () => setIsPhotoAlbumOpen(true)
         }, e(PhotoIcon))
+        e('button', {
+          key: 'dock-lookout',
+          className: 'w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center hover:bg-blue-600 transition-colors',
+          onClick: () => setIsLookoutOpen(true),
+        }, e(LookoutIcon)),
       ])
     )
   ]);

@@ -13,7 +13,7 @@ const albums = [
 ];
 
 const photos = [
-  { id: 1, album: 'family', src: './Pictures/bottomsUpForest.jpg', caption: 'Family Dinner', date: '2024-01-15' },
+  { id: 1, album: 'family', src: './Pictures/bottomsUpForest.jpg', caption: 'tree council judge and jury', date: '1995-04-01' },
   { id: 2, album: 'family', src: '/api/placeholder/400/300', caption: 'Birthday Party', date: '2024-02-01' },
   { id: 3, album: 'vacation', src: '/api/placeholder/400/300', caption: 'Beach sunset', date: '2024-02-15' },
   { id: 4, album: 'vacation', src: '/api/placeholder/400/300', caption: 'Mountain hike', date: '2024-02-16' },
