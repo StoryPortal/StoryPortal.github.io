@@ -7,10 +7,15 @@ import { DraggableWindow } from './DraggableWindow.js';
 const initialEmails = [
   {
     id: 1,
-    from: 'john@example.com',
-    subject: 'Meeting Reminder',
-    body: 'Don\'t forget about the meeting tomorrow at 10 AM.',
-    date: '2024-02-24',
+    from: 'sanguisMD@kaiser.com',
+    subject: 'Results',
+    body: `Dear Mr. Pell, your bloodwork analysis is completed.  I've looked them over, and I think it's best for you to 
+    come in for an in-person consultation.  Let's schedule that for as soon as possible -- maybe this Thursday?
+    Thanks,
+    Dr. Sanguis, MD
+    Hematology
+    Kaiser Hemostatic Center`,
+    date: '2025-01-07',
   },
   // Add more sample emails...
 ];
