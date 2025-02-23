@@ -4,10 +4,12 @@ desktopTest/
 ├── js/
 │   ├── components/
 │   │   ├── MessageWindow.js
+│   │   ├── LookoutWindow.js
 │   │   ├── NotesWindow.js
 │   │   ├── PhotoAlbumWindow.js
 │   │   └── DraggableWindow.js
 │   ├── icons/
+│   │   ├── LookoutIcon.js
 │   │   ├── MessageIcon.js
 │   │   ├── NotesIcon.js
 │   │   └── PhotoIcon.js

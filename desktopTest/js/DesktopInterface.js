@@ -17,9 +17,20 @@ const DesktopInterface = () => {
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [isPhotoAlbumOpen, setIsPhotoAlbumOpen] = useState(false);
   const [isLookoutOpen, setIsLookoutOpen] = useState(true);
+  const [backgroundImage, setBackgroundImage] = useState('./Pictures/spirl.jpg');
 
-  return e('div', {
-    className: 'relative w-full h-screen bg-gradient-to-br from-blue-50 to-indigo-100'
+  
+  //e('div', {
+    //below changes background color/image
+    //className: 'relative w-full h-screen bg-gradient-to-br from-purple-100 to-pink-200'
+ // }
+ return e('div', {
+  className: 'relative w-full h-screen bg-cover bg-center',
+  style: {
+    backgroundImage: `url(${backgroundImage})`,
+    backgroundSize: 'cover', // Ensures image covers entire screen
+    backgroundPosition: 'center' // Centers the image
+  }
   }, [
     // Desktop Icons
     e('div', {
