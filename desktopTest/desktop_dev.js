@@ -1,6 +1,7 @@
 // Get React hooks from the global React object
 const { useState, useEffect } = React;
 
+
 // Message Icon Component
 const MessageIcon = () => React.createElement('svg', {
   className: 'w-8 h-8 text-white',
@@ -28,6 +29,21 @@ const NotesIcon = () => React.createElement('svg', {
     strokeLinejoin: 'round',
     strokeWidth: 2,
     d: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'
+  })
+);
+
+//Photo Icon Component
+const PhotoIcon = () => React.createElement('svg', {
+  className: 'w-8 h-8 text-white',
+  fill: 'none',
+  stroke: 'currentColor',
+  viewBox: '0 0 24 24'
+}, 
+  React.createElement('path', {
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    strokeWidth: 2,
+    d: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'
   })
 );
 
@@ -81,6 +97,185 @@ const DraggableWindow = ({ children, initialPosition = { x: 100, y: 50 }, onClos
     onMouseDown: handleMouseDown,
     className: 'bg-white rounded-lg shadow-xl border border-gray-200'
   }, children);
+};
+
+// Photo Album Window Component
+const PhotoAlbumWindow = ({ onClose }) => {
+  const [selectedAlbum, setSelectedAlbum] = useState('All Photos');
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  
+  // Mock data - replace with your story's photos
+  const albums = [
+    { id: 'all', name: 'All Photos', count: 6 },
+    { id: 'family', name: 'Family', count: 2 },
+    { id: 'vacation', name: 'Vacation', count: 2 },
+    { id: 'work', name: 'Work', count: 2 }
+  ];
+
+  const photos = [
+    { id: 1, album: 'nature', src: './Pictures/bottomsUpForest.jpg', caption: 'Before the tree council, my fate is decided', date: '1998-04-01' },
+    { id: 2, album: 'nature', src: '/api/placeholder/400/300', caption: 'Birthday Party', date: '2024-02-01' },
+    { id: 3, album: 'private', src: '/api/placeholder/400/300', caption: 'Beach sunset', date: '2024-02-15' },
+    { id: 4, album: 'private', src: '/api/placeholder/400/300', caption: 'Mountain hike', date: '2024-02-16' },
+    { id: 5, album: 'work', src: '/api/placeholder/400/300', caption: 'Office meeting', date: '2024-02-20' },
+    { id: 6, album: 'work', src: '/api/placeholder/400/300', caption: 'Team lunch', date: '2024-02-21' }
+  ];
+
+  const filteredPhotos = selectedAlbum === 'All Photos' 
+    ? photos 
+    : photos.filter(photo => photo.album === selectedAlbum.toLowerCase());
+
+  const PhotoModal = ({ photo, onClose }) => {
+    if (!photo) return null;
+    
+    return React.createElement('div', {
+      className: 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50',
+      onClick: onClose
+    },
+      React.createElement('div', {
+        className: 'bg-white p-4 rounded-lg max-w-2xl',
+        onClick: e => e.stopPropagation()
+      }, [
+        React.createElement('img', {
+          key: 'modal-image',
+          src: photo.src,
+          alt: photo.caption,
+          className: 'w-full h-auto rounded'
+        }),
+        React.createElement('div', {
+          key: 'modal-info',
+          className: 'mt-4'
+        }, [
+          React.createElement('h3', {
+            key: 'modal-caption',
+            className: 'text-lg font-medium'
+          }, photo.caption),
+          React.createElement('p', {
+            key: 'modal-date',
+            className: 'text-sm text-gray-500'
+          }, new Date(photo.date).toLocaleDateString())
+        ])
+      ])
+    );
+  };
+
+  return React.createElement(DraggableWindow, {
+    onClose,
+    initialPosition: { x: 200, y: 50 }
+  }, [
+    // Window Title Bar
+    React.createElement('div', {
+      key: 'titlebar',
+      className: 'window-titlebar flex items-center justify-between bg-gray-100 p-2 rounded-t-lg border-b'
+    }, 
+      React.createElement('div', {
+        className: 'flex items-center space-x-2'
+      }, [
+        React.createElement('div', {
+          key: 'buttons',
+          className: 'flex space-x-2'
+        }, [
+          React.createElement('button', {
+            key: 'close',
+            className: 'w-3 h-3 rounded-full bg-red-500',
+            onClick: onClose
+          }),
+          React.createElement('div', {
+            key: 'minimize',
+            className: 'w-3 h-3 rounded-full bg-yellow-500'
+          }),
+          React.createElement('div', {
+            key: 'maximize',
+            className: 'w-3 h-3 rounded-full bg-green-500'
+          })
+        ]),
+        React.createElement('span', {
+          key: 'title',
+          className: 'text-sm font-medium'
+        }, 'Photo Album')
+      ])
+    ),
+    
+    // Main Content Area
+    React.createElement('div', {
+      key: 'content',
+      className: 'flex h-96'
+    }, [
+      // Albums Sidebar
+      React.createElement('div', {
+        key: 'sidebar',
+        className: 'w-48 border-r border-gray-200 p-4 overflow-y-auto'
+      },
+        React.createElement('div', {
+          className: 'space-y-2'
+        },
+          albums.map(album => 
+            React.createElement('button', {
+              key: album.id,
+              onClick: () => setSelectedAlbum(album.name),
+              className: `w-full text-left px-3 py-2 rounded ${
+                selectedAlbum === album.name 
+                  ? 'bg-blue-500 text-white' 
+                  : 'hover:bg-gray-100'
+              }`
+            }, [
+              React.createElement('span', {
+                key: 'name',
+                className: 'block font-medium'
+              }, album.name),
+              React.createElement('span', {
+                key: 'count',
+                className: `text-sm ${selectedAlbum === album.name ? 'text-blue-100' : 'text-gray-500'}`
+              }, `${album.count} photos`)
+            ])
+          )
+        )
+      ),
+      
+      // Photos Grid
+      React.createElement('div', {
+        key: 'photos-grid',
+        className: 'flex-1 p-4 overflow-y-auto'
+      },
+        React.createElement('div', {
+          className: 'grid grid-cols-3 gap-4'
+        },
+          filteredPhotos.map(photo => 
+            React.createElement('div', {
+              key: photo.id,
+              className: 'relative group cursor-pointer',
+              onClick: () => setSelectedPhoto(photo)
+            }, [
+              React.createElement('img', {
+                key: 'image',
+                src: photo.src,
+                alt: photo.caption,
+                className: 'w-full h-32 object-cover rounded-lg'
+              }),
+              React.createElement('div', {
+                key: 'overlay',
+                className: 'absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-25 transition-opacity rounded-lg'
+              }),
+              React.createElement('div', {
+                key: 'caption',
+                className: 'absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity'
+              },
+                React.createElement('span', {
+                  className: 'text-white text-sm'
+                }, photo.caption)
+              )
+            ])
+          )
+        )
+      )
+    ]),
+
+    // Photo Modal
+    selectedPhoto && React.createElement(PhotoModal, {
+      photo: selectedPhoto,
+      onClose: () => setSelectedPhoto(null)
+    })
+  ]);
 };
 
 // Message Window Component
@@ -390,7 +585,8 @@ const DesktopInterface = () => {
         React.createElement('span', {
           className: 'mt-1 text-xs text-center text-gray-700 group-hover:text-gray-900'
         }, 'Notes')
-      ])
+      ]),
+      // Photo Album Icon
       React.createElement('div', {
         key: 'photo-album-icon',
         className: 'flex flex-col items-center w-20 group cursor-pointer',
@@ -417,9 +613,9 @@ const DesktopInterface = () => {
     }),
 
     isPhotoAlbumOpen && React.createElement(PhotoAlbumWindow, {
-     key: 'photo-album-window',
-     onClose: () => setIsPhotoAlbumOpen(false)
-    })
+      key: 'photo-album-window',
+      onClose: () => setIsPhotoAlbumOpen(false)
+    }),
 
     // Dock/Taskbar
     React.createElement('div', {
@@ -438,7 +634,7 @@ const DesktopInterface = () => {
           key: 'dock-notes',
           className: 'w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center hover:bg-blue-600 transition-colors',
           onClick: () => setIsNotesOpen(true)
-        }, React.createElement(NotesIcon))
+        }, React.createElement(NotesIcon)),
         React.createElement('button', {
           key: 'dock-photos',
           className: 'w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center hover:bg-blue-600 transition-colors',
