@@ -1,5 +1,5 @@
 desktopTest/
-├── index.html
+├── desktop_dev.html
 ├── js/
 │   ├── components/
 │   │   ├── MessageWindow.js
