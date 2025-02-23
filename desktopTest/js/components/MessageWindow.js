@@ -7,35 +7,56 @@ import { DraggableWindow } from './DraggableWindow.js';
 const initialConversations = [
   {
     id: 1,
-    name: 'Team Rocket',
-    participants: ['Alex Smith', 'Sarah Johnson', 'Jordan Lee'],
-    lastMessage: 'Meeting at 3 PM',
+    name: 'Banana Bonanza Bros',
+    participants: ['Rob Blanchettey', 'Naomi Rosalyn', 'Bilbo Baggins'],
+    lastMessage: `lol i'm down`,
     messages: [
       { 
-        id: 1, 
-        sender: 'Alex Smith', 
-        content: 'Hey team, project update?', 
-        time: '2:45 PM' 
+        id: 4123214, 
+        sender: 'You', 
+        content: `Friends!! You know how we’ve been talking 
+         'about doing a friends getaway/artist’s retreat/psyche bath thing?  
+         Well…let’s do it!! This weekend? Next weekend? Whenever you’re all free…I’m
+        thinking of taking some time off work so I can be pretty available. 
+        And don’t worry nothing’s wrong I just have a toon of PTO saved that I need 
+        to use by the end of the year. I can make time. For you. God, I haven’t 
+        taken a vacation in years. I really want to spend more quality time with 
+        y’all and just get away from liiifee and chill. For the rest of my life 
+        haha. I have so much to tell you.`, 
+        time: '7:27 PM' 
       },
       { 
-        id: 2, 
-        sender: 'Sarah Johnson', 
-        content: 'Almost done with my part', 
-        time: '2:46 PM' 
+        id: 132532, 
+        sender: 'Rob', 
+        content: 'jst off wrk. im fred.', 
+        time: '7:27 PM' 
       },
       { 
-        id: 3, 
-        sender: 'Jordan Lee', 
-        content: 'Meeting at 3 PM', 
-        time: '2:47 PM' 
+        id: 1122, 
+        sender: 'Rob', 
+        content: 'fried ', 
+        time: '7:28 PM' 
+      },
+      { 
+        id: 424242, 
+        sender: 'Naomi Rosalyn', 
+        content: 'wtf????? ', 
+        time: '7:30 PM' 
+      },
+      { 
+        id: 12421, 
+        sender: 'Rob', 
+        content: `lol i'm down`, 
+        time: '12:00 AM' 
       }
+      
     ]
   },
   {
     id: 2,
     name: 'Family Chat',
     participants: ['Mom', 'Dad', 'Sister', 'Brother'],
-    lastMessage: 'Dinner plans?',
+    lastMessage: 'shut up',
     messages: [
       { 
         id: 1, 
@@ -52,7 +73,7 @@ const initialConversations = [
       { 
         id: 3, 
         sender: 'Dad', 
-        content: 'Dinner plans?', 
+        content: 'Whooaaa', 
         time: '1:36 PM' 
       }
     ]
@@ -85,7 +106,6 @@ const initialConversations = [
   }
 ];
 
-// Separate TitleBar component
 const TitleBar = ({ onClose, onMinimize, handleMaximize }) => {
   return e('div', {
     className: 'window-titlebar flex items-center justify-between bg-gray-100 p-2 rounded-t-lg border-b'

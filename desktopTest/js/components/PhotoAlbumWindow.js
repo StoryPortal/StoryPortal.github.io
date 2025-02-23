@@ -6,19 +6,19 @@ import { PhotoIcon } from '../icons/PhotoIcon.js';
 
 // Mock data - replace with your story's photos
 const albums = [
-  { id: 'all', name: 'All Photos', count: 6 },
-  { id: 'family', name: 'Family', count: 2 },
-  { id: 'vacation', name: 'Vacation', count: 2 },
-  { id: 'work', name: 'Work', count: 2 }
+  { id: 'nature', name: 'nature', count: 1 },
+  { id: 'unexplainable phenomenon', name: 'unexplainable phenomenon', count: 2 },
+  { id: 'work', name: 'work', count: 2 },
+  //{ id: 'all', name: 'All Photos', count: 6 }
 ];
 
 const photos = [
-  { id: 1, album: 'family', src: './Pictures/bottomsUpForest.jpg', caption: 'tree council judge and jury', date: '1995-04-01' },
-  { id: 2, album: 'family', src: '/api/placeholder/400/300', caption: 'Birthday Party', date: '2024-02-01' },
-  { id: 3, album: 'vacation', src: '/api/placeholder/400/300', caption: 'Beach sunset', date: '2024-02-15' },
-  { id: 4, album: 'vacation', src: '/api/placeholder/400/300', caption: 'Mountain hike', date: '2024-02-16' },
-  { id: 5, album: 'work', src: '/api/placeholder/400/300', caption: 'Office meeting', date: '2024-02-20' },
-  { id: 6, album: 'work', src: '/api/placeholder/400/300', caption: 'Team lunch', date: '2024-02-21' }
+  { id: 1, album: 'nature', src: './Pictures/bottomsUpForest.jpg', caption: 'tree council judge and jury', date: '1995-04-01' },
+  //{ id: 2, album: 'nature', src: '/api/placeholder/400/300', caption: 'Birthday Party', date: '2024-02-01' },
+  { id: 3, album: 'unexplainable phenomenon', src: './Pictures/redOrbGetTogether.jpg', caption: 'femininomenon', date: '2022-01-01' },
+  { id: 4, album: 'unexplainable phenomenon', src: './Pictures/spirl.jpg', caption: 'the cosmos watches', date: '2022-11-11' },
+  { id: 5, album: 'work', src: './Pictures/nooo.gif', caption: 'real', date: '1979-02-20' },
+  { id: 6, album: 'work', src: './Pictures/strongBrain.png', caption: 'elon must die', date: '2000-05-21' }
 ];
 
 const PhotoModal = ({ photo, onClose }) => {
