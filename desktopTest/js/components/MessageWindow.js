@@ -3,26 +3,84 @@ const { createElement: e } = React;
 
 import { DraggableWindow } from './DraggableWindow.js';
 
-// Mock conversation data
+// Mock conversation data to support group messaging
 const initialConversations = [
   {
     id: 1,
-    name: 'Alex Smith',
-    lastMessage: 'Check your inbox...',
+    name: 'Team Rocket',
+    participants: ['Alex Smith', 'Sarah Johnson', 'Jordan Lee'],
+    lastMessage: 'Meeting at 3 PM',
     messages: [
-      { id: 1, sender: 'Alex Smith', content: 'Hey, did you see that weird email?', time: '2:45 PM' },
-      { id: 2, sender: 'You', content: 'No, what email?', time: '2:46 PM' },
-      { id: 3, sender: 'Alex Smith', content: 'Check your inbox...', time: '2:46 PM' }
+      { 
+        id: 1, 
+        sender: 'Alex Smith', 
+        content: 'Hey team, project update?', 
+        time: '2:45 PM' 
+      },
+      { 
+        id: 2, 
+        sender: 'Sarah Johnson', 
+        content: 'Almost done with my part', 
+        time: '2:46 PM' 
+      },
+      { 
+        id: 3, 
+        sender: 'Jordan Lee', 
+        content: 'Meeting at 3 PM', 
+        time: '2:47 PM' 
+      }
     ]
   },
   {
     id: 2,
+    name: 'Family Chat',
+    participants: ['Mom', 'Dad', 'Sister', 'Brother'],
+    lastMessage: 'Dinner plans?',
+    messages: [
+      { 
+        id: 1, 
+        sender: 'Mom', 
+        content: 'Who\'s cooking tonight?', 
+        time: '1:30 PM' 
+      },
+      { 
+        id: 2, 
+        sender: 'Sister', 
+        content: 'I can order pizza', 
+        time: '1:35 PM' 
+      },
+      { 
+        id: 3, 
+        sender: 'Dad', 
+        content: 'Dinner plans?', 
+        time: '1:36 PM' 
+      }
+    ]
+  },
+  {
+    id: 3,
     name: 'Sarah Johnson',
+    participants: ['Sarah Johnson'],
     lastMessage: 'See you tomorrow!',
     messages: [
-      { id: 1, sender: 'Sarah Johnson', content: 'Are we still on for coffee?', time: '1:30 PM' },
-      { id: 2, sender: 'You', content: 'Yes, 10am works for me', time: '1:35 PM' },
-      { id: 3, sender: 'Sarah Johnson', content: 'See you tomorrow!', time: '1:36 PM' }
+      { 
+        id: 1, 
+        sender: 'Sarah Johnson', 
+        content: 'Are we still on for coffee?', 
+        time: '1:30 PM' 
+      },
+      { 
+        id: 2, 
+        sender: 'You', 
+        content: 'Yes, 10am works for me', 
+        time: '1:35 PM' 
+      },
+      { 
+        id: 3, 
+        sender: 'Sarah Johnson', 
+        content: 'See you tomorrow!', 
+        time: '1:36 PM' 
+      }
     ]
   }
 ];
@@ -77,72 +135,98 @@ const TitleBar = ({ onClose, onMinimize, handleMaximize }) => {
   );
 };
 
-const Message = ({ message }) => e('div', {
-  className: `flex mb-4 ${message.sender === 'You' ? 'justify-end' : 'justify-start'}`
-},
-  e('div', {
-    className: `max-w-xs rounded-lg p-3 ${
-      message.sender === 'You' 
-        ? 'bg-blue-500 text-white rounded-br-none' 
-        : 'bg-gray-200 text-gray-900 rounded-bl-none'
-    }`
-  }, [
-    e('div', { 
-      className: 'text-sm font-medium mb-1',
-      key: 'sender'
-    }, message.sender),
-    e('div', { 
-      className: 'text-sm',
-      key: 'content'
-    }, message.content),
-    e('div', { 
-      className: `text-xs mt-1 ${message.sender === 'You' ? 'text-blue-100' : 'text-gray-500'}`,
-      key: 'time'
-    }, message.time)
-  ])
-);
+// Updated Message component to show sender in group chats
+const Message = ({ message, isGroup }) => {
+  return e('div', {
+    className: `flex mb-4 ${message.sender === 'You' ? 'justify-end' : 'justify-start'}`
+  },
+    e('div', {
+      className: `max-w-xs rounded-lg p-3 ${
+        message.sender === 'You' 
+          ? 'bg-blue-500 text-white rounded-br-none' 
+          : 'bg-gray-200 text-gray-900 rounded-bl-none'
+      }`
+    }, [
+      // Show sender name only in group chats
+      isGroup && message.sender !== 'You' && e('div', { 
+        className: 'text-xs font-medium mb-1 text-gray-700',
+        key: 'sender'
+      }, message.sender),
+      e('div', { 
+        className: 'text-sm',
+        key: 'content'
+      }, message.content),
+      e('div', { 
+        className: `text-xs mt-1 ${message.sender === 'You' ? 'text-blue-100' : 'text-gray-500'}`,
+        key: 'time'
+      }, message.time)
+    ])
+  );
+};
 
-const ConversationItem = ({ conversation, isSelected, onClick }) => e('div', {
-  className: `p-3 cursor-pointer hover:bg-gray-100 ${isSelected ? 'bg-gray-100' : ''}`,
-  onClick: onClick
-},
-  e('div', {
-    className: 'flex items-center space-x-3'
-  }, [
+// Updated ConversationItem to show participants in group chats
+const ConversationItem = ({ conversation, isSelected, onClick }) => {
+  // Generate avatar based on first letters of participants or first participant
+  const avatarText = conversation.participants.length > 2 
+    ? conversation.participants.slice(0, 2).map(p => p[0]).join('')
+    : conversation.participants[0][0];
+
+  return e('div', {
+    className: `p-3 cursor-pointer hover:bg-gray-100 ${isSelected ? 'bg-gray-100' : ''}`,
+    onClick: onClick
+  },
     e('div', {
-      key: 'avatar',
-      className: 'w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center'
-    },
-      e('span', {
-        className: 'text-white text-lg'
-      }, conversation.name[0])
-    ),
-    e('div', {
-      key: 'info',
-      className: 'flex-1 min-w-0'
+      className: 'flex items-center space-x-3'
     }, [
       e('div', {
-        key: 'header',
-        className: 'flex justify-between items-baseline'
-      }, [
-        e('h3', {
-          key: 'name',
-          className: 'text-sm font-medium truncate'
-        }, conversation.name),
+        key: 'avatar',
+        className: 'w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center'
+      },
         e('span', {
-          key: 'time',
-          className: 'text-xs text-gray-500'
-        }, conversation.messages[conversation.messages.length - 1].time)
-      ]),
-      e('p', {
-        key: 'preview',
-        className: 'text-sm text-gray-500 truncate'
-      }, conversation.lastMessage)
+          className: 'text-white text-lg'
+        }, avatarText)
+      ),
+      e('div', {
+        key: 'info',
+        className: 'flex-1 min-w-0'
+      }, [
+        e('div', {
+          key: 'header',
+          className: 'flex justify-between items-baseline'
+        }, [
+          // Show group name and participants
+          e('h3', {
+            key: 'name',
+            className: 'text-sm font-medium truncate'
+          }, conversation.name),
+          e('span', {
+            key: 'time',
+            className: 'text-xs text-gray-500'
+          }, conversation.messages[conversation.messages.length - 1].time)
+        ]),
+        e('p', {
+          key: 'preview',
+          className: 'text-sm text-gray-500 truncate'
+        }, 
+          conversation.participants.length > 2 
+            ? `${conversation.messages[conversation.messages.length - 1].sender}: ${conversation.lastMessage}`
+            : conversation.lastMessage
+        )
+      ])
     ])
-  ])
-);
+  );
+};
 
-const MessageWindowContent = ({ isMaximized, conversations, selectedConversation, setSelectedConversation, newMessage, setNewMessage, handleSendMessage }) => {
+// MessageWindowContent with group messaging support
+const MessageWindowContent = ({ 
+  isMaximized, 
+  conversations, 
+  selectedConversation, 
+  setSelectedConversation, 
+  newMessage, 
+  setNewMessage, 
+  handleSendMessage 
+}) => {
   return e('div', {
     key: 'content',
     className: `flex ${isMaximized ? 'h-[calc(100vh-48px)]' : 'h-96'}`
@@ -175,7 +259,8 @@ const MessageWindowContent = ({ isMaximized, conversations, selectedConversation
         selectedConversation.messages.map(message => 
           e(Message, {
             key: message.id,
-            message
+            message,
+            isGroup: selectedConversation.participants.length > 2
           })
         )
       ),
@@ -245,7 +330,7 @@ export const MessageWindow = ({ onClose, onMinimize, isMinimized, handleMaximize
       key: 'titlebar',
       onClose,
       onMinimize,
-      handleMaximize // Pass it through from props
+      handleMaximize
     }),
     e(MessageWindowContent, {
       key: 'window-content',
