@@ -7,6 +7,77 @@ import { DraggableWindow } from './DraggableWindow.js';
 const initialConversations = [
   {
     id: 1,
+    name: 'Naomi Rosalyn',
+    participants: ['Naomi Rosalyn'],
+    lastMessage: ':-)',
+    messages: [
+      { 
+        id: 1, 
+        sender: 'Naomi Rosalyn', 
+        content: `Hello there! I am getting the farmhouse rooms sorted for our retreat this weekend.
+         I'm giving you the special cupola room - great for stargazing. 
+         Also, how did things go at the doctor? Sending good thoughts your way!`, 
+        time: '8:30 PM' 
+      },
+      { 
+        id: 2, 
+        sender: 'Naomi Rosalyn', 
+        content: ':-)', 
+        time: '8:31 PM' 
+      }
+    ]
+  },
+  {
+    id: 2,
+    name: 'Rob Blanchett',
+    participants: ['Rob Blanchett'],
+    lastMessage: `im a doctor. rushing 2 work. will respond when i can.`,
+    messages: [
+      { 
+        id: 1, 
+        sender: 'You', 
+        content: `Doctor said it's probably just stress. Psychosomatic? 
+        Know anything about that? I really really think something is wrong.
+        I'm gonna ask for another blood test. Or try someone else. Can you order something for me?`, 
+        time: '6:00 PM' 
+      },
+      { 
+        id: 2, 
+        sender: 'Rob Blanchett', 
+        content: `not my expertise but u can send me ur recrds for 2nd opinion.`, 
+        time: '6:10 PM' 
+      },
+      { 
+        id: 3, 
+        sender: 'Rob Blanchett', 
+        content: `i saw a crazy doc about psychosomatic disorder...
+        patients come in all the time for stress stuff.`, 
+        time: '6:10 PM' 
+      },
+      { 
+        id: 4, 
+        sender: 'Rob Blanchett', 
+        content: `ur 2 young to be so stressed. 
+        take soem time off work. get off the internet.`, 
+        time: '6:10 PM' 
+      },
+      {
+      id: 4, 
+      sender: 'You', 
+      content: `We're literally the same age....and you're the most stressed out person I know`, 
+      time: '6:20 PM' 
+      },
+      { 
+        id: 5, 
+        sender: 'Rob Blanchett', 
+        content: `im a doctor. just send me ur records. im rushing 2 work. will respond when i can`, 
+        time: '6:32 PM' 
+      }
+    ]
+  },
+
+    {
+    id: 3,
     name: 'Banana Bonanza Bros',
     participants: ['Rob', 'Naomi Rosalyn'],
     lastMessage: `Ok!!! See you at 12.    ʕ·͡ᴥ·ʔ`,
@@ -15,7 +86,7 @@ const initialConversations = [
         id: 1, 
         sender: 'You', 
         content: `Friends!! You know how we’ve been talking 
-         'about doing a friends getaway/artist’s retreat/psyche bath thing?  
+         about doing a friends getaway/artist’s retreat/psyche bath thing?  
          Well…let’s do it!! This weekend? Next weekend? Whenever you’re all free…I’m
         thinking of taking some time off work so I can be pretty available. 
         And don’t worry nothing’s wrong I just have a toon of PTO saved that I need 
@@ -76,10 +147,11 @@ const initialConversations = [
         sender: 'Naomi Rosalyn', 
         content: `Hello friends! An artist’s retreat sounds amazing. 
         I’m always in. The farmhouse is available this weekend. 
-        We had a cancellation due to the “bad weather”  
+        We had a cancellation due to the ~bad weather~ haha. It's just a little drizzly!
         I could plan something amazing really quickly! 
-        On a serious note...Alex are you doing okay bud? 
-        I’m in the studio all day, but why don’t we meet at the cafe nearby at 12? `, 
+        Oh well, their loss is our gain! 
+        On a serious note...Alex are you okay??
+        I’m in the studio all day, but why don’t we meet grab coffee nearby at 12 and we can migrate to the studio if we need some privacy to chat. `, 
         time: '9:00 AM' 
       },
       { 
@@ -89,54 +161,6 @@ const initialConversations = [
         time: '9:01 AM' 
       }
       
-    ]
-  },
-  {
-    id: 2,
-    name: 'Naomi Rosalyn',
-    participants: ['Naomi Rosalyn'],
-    lastMessage: ':-)',
-    messages: [
-      { 
-        id: 1, 
-        sender: 'Naomi Rosalyn', 
-        content: `Hello there! I am getting the farmhouse rooms sorted for our retreat this weekend.
-         Did you want to take the Sun Room or the Stars Room? 
-         Also, how did things go at the doctor? `, 
-        time: '1:30 PM' 
-      },
-      { 
-        id: 2, 
-        sender: 'Naomi Rosalyn', 
-        content: ':-)', 
-        time: '1:31 PM' 
-      }
-    ]
-  },
-  {
-    id: 3,
-    name: 'Sarah Johnson',
-    participants: ['Sarah Johnson'],
-    lastMessage: 'See you tomorrow!',
-    messages: [
-      { 
-        id: 1, 
-        sender: 'Sarah Johnson', 
-        content: 'Are we still on for coffee?', 
-        time: '1:30 PM' 
-      },
-      { 
-        id: 2, 
-        sender: 'You', 
-        content: 'Yes, 10am works for me', 
-        time: '1:35 PM' 
-      },
-      { 
-        id: 3, 
-        sender: 'Sarah Johnson', 
-        content: 'See you tomorrow!', 
-        time: '1:36 PM' 
-      }
     ]
   }
 ];
