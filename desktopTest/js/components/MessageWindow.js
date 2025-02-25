@@ -31,7 +31,7 @@ const initialConversations = [
     id: 2,
     name: 'Rob Blanchett',
     participants: ['Rob Blanchett'],
-    lastMessage: `im a doctor. rushing 2 work. will respond when i can.`,
+    lastMessage: `im a doctor. just send me ur recs. im rushing 2 work. will respond when i can`,
     messages: [
       { 
         id: 1, 
@@ -70,7 +70,7 @@ const initialConversations = [
       { 
         id: 5, 
         sender: 'Rob Blanchett', 
-        content: `im a doctor. just send me ur records. im rushing 2 work. will respond when i can`, 
+        content: `im a doctor. just send me ur recs. im rushing 2 work. will respond when i can`, 
         time: '6:32 PM' 
       }
     ]
