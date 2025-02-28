@@ -1,3 +1,4 @@
+// js/DesktopInterface.js
 const { useState } = React;
 const { createElement: e } = React;
 
@@ -11,12 +12,12 @@ import { NotesIcon } from './icons/NotesIcon.js';
 import { PhotoIcon } from './icons/PhotoIcon.js';
 import { LookoutIcon } from './icons/LookoutIcon.js';
 
-// Dock icon component for better visual feedback
-const DockIcon = ({ icon: Icon, isOpen, isMinimized, onClick }) => {
+// Enhanced DockIcon component
+const DockIcon = ({ icon: Icon, label, isOpen, isMinimized, onClick, customClass = '' }) => {
   return e('button', {
     className: `relative w-12 h-12 rounded-lg 
       ${isMinimized ? 'bg-blue-700' : isOpen ? 'bg-blue-600' : 'bg-blue-500'} 
-      flex items-center justify-center hover:bg-blue-600 transition-colors group`,
+      flex items-center justify-center hover:bg-blue-600 transition-colors group ${customClass}`,
     onClick: onClick
   }, [
     e(Icon),
@@ -26,33 +27,157 @@ const DockIcon = ({ icon: Icon, isOpen, isMinimized, onClick }) => {
         ${isMinimized ? 'w-4 h-1' : 'w-1 h-1'} 
         bg-white rounded-full transition-all duration-200`
     }),
-    isMinimized && e('div', {
+    e('div', {
       key: 'tooltip',
       className: 'absolute bottom-full mb-2 px-2 py-1 bg-black bg-opacity-75 text-white text-xs rounded hidden group-hover:block whitespace-nowrap',
-    }, 'Click to restore')
+    }, isMinimized ? 'Click to restore' : label)
   ]);
 };
 
+// Simplified Window Manager without z-index handling
+const useWindowManager = () => {
+  const [windows, setWindows] = useState({
+    message: { isOpen: true, isMinimized: false },
+    notes: { isOpen: false, isMinimized: false },
+    photoAlbum: { isOpen: false, isMinimized: false },
+    lookout: { isOpen: true, isMinimized: false }
+  });
+  
+  const createWindowStateHelpers = (windowKey) => ({
+    open: () => setWindows(prev => ({
+      ...prev,
+      [windowKey]: { 
+        ...prev[windowKey], 
+        isOpen: true, 
+        isMinimized: false 
+      }
+    })),
+    close: () => setWindows(prev => ({
+      ...prev,
+      [windowKey]: { 
+        ...prev[windowKey], 
+        isOpen: false, 
+        isMinimized: false 
+      }
+    })),
+    minimize: () => setWindows(prev => ({
+      ...prev,
+      [windowKey]: { 
+        ...prev[windowKey], 
+        isMinimized: true 
+      }
+    })),
+    restore: () => setWindows(prev => ({
+      ...prev,
+      [windowKey]: { 
+        ...prev[windowKey], 
+        isMinimized: false 
+      }
+    })),
+    getState: () => windows[windowKey]
+  });
+  
+  return {
+    messageHelpers: createWindowStateHelpers('message'),
+    notesHelpers: createWindowStateHelpers('notes'),
+    photoAlbumHelpers: createWindowStateHelpers('photoAlbum'),
+    lookoutHelpers: createWindowStateHelpers('lookout')
+  };
+};
+
 const DesktopInterface = () => {
-  // Track both open and minimized state for each window
-  const [messageState, setMessageState] = useState({ isOpen: true, isMinimized: false });
-  const [notesState, setNotesState] = useState({ isOpen: false, isMinimized: false });
-  const [photoAlbumState, setPhotoAlbumState] = useState({ isOpen: false, isMinimized: false });
-  const [lookoutState, setLookoutState] = useState({ isOpen: true, isMinimized: false });
+  // Use window manager for open/close/minimize state
+  const { 
+    messageHelpers, 
+    notesHelpers, 
+    photoAlbumHelpers, 
+    lookoutHelpers 
+  } = useWindowManager();
+  
+  // NEW: Keep track of window order for rendering
+  const [windowOrder, setWindowOrder] = useState(['message', 'notes', 'photoAlbum', 'lookout']);
+  
+  // NEW: Function to bring window to front by changing DOM order
+  const bringToFront = (windowKey) => {
+    console.log(`Bringing ${windowKey} to front via DOM order`);
+    setWindowOrder(prevOrder => {
+      // Remove the window from its current position
+      const newOrder = prevOrder.filter(key => key !== windowKey);
+      // Add it to the beginning (will be rendered last, thus on top)
+      newOrder.unshift(windowKey);
+      console.log('New window order:', newOrder);
+      return newOrder;
+    });
+  };
+  
   const [backgroundImage, setBackgroundImage] = useState('./Pictures/spirl.jpg');
 
-  // Helper functions for window states
-  const createWindowStateHelpers = (setState) => ({
-    open: () => setState({ isOpen: true, isMinimized: false }),
-    close: () => setState({ isOpen: false, isMinimized: false }),
-    minimize: () => setState(prev => ({ ...prev, isMinimized: true })),
-    restore: () => setState(prev => ({ ...prev, isMinimized: false }))
-  });
-
-  const messageHelpers = createWindowStateHelpers(setMessageState);
-  const notesHelpers = createWindowStateHelpers(setNotesState);
-  const photoAlbumHelpers = createWindowStateHelpers(setPhotoAlbumState);
-  const lookoutHelpers = createWindowStateHelpers(setLookoutState);
+  // Function to render windows in correct stacking order
+  const renderWindows = () => {
+    // Windows will be rendered in reverse order, so the first one in the array
+    // will be rendered last (on top)
+    const windowComponents = [];
+    
+    // Render windows in the order specified by windowOrder (reversed)
+    [...windowOrder].reverse().forEach(windowKey => {
+      switch(windowKey) {
+        case 'message':
+          if (messageHelpers.getState().isOpen) {
+            windowComponents.push(
+              e(MessageWindow, {
+                key: 'message-window',
+                onClose: messageHelpers.close,
+                onMinimize: messageHelpers.minimize,
+                isMinimized: messageHelpers.getState().isMinimized,
+                onActivate: () => bringToFront('message')
+              })
+            );
+          }
+          break;
+        case 'notes':
+          if (notesHelpers.getState().isOpen) {
+            windowComponents.push(
+              e(NotesWindow, {
+                key: 'notes-window',
+                onClose: notesHelpers.close,
+                onMinimize: notesHelpers.minimize,
+                isMinimized: notesHelpers.getState().isMinimized,
+                onActivate: () => bringToFront('notes')
+              })
+            );
+          }
+          break;
+        case 'photoAlbum':
+          if (photoAlbumHelpers.getState().isOpen) {
+            windowComponents.push(
+              e(PhotoAlbumWindow, {
+                key: 'photoalbum-window',
+                onClose: photoAlbumHelpers.close,
+                onMinimize: photoAlbumHelpers.minimize,
+                isMinimized: photoAlbumHelpers.getState().isMinimized,
+                onActivate: () => bringToFront('photoAlbum')
+              })
+            );
+          }
+          break;
+        case 'lookout':
+          if (lookoutHelpers.getState().isOpen) {
+            windowComponents.push(
+              e(LookoutWindow, {
+                key: 'lookout-window',
+                onClose: lookoutHelpers.close,
+                onMinimize: lookoutHelpers.minimize,
+                isMinimized: lookoutHelpers.getState().isMinimized,
+                onActivate: () => bringToFront('lookout')
+              })
+            );
+          }
+          break;
+      }
+    });
+    
+    return windowComponents;
+  };
 
   return e('div', {
     className: 'relative w-full h-screen bg-cover bg-center',
@@ -63,119 +188,161 @@ const DesktopInterface = () => {
     }
   }, [
     // Desktop Icons
+    // Desktop Icons
     e('div', {
       key: 'icons',
-      className: 'absolute top-4 left-4 space-y-4'
+      className: 'absolute top-4 left-4 space-y-4 z-10'
     }, [
       // Messages Icon
       e('div', {
         key: 'messages-icon',
         className: 'flex flex-col items-center w-20 group cursor-pointer',
-        onClick: messageHelpers.open
+        onClick: () => {
+          messageHelpers.open();
+          bringToFront('message');
+        }
       }, [
         e('div', {
           className: 'w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center'
         }, e(MessageIcon)),
         e('span', {
-          className: 'mt-1 text-xs text-center text-gray-700 group-hover:text-gray-900'
+          className: 'mt-1 text-xs text-center text-white group-hover:text-gray-200 bg-black bg-opacity-40 px-2 py-1 rounded'
         }, 'Messages')
       ]),
       // Notes Icon
       e('div', {
         key: 'notes-icon',
         className: 'flex flex-col items-center w-20 group cursor-pointer',
-        onClick: notesHelpers.open
+        onClick: () => {
+          notesHelpers.open();
+          bringToFront('notes');
+        }
       }, [
         e('div', {
           className: 'w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center'
         }, e(NotesIcon)),
         e('span', {
-          className: 'mt-1 text-xs text-center text-gray-700 group-hover:text-gray-900'
+          className: 'mt-1 text-xs text-center text-white group-hover:text-gray-200 bg-black bg-opacity-40 px-2 py-1 rounded'
         }, 'Notes')
       ]),
       // Photo Album Icon
       e('div', {
         key: 'photoalbum-icon',
         className: 'flex flex-col items-center w-20 group cursor-pointer',
-        onClick: photoAlbumHelpers.open
+        onClick: () => {
+          photoAlbumHelpers.open();
+          bringToFront('photoAlbum');
+        }
       }, [
         e('div', {
           className: 'w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center'
         }, e(PhotoIcon)),
         e('span', {
-          className: 'mt-1 text-xs text-center text-gray-700 group-hover:text-gray-900'
+          className: 'mt-1 text-xs text-center text-white group-hover:text-gray-200 bg-black bg-opacity-40 px-2 py-1 rounded'
         }, 'Photos')
+      ]),
+      // Lookout Icon (Added comma before this)
+      e('div', {
+        key: 'lookout-icon',
+        className: 'flex flex-col items-center w-20 group cursor-pointer',
+        onClick: () => {
+          lookoutHelpers.open();
+          bringToFront('lookout');
+        }
+      }, [
+        e('div', {
+          className: 'w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center'
+        }, e(LookoutIcon)),
+        e('span', {
+          className: 'mt-1 text-xs text-center text-white group-hover:text-gray-200 bg-black bg-opacity-40 px-2 py-1 rounded'
+        }, 'Lookout')
       ])
     ]),
+    
 
-    // Windows
-    messageState.isOpen && e(MessageWindow, {
-      key: 'message-window',
-      onClose: messageHelpers.close,
-      onMinimize: messageHelpers.minimize,
-      isMinimized: messageState.isMinimized,
-      handleMaximize: () => {} // Placeholder for maximize functionality
-    }),
+    // Windows - render in correct order for stacking
+    ...renderWindows(),
 
-    notesState.isOpen && e(NotesWindow, {
-      key: 'notes-window',
-      onClose: notesHelpers.close,
-      onMinimize: notesHelpers.minimize,
-      isMinimized: notesState.isMinimized,
-      handleMaximize: () => {} // Placeholder for maximize functionality
-    }),
-
-    photoAlbumState.isOpen && e(PhotoAlbumWindow, {
-      key: 'photoalbum-window',
-      onClose: photoAlbumHelpers.close,
-      onMinimize: photoAlbumHelpers.minimize,
-      isMinimized: photoAlbumState.isMinimized,
-      handleMaximize: () => {} // Placeholder for maximize functionality
-    }),
-
-    lookoutState.isOpen && e(LookoutWindow, {
-      key: 'lookout-window',
-      onClose: lookoutHelpers.close,
-      onMinimize: lookoutHelpers.minimize,
-      isMinimized: lookoutState.isMinimized,
-      handleMaximize: () => {} // Placeholder for maximize functionality
-    }),
-
-    // Enhanced dock with better minimize indicators
+    // Dock - always on top with high z-index
     e('div', {
       key: 'dock',
-      className: 'absolute bottom-0 w-full bg-white bg-opacity-80 backdrop-blur-sm border-t border-gray-200'
+      className: 'absolute bottom-0 w-full bg-white bg-opacity-80 backdrop-blur-sm border-t border-gray-200',
+      style: { zIndex: 9999 }
     },
       e('div', {
-        className: 'max-w-screen-lg mx-auto p-2 flex items-center justify-center space-x-2'
+        className: 'max-w-screen-lg mx-auto p-2 flex items-center justify-center space-x-4'
       }, [
         e(DockIcon, {
           key: 'dock-messages',
           icon: MessageIcon,
-          isOpen: messageState.isOpen,
-          isMinimized: messageState.isMinimized,
-          onClick: () => messageState.isMinimized ? messageHelpers.restore() : messageHelpers.open()
+          label: 'Messages',
+          isOpen: messageHelpers.getState().isOpen,
+          isMinimized: messageHelpers.getState().isMinimized,
+          onClick: () => {
+            if (messageHelpers.getState().isMinimized) {
+              messageHelpers.restore();
+              bringToFront('message');
+            } else if (messageHelpers.getState().isOpen) {
+              bringToFront('message');
+            } else {
+              messageHelpers.open();
+              bringToFront('message');
+            }
+          }
         }),
         e(DockIcon, {
           key: 'dock-notes',
           icon: NotesIcon,
-          isOpen: notesState.isOpen,
-          isMinimized: notesState.isMinimized,
-          onClick: () => notesState.isMinimized ? notesHelpers.restore() : notesHelpers.open()
+          label: 'Notes',
+          isOpen: notesHelpers.getState().isOpen,
+          isMinimized: notesHelpers.getState().isMinimized,
+          onClick: () => {
+            if (notesHelpers.getState().isMinimized) {
+              notesHelpers.restore();
+              bringToFront('notes');
+            } else if (notesHelpers.getState().isOpen) {
+              bringToFront('notes');
+            } else {
+              notesHelpers.open();
+              bringToFront('notes');
+            }
+          }
         }),
         e(DockIcon, {
           key: 'dock-photoalbum',
           icon: PhotoIcon,
-          isOpen: photoAlbumState.isOpen,
-          isMinimized: photoAlbumState.isMinimized,
-          onClick: () => photoAlbumState.isMinimized ? photoAlbumHelpers.restore() : photoAlbumHelpers.open()
+          label: 'Photos',
+          isOpen: photoAlbumHelpers.getState().isOpen,
+          isMinimized: photoAlbumHelpers.getState().isMinimized,
+          onClick: () => {
+            if (photoAlbumHelpers.getState().isMinimized) {
+              photoAlbumHelpers.restore();
+              bringToFront('photoAlbum');
+            } else if (photoAlbumHelpers.getState().isOpen) {
+              bringToFront('photoAlbum');
+            } else {
+              photoAlbumHelpers.open();
+              bringToFront('photoAlbum');
+            }
+          }
         }),
         e(DockIcon, {
           key: 'dock-lookout',
           icon: LookoutIcon,
-          isOpen: lookoutState.isOpen,
-          isMinimized: lookoutState.isMinimized,
-          onClick: () => lookoutState.isMinimized ? lookoutHelpers.restore() : lookoutHelpers.open()
+          label: 'Lookout',
+          isOpen: lookoutHelpers.getState().isOpen,
+          isMinimized: lookoutHelpers.getState().isMinimized,
+          onClick: () => {
+            if (lookoutHelpers.getState().isMinimized) {
+              lookoutHelpers.restore();
+              bringToFront('lookout');
+            } else if (lookoutHelpers.getState().isOpen) {
+              bringToFront('lookout');
+            } else {
+              lookoutHelpers.open();
+              bringToFront('lookout');
+            }
+          }
         })
       ])
     )

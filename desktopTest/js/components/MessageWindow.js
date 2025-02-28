@@ -1,7 +1,8 @@
+// js/components/MessageWindow.js
 const { useState } = React;
 const { createElement: e } = React;
 
-import { DraggableWindow } from './DraggableWindow.js';
+import { WindowFrame } from './WindowFrame.js';
 
 // Mock conversation data to support group messaging
 const initialConversations = [
@@ -75,8 +76,7 @@ const initialConversations = [
       }
     ]
   },
-
-    {
+  {
     id: 3,
     name: 'Banana Bonanza Bros',
     participants: ['Rob', 'Naomi Rosalyn'],
@@ -85,22 +85,22 @@ const initialConversations = [
       { 
         id: 1, 
         sender: 'You', 
-        content: `Friends!! You know how we’ve been talking 
-         about doing a friends getaway/artist’s retreat/psyche bath thing?  
-         Well…let’s do it!! This weekend? Next weekend? Whenever you’re all free…I’m
+        content: `Friends!! You know how we've been talking 
+         about doing a friends getaway/artist's retreat/psyche bath thing?  
+         Well…let's do it!! This weekend? Next weekend? Whenever you're all free…I'm
         thinking of taking some time off work so I can be pretty available. 
-        And don’t worry nothing’s wrong I just have a toon of PTO saved that I need 
-        to use by the end of the year. I can make time. For you. God, I haven’t 
+        And don't worry nothing's wrong I just have a toon of PTO saved that I need 
+        to use by the end of the year. I can make time. For you. God, I haven't 
         taken a vacation in years. I really want to spend more quality time with 
-        y’all and just get away from liiifee and chill. For the rest of my life 
+        y'all and just get away from liiifee and chill. For the rest of my life 
         haha. I have so much to tell you.`, 
         time: '4:03 AM' 
       },
       { 
         id: 2, 
         sender: 'You', 
-        content: `(ok I reread my texts and I’m panicking because I sound crazy.
-         I swear I’m not drunk. Or on any drugs. Totally sober - unless you count Diet Coke.).`, 
+        content: `(ok I reread my texts and I'm panicking because I sound crazy.
+         I swear I'm not drunk. Or on any drugs. Totally sober - unless you count Diet Coke.).`, 
         time: '4:10 AM' 
       },
       { 
@@ -112,10 +112,10 @@ const initialConversations = [
       { 
         id: 4, 
         sender: 'You', 
-        content: `Sorry for all the texts I’m just so excited.
-         I think it’s best if we talk tomorrow in person about this.
+        content: `Sorry for all the texts I'm just so excited.
+         I think it's best if we talk tomorrow in person about this.
           Are you free for coffee or lunch to discuss? 
-          Zomg let’s go to Sea Wolf… I would kill for a savory croissant right now. `, 
+          Zomg let's go to Sea Wolf… I would kill for a savory croissant right now. `, 
         time: '4:15 AM' 
       },
       { 
@@ -145,13 +145,13 @@ const initialConversations = [
       { 
         id: 9, 
         sender: 'Naomi Rosalyn', 
-        content: `Hello friends! An artist’s retreat sounds amazing. 
-        I’m always in. The farmhouse is available this weekend. 
+        content: `Hello friends! An artist's retreat sounds amazing. 
+        I'm always in. The farmhouse is available this weekend. 
         We had a cancellation due to the ~bad weather~ haha. It's just a little drizzly!
         I could plan something amazing really quickly! 
         Oh well, their loss is our gain! 
         On a serious note...Alex are you okay??
-        I’m in the studio all day, but why don’t we meet grab coffee nearby at 12 and we can migrate to the studio if we need some privacy to chat. `, 
+        I'm in the studio all day, but why don't we meet grab coffee nearby at 12 and we can migrate to the studio if we need some privacy to chat. `, 
         time: '9:00 AM' 
       },
       { 
@@ -160,65 +160,12 @@ const initialConversations = [
         content: `Ok!!! See you at 12.   ʕ·͡ᴥ·ʔ`, 
         time: '9:01 AM' 
       }
-      
     ]
   }
 ];
 
-const TitleBar = ({ onClose, onMinimize, handleMaximize }) => {
-  return e('div', {
-    className: 'window-titlebar flex items-center justify-between bg-gray-100 p-2 rounded-t-lg border-b'
-  }, 
-    e('div', {
-      className: 'flex items-center space-x-2'
-    }, [
-      e('div', {
-        key: 'buttons',
-        className: 'flex space-x-2'
-      }, [
-        e('button', {
-          key: 'close',
-          className: 'w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 transition-colors',
-          onClick: (e) => {
-            e.stopPropagation();
-            onClose();
-          },
-          title: 'Close'
-        }),
-        e('button', {
-          key: 'minimize',
-          className: 'w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-600 transition-colors',
-          onClick: (e) => {
-            e.stopPropagation();
-            onMinimize();
-          },
-          title: 'Minimize'
-        }),
-        e('button', {
-          key: 'maximize',
-          className: 'w-3 h-3 rounded-full bg-green-500 hover:bg-green-600 transition-colors',
-          onClick: (e) => {
-            e.stopPropagation();
-            if (typeof handleMaximize === 'function') {
-              handleMaximize();
-            }
-          },
-          title: 'Maximize'
-        })
-      ]),
-      e('span', {
-        key: 'title',
-        className: 'text-sm font-medium ml-2'
-      }, 'Messages')
-    ])
-  );
-};
-
 // Updated Message component to show sender in group chats
 const Message = ({ message, isGroup }) => {
-  console.log('Message:', message);
-  console.log('isGroup:', isGroup);
-
   return e('div', {
     className: `flex mb-4 ${message.sender === 'You' ? 'justify-end' : 'justify-start'}`
   },
@@ -299,24 +246,41 @@ const ConversationItem = ({ conversation, isSelected, onClick }) => {
   );
 };
 
-// MessageWindowContent with group messaging support
-const MessageWindowContent = ({ 
-  isMaximized, 
-  conversations, 
-  selectedConversation, 
-  setSelectedConversation, 
-  newMessage, 
-  setNewMessage, 
-  handleSendMessage 
-}) => {
+// MessageContent Component - Separated from window frame
+const MessageContent = ({ isMaximized, windowSize }) => {
+  const [conversations] = useState(initialConversations);
+  const [selectedConversation, setSelectedConversation] = useState(conversations[0]);
+  const [newMessage, setNewMessage] = useState('');
+
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (!newMessage.trim()) return;
+
+    const updatedConversation = {
+      ...selectedConversation,
+      messages: [
+        ...selectedConversation.messages,
+        {
+          id: selectedConversation.messages.length + 1,
+          sender: 'You',
+          content: newMessage,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ],
+      lastMessage: newMessage
+    };
+
+    setSelectedConversation(updatedConversation);
+    setNewMessage('');
+  };
+
   return e('div', {
-    key: 'content',
-    className: `flex ${isMaximized ? 'h-[calc(100vh-48px)]' : 'h-96'}`
+    className: 'flex h-full'
   }, [
     // Conversations Sidebar
     e('div', {
       key: 'sidebar',
-      className: `w-72 border-r border-gray-200 overflow-y-auto ${isMaximized ? 'h-full' : ''}`
+      className: 'w-72 border-r border-gray-200 overflow-y-auto'
     },
       conversations.map(conversation => 
         e(ConversationItem, {
@@ -331,7 +295,7 @@ const MessageWindowContent = ({
     // Chat Area
     e('div', {
       key: 'chat',
-      className: `flex-1 flex flex-col ${isMaximized ? 'h-full' : ''}`
+      className: 'flex-1 flex flex-col'
     }, [
       // Messages Container
       e('div', {
@@ -342,7 +306,7 @@ const MessageWindowContent = ({
           e(Message, {
             key: message.id,
             message,
-            isGroup: selectedConversation.participants.length > 1 // Ensure isGroup is set correctly
+            isGroup: selectedConversation.participants.length > 1
           })
         )
       ),
@@ -375,54 +339,27 @@ const MessageWindowContent = ({
   ]);
 };
 
-export const MessageWindow = ({ onClose, onMinimize, isMinimized, handleMaximize, isMaximized }) => {
-  const [conversations] = useState(initialConversations);
-  const [selectedConversation, setSelectedConversation] = useState(conversations[0]);
-  const [newMessage, setNewMessage] = useState('');
-
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    if (!newMessage.trim()) return;
-
-    const updatedConversation = {
-      ...selectedConversation,
-      messages: [
-        ...selectedConversation.messages,
-        {
-          id: selectedConversation.messages.length + 1,
-          sender: 'You',
-          content: newMessage,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }
-      ],
-      lastMessage: newMessage
-    };
-
-    setSelectedConversation(updatedConversation);
-    setNewMessage('');
+// Main MessageWindow component using the WindowFrame
+export const MessageWindow = ({ onClose, onMinimize, isMinimized }) => {
+  // Custom theme for messaging app
+  const messageTheme = {
+    titleBarBg: 'bg-blue-100',
+    closeButton: 'bg-red-500 hover:bg-red-600',
+    minimizeButton: 'bg-yellow-500 hover:bg-yellow-600',
+    maximizeButton: 'bg-green-500 hover:bg-green-600',
+    windowBorder: 'border-blue-300'
   };
 
-  return e(DraggableWindow, {
+  return e(WindowFrame, {
+    title: 'Messages',
+    initialPosition: { x: 100, y: 50 },
+    initialSize: { width: 800, height: 500 },
+    minSize: { width: 500, height: 300 },
     onClose,
     onMinimize,
     isMinimized,
-    initialPosition: { x: 100, y: 50 }
-  }, [
-    e(TitleBar, {
-      key: 'titlebar',
-      onClose,
-      onMinimize,
-      handleMaximize
-    }),
-    e(MessageWindowContent, {
-      key: 'window-content',
-      isMaximized: false, // Will be filled in by DraggableWindow
-      conversations,
-      selectedConversation,
-      setSelectedConversation,
-      newMessage,
-      setNewMessage,
-      handleSendMessage
-    })
-  ]);
+    theme: messageTheme
+  }, 
+    e(MessageContent)
+  );
 };

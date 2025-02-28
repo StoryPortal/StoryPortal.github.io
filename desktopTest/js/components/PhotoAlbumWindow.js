@@ -1,7 +1,8 @@
+// js/components/PhotoAlbumWindow.js
 const { useState } = React;
 const { createElement: e } = React;
 
-import { DraggableWindow } from './DraggableWindow.js';
+import { WindowFrame } from './WindowFrame.js';
 import { PhotoIcon } from '../icons/PhotoIcon.js';
 
 // Mock data - replace with your story's photos
@@ -55,57 +56,8 @@ const PhotoModal = ({ photo, onClose }) => {
   );
 };
 
-// Separate TitleBar component (similar to MessageWindow)
-const TitleBar = ({ onClose, onMinimize, handleMaximize }) => {
-  return e('div', {
-    className: 'window-titlebar flex items-center justify-between bg-gray-100 p-2 rounded-t-lg border-b'
-  }, 
-    e('div', {
-      className: 'flex items-center space-x-2'
-    }, [
-      e('div', {
-        key: 'buttons',
-        className: 'flex space-x-2'
-      }, [
-        e('button', {
-          key: 'close',
-          className: 'w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 transition-colors',
-          onClick: (e) => {
-            e.stopPropagation();
-            onClose();
-          },
-          title: 'Close'
-        }),
-        e('button', {
-          key: 'minimize',
-          className: 'w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-600 transition-colors',
-          onClick: (e) => {
-            e.stopPropagation();
-            onMinimize();
-          },
-          title: 'Minimize'
-        }),
-        e('button', {
-          key: 'maximize',
-          className: 'w-3 h-3 rounded-full bg-green-500 hover:bg-green-600 transition-colors',
-          onClick: (e) => {
-            e.stopPropagation();
-            if (typeof handleMaximize === 'function') {
-              handleMaximize();
-            }
-          },
-          title: 'Maximize'
-        })
-      ]),
-      e('span', {
-        key: 'title',
-        className: 'text-sm font-medium ml-2'
-      }, 'Photo Album')
-    ])
-  );
-};
-
-export const PhotoAlbumWindow = ({ onClose, onMinimize, isMinimized, handleMaximize, isMaximized }) => {
+// Photo Album Content Component - Separated from window frame
+const PhotoAlbumContent = ({ isMaximized, windowSize }) => {
   const [selectedAlbum, setSelectedAlbum] = useState('All Photos');
   const [selectedPhoto, setSelectedPhoto] = useState(null);
 
@@ -113,93 +65,76 @@ export const PhotoAlbumWindow = ({ onClose, onMinimize, isMinimized, handleMaxim
     ? photos 
     : photos.filter(photo => photo.album === selectedAlbum.toLowerCase());
 
-  return e(DraggableWindow, {
-    onClose,
-    onMinimize,
-    isMinimized,
-    initialPosition: { x: 200, y: 50 }
+  return e('div', {
+    className: 'flex h-full'
   }, [
-    // Window Title Bar
-    e(TitleBar, {
-      key: 'titlebar',
-      onClose,
-      onMinimize,
-      handleMaximize
-    }),
-    
-    // Main Content Area
+    // Albums Sidebar
     e('div', {
-      key: 'content',
-      className: `flex ${isMaximized ? 'h-[calc(100vh-48px)]' : 'h-96'}`
-    }, [
-      // Albums Sidebar
+      key: 'sidebar',
+      className: 'w-48 border-r border-gray-200 p-4 overflow-y-auto'
+    },
       e('div', {
-        key: 'sidebar',
-        className: 'w-48 border-r border-gray-200 p-4 overflow-y-auto'
+        className: 'space-y-2'
       },
-        e('div', {
-          className: 'space-y-2'
-        },
-          albums.map(album => 
-            e('button', {
-              key: album.id,
-              onClick: () => setSelectedAlbum(album.name),
-              className: `w-full text-left px-3 py-2 rounded ${
-                selectedAlbum === album.name 
-                  ? 'bg-blue-500 text-white' 
-                  : 'hover:bg-gray-100'
-              }`
-            }, [
-              e('span', {
-                key: 'name',
-                className: 'block font-medium'
-              }, album.name),
-              e('span', {
-                key: 'count',
-                className: `text-sm ${selectedAlbum === album.name ? 'text-blue-100' : 'text-gray-500'}`
-              }, `${album.count} photos`)
-            ])
-          )
-        )
-      ),
-      
-      // Photos Grid
-      e('div', {
-        key: 'photos-grid',
-        className: 'flex-1 p-4 overflow-y-auto'
-      },
-        e('div', {
-          className: 'grid grid-cols-3 gap-4'
-        },
-          filteredPhotos.map(photo => 
-            e('div', {
-              key: photo.id,
-              className: 'relative group cursor-pointer',
-              onClick: () => setSelectedPhoto(photo)
-            }, [
-              e('img', {
-                key: 'image',
-                src: photo.src,
-                alt: photo.caption,
-                className: 'w-full h-32 object-cover rounded-lg'
-              }),
-              e('div', {
-                key: 'overlay',
-                className: 'absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-25 transition-opacity rounded-lg'
-              }),
-              e('div', {
-                key: 'caption',
-                className: 'absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity'
-              },
-                e('span', {
-                  className: 'text-white text-sm'
-                }, photo.caption)
-              )
-            ])
-          )
+        albums.map(album => 
+          e('button', {
+            key: album.id,
+            onClick: () => setSelectedAlbum(album.name),
+            className: `w-full text-left px-3 py-2 rounded ${
+              selectedAlbum === album.name 
+                ? 'bg-blue-500 text-white' 
+                : 'hover:bg-gray-100'
+            }`
+          }, [
+            e('span', {
+              key: 'name',
+              className: 'block font-medium'
+            }, album.name),
+            e('span', {
+              key: 'count',
+              className: `text-sm ${selectedAlbum === album.name ? 'text-blue-100' : 'text-gray-500'}`
+            }, `${album.count} photos`)
+          ])
         )
       )
-    ]),
+    ),
+    
+    // Photos Grid
+    e('div', {
+      key: 'photos-grid',
+      className: 'flex-1 p-4 overflow-y-auto'
+    },
+      e('div', {
+        className: 'grid grid-cols-3 gap-4'
+      },
+        filteredPhotos.map(photo => 
+          e('div', {
+            key: photo.id,
+            className: 'relative group cursor-pointer',
+            onClick: () => setSelectedPhoto(photo)
+          }, [
+            e('img', {
+              key: 'image',
+              src: photo.src,
+              alt: photo.caption,
+              className: 'w-full h-32 object-cover rounded-lg'
+            }),
+            e('div', {
+              key: 'overlay',
+              className: 'absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-25 transition-opacity rounded-lg'
+            }),
+            e('div', {
+              key: 'caption',
+              className: 'absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity'
+            },
+              e('span', {
+                className: 'text-white text-sm'
+              }, photo.caption)
+            )
+          ])
+        )
+      )
+    ),
 
     // Photo Modal
     selectedPhoto && e(PhotoModal, {
@@ -207,4 +142,29 @@ export const PhotoAlbumWindow = ({ onClose, onMinimize, isMinimized, handleMaxim
       onClose: () => setSelectedPhoto(null)
     })
   ]);
+};
+
+// Main PhotoAlbumWindow component using the WindowFrame
+export const PhotoAlbumWindow = ({ onClose, onMinimize, isMinimized }) => {
+  // Custom theme for photo album (optional)
+  const photoAlbumTheme = {
+    titleBarBg: 'bg-blue-50',
+    closeButton: 'bg-red-500 hover:bg-red-600',
+    minimizeButton: 'bg-yellow-500 hover:bg-yellow-600',
+    maximizeButton: 'bg-green-500 hover:bg-green-600',
+    windowBorder: 'border-blue-200'
+  };
+
+  return e(WindowFrame, {
+    title: 'Photo Album',
+    initialPosition: { x: 200, y: 50 },
+    initialSize: { width: 800, height: 500 },
+    minSize: { width: 400, height: 300 },
+    onClose,
+    onMinimize,
+    isMinimized,
+    theme: photoAlbumTheme
+  }, 
+    e(PhotoAlbumContent)
+  );
 };
