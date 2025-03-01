@@ -13,6 +13,8 @@ import { NotesIcon } from './icons/NotesIcon.js';
 import { PhotoIcon } from './icons/PhotoIcon.js';
 import { LookoutIcon } from './icons/LookoutIcon.js';
 import { BrowserIcon } from './icons/BrowserIcon.js';
+import { MediaPlayerWindow } from './components/MediaPlayerWindow.js';
+import { MusicIcon } from './icons/MusicIcon.js';
 
 // Enhanced DockIcon component
 const DockIcon = ({ icon: Icon, label, isOpen, isMinimized, onClick, customClass = '' }) => {
@@ -43,7 +45,8 @@ const useWindowManager = () => {
     notes: { isOpen: false, isMinimized: false },
     photoAlbum: { isOpen: false, isMinimized: false },
     lookout: { isOpen: true, isMinimized: false },
-    browser: { isOpen: false, isMinimized: false }
+    browser: { isOpen: false, isMinimized: false },
+    mediaPlayer: { isOpen: false, isMinimized: false }
   });
   
   const createWindowStateHelpers = (windowKey) => ({
@@ -85,7 +88,8 @@ const useWindowManager = () => {
     notesHelpers: createWindowStateHelpers('notes'),
     photoAlbumHelpers: createWindowStateHelpers('photoAlbum'),
     lookoutHelpers: createWindowStateHelpers('lookout'),
-    browserHelpers: createWindowStateHelpers('browser')
+    browserHelpers: createWindowStateHelpers('browser'),
+    mediaPlayerHelpers: createWindowStateHelpers('mediaPlayer')
   };
 };
 
@@ -96,11 +100,12 @@ const DesktopInterface = () => {
     notesHelpers, 
     photoAlbumHelpers, 
     lookoutHelpers,
-    browserHelpers
+    browserHelpers,
+    mediaPlayerHelpers
   } = useWindowManager();
   
   // NEW: Keep track of window order for rendering
-  const [windowOrder, setWindowOrder] = useState(['message', 'notes', 'photoAlbum', 'lookout', 'browser']);
+  const [windowOrder, setWindowOrder] = useState(['message', 'notes', 'photoAlbum', 'lookout', 'browser', 'mediaPlayer']);
   
   // NEW: Function to bring window to front by changing DOM order
   const bringToFront = (windowKey) => {
@@ -190,8 +195,21 @@ const DesktopInterface = () => {
             );
           }
           break;
-      }
-    });
+          case 'mediaPlayer':
+            if (mediaPlayerHelpers.getState().isOpen) {
+              windowComponents.push(
+                e(MediaPlayerWindow, {
+                  key: 'mediaplayer-window',
+                  onClose: mediaPlayerHelpers.close,
+                  onMinimize: mediaPlayerHelpers.minimize,
+                  isMinimized: mediaPlayerHelpers.getState().isMinimized,
+                  onActivate: () => bringToFront('mediaPlayer')
+                })
+              );
+            }
+          break;
+        }
+      });
     
     return windowComponents;
   };
@@ -288,7 +306,22 @@ const DesktopInterface = () => {
         e('span', {
           className: 'mt-1 text-xs text-center text-white group-hover:text-gray-200 bg-black bg-opacity-40 px-2 py-1 rounded'
         }, 'Browser')
-      ])
+      ]),
+      e('div', {
+        key: 'mediaplayer-icon',
+        className: 'flex flex-col items-center w-20 group cursor-pointer',
+        onClick: () => {
+          mediaPlayerHelpers.open();
+          bringToFront('mediaPlayer');
+        }
+      }, [
+        e('div', {
+          className: 'w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center'
+        }, e(MusicIcon)),
+        e('span', {
+          className: 'mt-1 text-xs text-center text-white group-hover:text-gray-200 bg-black bg-opacity-40 px-2 py-1 rounded'
+        }, 'Media')
+      ]),
     ]),
 
     // Windows - render in correct order for stacking
@@ -390,6 +423,24 @@ const DesktopInterface = () => {
             } else {
               browserHelpers.open();
               bringToFront('browser');
+            }
+          }
+        }),
+        e(DockIcon, {
+          key: 'dock-mediaplayer',
+          icon: MusicIcon,
+          label: 'Media Player',
+          isOpen: mediaPlayerHelpers.getState().isOpen,
+          isMinimized: mediaPlayerHelpers.getState().isMinimized,
+          onClick: () => {
+            if (mediaPlayerHelpers.getState().isMinimized) {
+              mediaPlayerHelpers.restore();
+              bringToFront('mediaPlayer');
+            } else if (mediaPlayerHelpers.getState().isOpen) {
+              bringToFront('mediaPlayer');
+            } else {
+              mediaPlayerHelpers.open();
+              bringToFront('mediaPlayer');
             }
           }
         })
