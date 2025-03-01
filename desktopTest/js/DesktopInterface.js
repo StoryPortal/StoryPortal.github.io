@@ -7,10 +7,12 @@ import { MessageWindow } from './components/MessageWindow.js';
 import { NotesWindow } from './components/NotesWindow.js';
 import { PhotoAlbumWindow } from './components/PhotoAlbumWindow.js';
 import { LookoutWindow } from './components/LookoutWindow.js';
+import { BrowserWindow } from './components/BrowserWindow.js';
 import { MessageIcon } from './icons/MessageIcon.js';
 import { NotesIcon } from './icons/NotesIcon.js';
 import { PhotoIcon } from './icons/PhotoIcon.js';
 import { LookoutIcon } from './icons/LookoutIcon.js';
+import { BrowserIcon } from './icons/BrowserIcon.js';
 
 // Enhanced DockIcon component
 const DockIcon = ({ icon: Icon, label, isOpen, isMinimized, onClick, customClass = '' }) => {
@@ -40,7 +42,8 @@ const useWindowManager = () => {
     message: { isOpen: true, isMinimized: false },
     notes: { isOpen: false, isMinimized: false },
     photoAlbum: { isOpen: false, isMinimized: false },
-    lookout: { isOpen: true, isMinimized: false }
+    lookout: { isOpen: true, isMinimized: false },
+    browser: { isOpen: false, isMinimized: false }
   });
   
   const createWindowStateHelpers = (windowKey) => ({
@@ -81,7 +84,8 @@ const useWindowManager = () => {
     messageHelpers: createWindowStateHelpers('message'),
     notesHelpers: createWindowStateHelpers('notes'),
     photoAlbumHelpers: createWindowStateHelpers('photoAlbum'),
-    lookoutHelpers: createWindowStateHelpers('lookout')
+    lookoutHelpers: createWindowStateHelpers('lookout'),
+    browserHelpers: createWindowStateHelpers('browser')
   };
 };
 
@@ -91,11 +95,12 @@ const DesktopInterface = () => {
     messageHelpers, 
     notesHelpers, 
     photoAlbumHelpers, 
-    lookoutHelpers 
+    lookoutHelpers,
+    browserHelpers
   } = useWindowManager();
   
   // NEW: Keep track of window order for rendering
-  const [windowOrder, setWindowOrder] = useState(['message', 'notes', 'photoAlbum', 'lookout']);
+  const [windowOrder, setWindowOrder] = useState(['message', 'notes', 'photoAlbum', 'lookout', 'browser']);
   
   // NEW: Function to bring window to front by changing DOM order
   const bringToFront = (windowKey) => {
@@ -173,6 +178,18 @@ const DesktopInterface = () => {
             );
           }
           break;
+        case 'browser':
+          if (browserHelpers.getState().isOpen) {
+            windowComponents.push(
+              e(BrowserWindow, {
+                key: 'browser-window',
+                onClose: browserHelpers.close,
+                onMinimize: browserHelpers.minimize,
+                isMinimized: browserHelpers.getState().isMinimized
+              })
+            );
+          }
+          break;
       }
     });
     
@@ -187,7 +204,6 @@ const DesktopInterface = () => {
       backgroundPosition: 'center'
     }
   }, [
-    // Desktop Icons
     // Desktop Icons
     e('div', {
       key: 'icons',
@@ -241,7 +257,7 @@ const DesktopInterface = () => {
           className: 'mt-1 text-xs text-center text-white group-hover:text-gray-200 bg-black bg-opacity-40 px-2 py-1 rounded'
         }, 'Photos')
       ]),
-      // Lookout Icon (Added comma before this)
+      // Lookout Icon
       e('div', {
         key: 'lookout-icon',
         className: 'flex flex-col items-center w-20 group cursor-pointer',
@@ -256,9 +272,24 @@ const DesktopInterface = () => {
         e('span', {
           className: 'mt-1 text-xs text-center text-white group-hover:text-gray-200 bg-black bg-opacity-40 px-2 py-1 rounded'
         }, 'Lookout')
+      ]),
+      // Browser Icon
+      e('div', {
+        key: 'browser-icon',
+        className: 'flex flex-col items-center w-20 group cursor-pointer',
+        onClick: () => {
+          browserHelpers.open();
+          bringToFront('browser');
+        }
+      }, [
+        e('div', {
+          className: 'w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center'
+        }, e(BrowserIcon)),
+        e('span', {
+          className: 'mt-1 text-xs text-center text-white group-hover:text-gray-200 bg-black bg-opacity-40 px-2 py-1 rounded'
+        }, 'Browser')
       ])
     ]),
-    
 
     // Windows - render in correct order for stacking
     ...renderWindows(),
@@ -341,6 +372,24 @@ const DesktopInterface = () => {
             } else {
               lookoutHelpers.open();
               bringToFront('lookout');
+            }
+          }
+        }),
+        e(DockIcon, {
+          key: 'dock-browser',
+          icon: BrowserIcon,
+          label: 'Browser',
+          isOpen: browserHelpers.getState().isOpen,
+          isMinimized: browserHelpers.getState().isMinimized,
+          onClick: () => {
+            if (browserHelpers.getState().isMinimized) {
+              browserHelpers.restore();
+              bringToFront('browser');
+            } else if (browserHelpers.getState().isOpen) {
+              bringToFront('browser');
+            } else {
+              browserHelpers.open();
+              bringToFront('browser');
             }
           }
         })
