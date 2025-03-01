@@ -16,7 +16,7 @@ const initialConversations = [
         id: 1, 
         sender: 'Naomi Rosalyn', 
         content: `Hello there! I am getting the farmhouse rooms sorted for our retreat this weekend.
-         I'm giving you the special cupola room - great for stargazing. 
+         I'm giving you the special cupola room - great for star gazing. 
          Also, how did things go at the doctor? Sending good thoughts your way!`, 
         time: '8:30 PM' 
       },
