@@ -25,6 +25,21 @@ const initialConversations = [
         sender: 'Naomi Rosalyn', 
         content: ':-)', 
         time: '8:31 PM' 
+      },
+      { 
+        id: 3, 
+        sender: 'You', 
+        content: `Woof. Don't know what to say. It's the same every time. Doctor says blood work looks fine. I'm too stressed.
+        Am I exercising and sleeping? Anyways, I booked an appointment with another doctor to get a second (more like 6th opinion).
+        Also - I'm so excited for this weekend! Thanks again for hosting us!! ⛷️🌲🐓`, 
+        time: '9:00 PM' 
+      }, 
+            { 
+        id: 4, 
+        sender: 'You', 
+        content: `Omg I so understand and support you. You've got to take health matters into your own hands sometimes. 
+        I'm excited too. Meet me and Rob at the studio at 7 to head over. Ta ta.`, 
+        time: '9:48 PM' 
       }
     ]
   },
