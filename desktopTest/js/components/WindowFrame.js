@@ -224,11 +224,11 @@ export const WindowFrame = ({
       }, [
         e('div', {
           key: 'buttons',
-          className: 'flex space-x-2 window-controls'
+          className: 'flex space-x-3 window-controls' // Increased space between buttons
         }, [
           e('button', {
             key: 'close',
-            className: `w-3 h-3 rounded-full ${theme.closeButton} transition-colors`,
+            className: `w-5 h-5 p-2 rounded-full ${theme.closeButton} transition-colors flex items-center justify-center`, // Increased size and added padding
             onClick: (e) => {
               e.stopPropagation();
               onClose();
@@ -237,7 +237,7 @@ export const WindowFrame = ({
           }),
           e('button', {
             key: 'minimize',
-            className: `w-3 h-3 rounded-full ${theme.minimizeButton} transition-colors`,
+            className: `w-5 h-5 p-2 rounded-full ${theme.minimizeButton} transition-colors flex items-center justify-center`, // Increased size and added padding
             onClick: (e) => {
               e.stopPropagation();
               onMinimize();
@@ -246,7 +246,7 @@ export const WindowFrame = ({
           }),
           e('button', {
             key: 'maximize',
-            className: `w-3 h-3 rounded-full ${theme.maximizeButton} transition-colors`,
+            className: `w-5 h-5 p-2 rounded-full ${theme.maximizeButton} transition-colors flex items-center justify-center`, // Increased size and added padding
             onClick: (e) => {
               e.stopPropagation();
               handleMaximize();
