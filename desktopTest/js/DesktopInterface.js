@@ -8,12 +8,14 @@ import { NotesWindow } from './components/NotesWindow.js';
 import { PhotoAlbumWindow } from './components/PhotoAlbumWindow.js';
 import { LookoutWindow } from './components/LookoutWindow.js';
 import { BrowserWindow } from './components/BrowserWindow.js';
+import { PDFViewerWindow } from './components/PDFViewerWindow.js';
+import { MediaPlayerWindow } from './components/MediaPlayerWindow.js';
 import { MessageIcon } from './icons/MessageIcon.js';
 import { NotesIcon } from './icons/NotesIcon.js';
 import { PhotoIcon } from './icons/PhotoIcon.js';
 import { LookoutIcon } from './icons/LookoutIcon.js';
 import { BrowserIcon } from './icons/BrowserIcon.js';
-import { MediaPlayerWindow } from './components/MediaPlayerWindow.js';
+import { PDFIcon } from './icons/PDFIcon.js';
 import { MusicIcon } from './icons/MusicIcon.js';
 
 // Enhanced DockIcon component
@@ -46,7 +48,8 @@ const useWindowManager = () => {
     photoAlbum: { isOpen: false, isMinimized: false },
     lookout: { isOpen: true, isMinimized: false },
     browser: { isOpen: false, isMinimized: false },
-    mediaPlayer: { isOpen: false, isMinimized: false }
+    mediaPlayer: { isOpen: false, isMinimized: false },
+    pdfViewer: { isOpen: false, isMinimized: false }
   });
   
   const createWindowStateHelpers = (windowKey) => ({
@@ -89,7 +92,8 @@ const useWindowManager = () => {
     photoAlbumHelpers: createWindowStateHelpers('photoAlbum'),
     lookoutHelpers: createWindowStateHelpers('lookout'),
     browserHelpers: createWindowStateHelpers('browser'),
-    mediaPlayerHelpers: createWindowStateHelpers('mediaPlayer')
+    mediaPlayerHelpers: createWindowStateHelpers('mediaPlayer'),
+    pdfViewerHelpers: createWindowStateHelpers('pdfViewer')
   };
 };
 
@@ -101,11 +105,15 @@ const DesktopInterface = () => {
     photoAlbumHelpers, 
     lookoutHelpers,
     browserHelpers,
-    mediaPlayerHelpers
+    mediaPlayerHelpers,
+    pdfViewerHelpers
   } = useWindowManager();
   
   // NEW: Keep track of window order for rendering
-  const [windowOrder, setWindowOrder] = useState(['message', 'notes', 'photoAlbum', 'lookout', 'browser', 'mediaPlayer']);
+  const [windowOrder, setWindowOrder] = useState([
+    'message', 'notes', 'photoAlbum', 'lookout', 
+    'browser', 'mediaPlayer', 'pdfViewer'
+  ]);
   
   // NEW: Function to bring window to front by changing DOM order
   const bringToFront = (windowKey) => {
@@ -190,23 +198,37 @@ const DesktopInterface = () => {
                 key: 'browser-window',
                 onClose: browserHelpers.close,
                 onMinimize: browserHelpers.minimize,
-                isMinimized: browserHelpers.getState().isMinimized
+                isMinimized: browserHelpers.getState().isMinimized,
+                onActivate: () => bringToFront('browser')
               })
             );
           }
           break;
-          case 'mediaPlayer':
-            if (mediaPlayerHelpers.getState().isOpen) {
-              windowComponents.push(
-                e(MediaPlayerWindow, {
-                  key: 'mediaplayer-window',
-                  onClose: mediaPlayerHelpers.close,
-                  onMinimize: mediaPlayerHelpers.minimize,
-                  isMinimized: mediaPlayerHelpers.getState().isMinimized,
-                  onActivate: () => bringToFront('mediaPlayer')
-                })
-              );
-            }
+        case 'mediaPlayer':
+          if (mediaPlayerHelpers.getState().isOpen) {
+            windowComponents.push(
+              e(MediaPlayerWindow, {
+                key: 'mediaplayer-window',
+                onClose: mediaPlayerHelpers.close,
+                onMinimize: mediaPlayerHelpers.minimize,
+                isMinimized: mediaPlayerHelpers.getState().isMinimized,
+                onActivate: () => bringToFront('mediaPlayer')
+              })
+            );
+          }
+          break;
+        case 'pdfViewer':
+          if (pdfViewerHelpers.getState().isOpen) {
+            windowComponents.push(
+              e(PDFViewerWindow, {
+                key: 'pdfviewer-window',
+                onClose: pdfViewerHelpers.close,
+                onMinimize: pdfViewerHelpers.minimize,
+                isMinimized: pdfViewerHelpers.getState().isMinimized,
+                onActivate: () => bringToFront('pdfViewer')
+              })
+            );
+          }
           break;
         }
       });
@@ -307,6 +329,7 @@ const DesktopInterface = () => {
           className: 'mt-1 text-xs text-center text-white group-hover:text-gray-200 bg-black bg-opacity-40 px-2 py-1 rounded'
         }, 'Browser')
       ]),
+      // Media Player Icon
       e('div', {
         key: 'mediaplayer-icon',
         className: 'flex flex-col items-center w-20 group cursor-pointer',
@@ -321,6 +344,22 @@ const DesktopInterface = () => {
         e('span', {
           className: 'mt-1 text-xs text-center text-white group-hover:text-gray-200 bg-black bg-opacity-40 px-2 py-1 rounded'
         }, 'Media')
+      ]),
+      // PDF Viewer Icon
+      e('div', {
+        key: 'pdfviewer-icon',
+        className: 'flex flex-col items-center w-20 group cursor-pointer',
+        onClick: () => {
+          pdfViewerHelpers.open();
+          bringToFront('pdfViewer');
+        }
+      }, [
+        e('div', {
+          className: 'w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center'
+        }, e(PDFIcon)),
+        e('span', {
+          className: 'mt-1 text-xs text-center text-white group-hover:text-gray-200 bg-black bg-opacity-40 px-2 py-1 rounded'
+        }, 'Documents')
       ]),
     ]),
 
@@ -441,6 +480,24 @@ const DesktopInterface = () => {
             } else {
               mediaPlayerHelpers.open();
               bringToFront('mediaPlayer');
+            }
+          }
+        }),
+        e(DockIcon, {
+          key: 'dock-pdfviewer',
+          icon: PDFIcon,
+          label: 'Documents',
+          isOpen: pdfViewerHelpers.getState().isOpen,
+          isMinimized: pdfViewerHelpers.getState().isMinimized,
+          onClick: () => {
+            if (pdfViewerHelpers.getState().isMinimized) {
+              pdfViewerHelpers.restore();
+              bringToFront('pdfViewer');
+            } else if (pdfViewerHelpers.getState().isOpen) {
+              bringToFront('pdfViewer');
+            } else {
+              pdfViewerHelpers.open();
+              bringToFront('pdfViewer');
             }
           }
         })
