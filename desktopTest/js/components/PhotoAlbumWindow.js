@@ -7,19 +7,35 @@ import { PhotoIcon } from '../icons/PhotoIcon.js';
 
 // Mock data - replace with your story's photos
 const albums = [
-  { id: 'nature', name: 'nature', count: 1 },
-  { id: 'unexplainable phenomenon', name: 'unexplainable phenomenon', count: 2 },
-  { id: 'work', name: 'work', count: 2 },
+  { id: 'unexplainable phenomenon', name: 'unexplainable phenomenon', count: 4 },
+  { id: 'retreat', name: 'retreat', count: 13 },
+  { id: 'summer', name: 'summer', count: 4 },
   //{ id: 'all', name: 'All Photos', count: 6 }
 ];
 
 const photos = [
-  { id: 1, album: 'nature', src: './Pictures/bottomsUpForest.jpg', caption: 'tree council judge and jury', date: '1995-04-01' },
-  //{ id: 2, album: 'nature', src: '/api/placeholder/400/300', caption: 'Birthday Party', date: '2024-02-01' },
+  { id: 1, album: 'unexplainable phenomenon', src: './Pictures/richarscarry.jpg', caption: '', date: '2024-10-27' },
+  { id: 2, album : 'unexplainable phenomenon', src: './Pictures/bedraggled.jpg', caption: '', date: '2024-09-25' },
   { id: 3, album: 'unexplainable phenomenon', src: './Pictures/redOrbGetTogether.jpg', caption: 'femininomenon', date: '2022-01-01' },
-  { id: 4, album: 'unexplainable phenomenon', src: './Pictures/spirl.jpg', caption: 'the cosmos watches', date: '2022-11-11' },
-  { id: 5, album: 'work', src: './Pictures/nooo.gif', caption: 'real', date: '1979-02-20' },
-  { id: 6, album: 'work', src: './Pictures/strongBrain.png', caption: 'elon must die', date: '2000-05-21' }
+  { id: 4, album: 'unexplainable phenomenon', src: './Pictures/angel.jpg', caption: '', date: '2022-01-01' },
+  { id: 5, album: 'retreat', src: './Pictures/snowy_day.jpg', caption: '', date: '2024-01-11' },
+  { id: 6, album: 'retreat', src: './Pictures/snowy_walk.jpg', caption: '', date: '2024-01-11' }, 
+  { id: 7, album: 'retreat', src: './Pictures/steak_dinner.jpg', caption: '', date: '2022-01-11' },
+  { id: 8, album: 'retreat', src: './Pictures/cremebrulee.jpg', caption: '', date: '2024-01-11' },
+  { id: 9, album: 'retreat', src: './Pictures/bird_snow_tracks2.jpg', caption: '', date: '2024-01-12' },
+  { id: 10, album: 'retreat', src: './Pictures/bird_snow_zoom.jpg', caption: '', date: '2024-01-12' },
+  { id: 11, album: 'retreat', src: './Pictures/death_mushrooms.jpg', caption: '', date: '2024-01-12' },
+  { id: 12, album: 'retreat', src: './Pictures/ruth_asawa.jpg', caption: '', date: '2024-01-12' },
+  { id: 13, album: 'retreat', src: './Pictures/milo.jpg', caption: '', date: '2024-01-12' },
+  { id: 14, album: 'retreat', src: './Pictures/coffee.jpg', caption: '', date: '2024-01-12' },
+  { id: 15, album: 'retreat', src: './Pictures/pork_roast.jpg', caption: '', date: '2024-01-12' },
+  { id: 16, album: 'retreat', src: './Pictures/red_dessert.jpg', caption: '', date: '2024-01-12' },
+  { id: 17, album: 'retreat', src: './Pictures/snowboard.jpg', caption: '', date: '2024-01-12' },
+  { id: 17, album: 'summer', src: './Pictures/shadowpeople.jpg', caption: '', date: '2024-07-24' },
+  { id: 18, album: 'summer', src: './Pictures/myaloha.jpg', caption: '', date: '2024-08-01' },
+  { id: 19, album: 'summer', src: './Pictures/birdsintree.jpg', caption: '', date: '2024-08-02' },
+  { id: 20, album: 'summer', src: './Pictures/mystery_guy.jpg', caption: '', date: '2024-09-01' }
+
 ];
 
 const PhotoModal = ({ photo, onClose }) => {
