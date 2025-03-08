@@ -10,7 +10,7 @@ const initialConversations = [
     id: 1,
     name: 'Naomi Rosalyn',
     participants: ['Naomi Rosalyn'],
-    lastMessage: ':-)',
+    lastMessage: 'Ta ta.',
     messages: [
       { 
         id: 1, 
@@ -34,12 +34,18 @@ const initialConversations = [
         Also - I'm so excited for this weekend! Thanks again for hosting us!! ⛷️🌲🐓`, 
         time: '9:00 PM' 
       }, 
-            { 
+      { 
         id: 4, 
-        sender: 'You', 
+        sender: 'Naomi Rosalyn', 
         content: `Omg I so understand and support you. You've got to take health matters into your own hands sometimes. 
-        I'm excited too. Meet me and Rob at the studio at 7 to head over. Ta ta.`, 
+        I'm excited too. Meet me and Rob at the studio at 7 to head over.`, 
         time: '9:48 PM' 
+      },
+      { 
+        id: 5, 
+        sender: 'Naomi Rosalyn', 
+        content: `Ta ta.`, 
+        time: '9:49 PM' 
       }
     ]
   },
