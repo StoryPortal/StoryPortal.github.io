@@ -71,39 +71,27 @@ const soundcloudPlaylists = [
     tracks: [
       {
         id: 'sd-1',
+        title: 'Stardew Valley OST',
+        artist: 'The_Professa',
+        url: 'https://soundcloud.com/user-153780178/sets/stardew-valley-ost'
+      },
+      {
+        id: 'sd-2',
         title: 'I Sing Myself 2 Sleep',
         artist: 'Elijah Scarlett',
         url: 'https://soundcloud.com/elijahscarlett/i-sing-myself-2-sleep'
       },
       {
-        id: 'sd-2',
+        id: 'sd-3',
         title: 'Okay But This Is The Last Time',
         artist: 'Mt. Marcy',
         url: 'https://soundcloud.com/mt-marcy/okay-but-this-is-the-last-time'
       },
       {
-        id: 'sd-3',
+        id: 'sd-4',
         title: 'Seasons Beattape',
         artist: 'Wun Two',
         url: 'https://soundcloud.com/wun-two/seasons-beattape'
-      }
-    ]
-  },
-  {
-    id: 'vertical-vibrations',
-    name: 'Vertical Vibrations',
-    tracks: [
-      {
-        id: 'vv-1',
-        title: 'Ex Machina',
-        artist: 'Icekream',
-        url: 'https://soundcloud.com/icekream/ex-machina'
-      },
-      {
-        id: 'vv-2',
-        title: 'Aliens',
-        artist: 'Just A Gent',
-        url: 'https://soundcloud.com/just-a-gent/aliens'
       }
     ]
   },
@@ -119,12 +107,18 @@ const soundcloudPlaylists = [
       },
       {
         id: 'ut-2',
+        title: 'Time is the Enemy',
+        artist: 'Quantic',
+        url: 'https://soundcloud.com/quantic/time-is-the-enemy'
+      },
+      {
+        id: 'ut-3',
         title: 'Krystyna',
         artist: 'Ptaki',
         url: 'https://soundcloud.com/polishcutouts/ptaki-krystyna'
       },
       {
-        id: 'ut-3',
+        id: 'ut-4',
         title: 'Beatroots Meets Brujos Bowl',
         artist: 'Brujos Bowl',
         url: 'https://soundcloud.com/brujosbowl/beatroots-meets-brujos-bowl'
