@@ -18,13 +18,15 @@ const initialConversations = [
         content: `Hello there! I am getting the farmhouse rooms sorted for our retreat this weekend.
          I'm giving you the special cupola room - great for star gazing. 
          Also, how did things go at the doctor? Sending good thoughts your way!`, 
-        time: 'Jan 8, 2024, 8:30 PM' 
+        time: 'Jan 8, 2024, 8:30 PM',
+        timestamp: '2024-01-08T20:30:00'
       },
       { 
         id: 2, 
         sender: 'Naomi Rosalyn', 
         content: ':-)', 
-        time: '8:31 PM' 
+        time: '8:31 PM',
+        timestamp: '2024-01-08T20:31:00'
       },
       { 
         id: 3, 
@@ -32,20 +34,23 @@ const initialConversations = [
         content: `Woof. Don't know what to say. It's the same every time. Doctor says blood work looks fine. I'm too stressed.
         Am I exercising and sleeping? Anyways, I booked an appointment with another doctor to get a second (more like 6th opinion).
         Also - I'm so excited for this weekend! Thanks again for hosting us!! ⛷️🌲🐓`, 
-        time: '9:00 PM' 
+        time: '9:00 PM',
+        timestamp: '2024-01-08T21:00:00'
       }, 
       { 
         id: 4, 
         sender: 'Naomi Rosalyn', 
         content: `Omg I so understand and support you. You've got to take health matters into your own hands sometimes. 
         I'm excited too. Meet me and Rob at the studio at 7 to head over.`, 
-        time: '9:48 PM' 
+        time: '9:48 PM',
+        timestamp: '2024-01-08T21:48:00'
       },
       { 
         id: 5, 
         sender: 'Naomi Rosalyn', 
         content: `Ta ta.`, 
-        time: '9:49 PM' 
+        time: '9:49 PM',
+        timestamp: '2024-01-08T21:49:00'
       }
     ]
   },
@@ -61,47 +66,52 @@ const initialConversations = [
         content: `Doctor said it's probably just stress. Psychosomatic? 
         Know anything about that? I really really think something is wrong.
         I'm gonna ask for another blood test. Or try someone else. Can you order something for me?`, 
-        time: 'Jan 8 2024, 6:00 PM' 
+        time: 'Jan 8 2024, 6:00 PM',
+        timestamp: '2024-01-08T18:00:00'
       },
       { 
         id: 2, 
         sender: 'Rob Blanchett', 
         content: `not my expertise but u can send me ur recrds for 2nd opinion.`, 
-        time: '6:10 PM' 
+        time: '6:10 PM',
+        timestamp: '2024-01-08T18:10:00'
       },
       { 
         id: 3, 
         sender: 'Rob Blanchett', 
         content: `i saw a crazy doc about psychosomatic disorder...
         patients come in all the time for stress stuff.`, 
-        time: '6:10 PM' 
+        time: '6:10 PM',
+        timestamp: '2024-01-08T18:10:30'
       },
       { 
         id: 4, 
         sender: 'Rob Blanchett', 
         content: `ur 2 young to be so stressed. 
         take soem time off work. get off the internet.`, 
-        time: '6:10 PM' 
+        time: '6:10 PM',
+        timestamp: '2024-01-08T18:11:00'
       },
       {
-      id: 4, 
-      sender: 'You', 
-      content: `We're literally the same age....and you're the most stressed out person I know`, 
-      time: '6:20 PM' 
+        id: 5, 
+        sender: 'You', 
+        content: `We're literally the same age....and you're the most stressed out person I know`, 
+        time: '6:20 PM',
+        timestamp: '2024-01-08T18:20:00'
       },
       { 
-        id: 5, 
+        id: 6, 
         sender: 'Rob Blanchett', 
         content: `im a doctor. just send me ur recs. im rushing 2 work. will respond when i can`, 
-        time: '6:32 PM' 
+        time: '6:32 PM',
+        timestamp: '2024-01-08T18:32:00'
       }
-      
     ]
   },
   {
     id: 3,
     name: 'Banana Bonanza Bros',
-    participants: ['Rob', 'Naomi Rosalyn'],
+    participants: ['Rob Blanchett', 'Naomi Rosalyn'],
     lastMessage: `Please no Doritos. And I'm good on snacks. I don't eat after 4pm on weekdays anyways. See you in a bit!`,
     messages: [
       { 
@@ -116,20 +126,23 @@ const initialConversations = [
         taken a vacation in years. I really want to spend more quality time with 
         y'all and just get away from liiifee and chill. For the rest of my life 
         haha. I have so much to tell you.`, 
-        time: 'Jan 7 2024, 4:03 AM' 
+        time: 'Jan 7 2024, 4:03 AM',
+        timestamp: '2024-01-07T04:03:00'
       },
       { 
         id: 2, 
         sender: 'You', 
         content: `(ok I reread my texts and I'm panicking because I sound crazy.
          I swear I'm not drunk. Or on any drugs. Totally sober - unless you count Diet Coke.).`, 
-        time: '4:10 AM' 
+        time: '4:10 AM',
+        timestamp: '2024-01-07T04:10:00'
       },
       { 
         id: 3, 
         sender: 'You', 
         content: `A few ideas for our getaway trip....check your email.`, 
-        time: '4:11 AM' 
+        time: '4:11 AM',
+        timestamp: '2024-01-07T04:11:00'
       },
       { 
         id: 4, 
@@ -138,31 +151,36 @@ const initialConversations = [
          I think it's best if we talk tomorrow in person about this.
           Are you free for coffee or lunch to discuss? 
           Zomg let's go to Sea Wolf… I would kill for a savory croissant right now. `, 
-        time: '4:15 AM' 
+        time: '4:15 AM',
+        timestamp: '2024-01-07T04:15:00'
       },
       { 
         id: 5, 
-        sender: 'Rob', 
+        sender: 'Rob Blanchett', 
         content: 'jst got off work. im fred.', 
-        time: '7:07 AM' 
+        time: '7:07 AM',
+        timestamp: '2024-01-07T07:07:00'
       },
       { 
         id: 6, 
-        sender: 'Rob', 
+        sender: 'Rob Blanchett', 
         content: 'fried.', 
-        time: '7:07 AM' 
+        time: '7:07 AM',
+        timestamp: '2024-01-07T07:07:30'
       },
       { 
         id: 7, 
-        sender: 'Rob', 
+        sender: 'Rob Blanchett', 
         content: 'wtf????? ', 
-        time: '7:30 AM' 
+        time: '7:30 AM',
+        timestamp: '2024-01-07T07:30:00'
       },
       { 
         id: 8, 
-        sender: 'Rob', 
+        sender: 'Rob Blanchett', 
         content: `lol i'm down `, 
-        time: '7:31 AM' 
+        time: '7:31 AM',
+        timestamp: '2024-01-07T07:31:00'
       },
       { 
         id: 9, 
@@ -174,81 +192,172 @@ const initialConversations = [
         Oh well, their loss is our gain! 
         On a serious note...Alex are you okay??
         I'm in the studio all day, but why don't we meet grab coffee nearby at 12 and we can migrate to the studio if we need some privacy to chat. `, 
-        time: '9:00 AM' 
+        time: '9:00 AM',
+        timestamp: '2024-01-07T09:00:00'
       },
       { 
         id: 10, 
         sender: 'You', 
         content: `Ok!!! See you at 12.   ʕ·͡ᴥ·ʔ`, 
-        time: '9:01 AM' 
+        time: '9:01 AM',
+        timestamp: '2024-01-07T09:01:00'
       },
       { 
         id: 11, 
         sender: 'Rob Blanchett', 
         content: `sorry was sleeping and just saw this. still sleeping but will phone in.`, 
-        time: '11:25 AM' 
+        time: '11:25 AM',
+        timestamp: '2024-01-07T11:25:00'
       },
       { 
         id: 12, 
         sender: 'Naomi Rosalyn', 
         content: `I'm heading over to the studio now. Any snack requests for the road?`, 
-        time: 'Jan 10, 2024, 6:33 PM' 
+        time: 'Jan 10, 2024, 6:33 PM',
+        timestamp: '2024-01-10T18:33:00'
       }, 
       { 
         id: 13, 
         sender: 'Rob Blanchett', 
         content: `Dr. Pepper`, 
-        time: '6:34 PM' 
+        time: '6:34 PM',
+        timestamp: '2024-01-10T18:34:00'
       },
       { 
         id: 14, 
         sender: 'Rob Blanchett', 
         content: `Cheetos. Purple Doritos. Apple chips.`, 
-        time: '6:34 PM' 
+        time: '6:34 PM',
+        timestamp: '2024-01-10T18:34:30'
       },
       { 
         id: 15, 
         sender: 'Rob Blanchett', 
         content: `Pedialyte. Sun glasses.`, 
-        time: '6:34 PM' 
+        time: '6:34 PM',
+        timestamp: '2024-01-10T18:34:45'
       },
       { 
         id: 16, 
         sender: 'You', 
         content: `Please no Doritos. And I'm good on snacks. I don't eat after 4pm on weekdays anyways. See you in a bit!`, 
-        time: '6:45 PM' 
+        time: '6:45 PM',
+        timestamp: '2024-01-10T18:45:00'
       }
     ]
   }
 ];
 
+// Format date for timestamp dividers
+const formatMessageDate = (timestamp) => {
+  const date = new Date(timestamp);
+  const now = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  
+  // Reset time part for comparison
+  const dateDay = new Date(date);
+  dateDay.setHours(0, 0, 0, 0);
+  
+  const nowDay = new Date(now);
+  nowDay.setHours(0, 0, 0, 0);
+  
+  const yesterdayDay = new Date(yesterday);
+  yesterdayDay.setHours(0, 0, 0, 0);
+  
+  // Format time
+  const timeString = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  
+  // Check if date is today, yesterday, or earlier
+  if (dateDay.getTime() === nowDay.getTime()) {
+    return `Today, ${timeString}`;
+  } else if (dateDay.getTime() === yesterdayDay.getTime()) {
+    return `Yesterday, ${timeString}`;
+  } else {
+    // Format full date for older messages
+    return date.toLocaleDateString([], { 
+      weekday: 'short',
+      month: 'short', 
+      day: 'numeric',
+      year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+    }) + `, ${timeString}`;
+  }
+};
+
+// Should a timestamp divider be shown before this message?
+const shouldShowDivider = (messages, index) => {
+  if (index === 0) return true; // Always show timestamp for first message
+  
+  const currentMsg = messages[index];
+  const prevMsg = messages[index - 1];
+  
+  // Get dates from timestamps
+  const currentDate = new Date(currentMsg.timestamp);
+  const prevDate = new Date(prevMsg.timestamp);
+  
+  // Calculate the time difference in minutes
+  const timeDiff = (currentDate - prevDate) / (1000 * 60);
+  
+  // Show divider if messages are more than 30 minutes apart
+  if (timeDiff > 30) return true;
+  
+  // Show divider if the day changed between messages
+  if (currentDate.getDate() !== prevDate.getDate() || 
+      currentDate.getMonth() !== prevDate.getMonth() ||
+      currentDate.getFullYear() !== prevDate.getFullYear()) {
+    return true;
+  }
+  
+  return false;
+};
+
 // Updated Message component to show sender in group chats
-const Message = ({ message, isGroup }) => {
+const Message = ({ message, isGroup, showDivider }) => {
   return e('div', {
-    className: `flex mb-4 ${message.sender === 'You' ? 'justify-end' : 'justify-start'}`
-  },
+    className: `mb-4 ${showDivider ? 'mt-6' : ''}`
+  }, [
+    // Timestamp divider (conditional)
+    showDivider && e('div', {
+      key: 'timestamp-divider',
+      className: 'flex items-center justify-center mb-4'
+    }, 
+      e('div', {
+        className: 'text-gray-500 text-xs px-2 py-1 relative flex items-center w-full'
+      }, [
+        e('div', { key: 'line-left', className: 'flex-grow border-t border-gray-300 mr-3' }),
+        e('span', { key: 'date-text' }, formatMessageDate(message.timestamp)),
+        e('div', { key: 'line-right', className: 'flex-grow border-t border-gray-300 ml-3' })
+      ])
+    ),
+    
+    // Message bubble
     e('div', {
-      className: `max-w-xs rounded-lg p-3 ${
-        message.sender === 'You' 
-          ? 'bg-blue-500 text-white rounded-br-none' 
-          : 'bg-gray-200 text-gray-900 rounded-bl-none'
-      }`
-    }, [
-      // Show sender name only in group chats
-      isGroup && message.sender !== 'You' && e('div', { 
-        className: 'text-xs font-medium mb-1 text-gray-700',
-        key: 'sender'
-      }, message.sender),
-      e('div', { 
-        className: 'text-sm',
-        key: 'content'
-      }, message.content),
-      e('div', { 
-        className: `text-xs mt-1 ${message.sender === 'You' ? 'text-blue-100' : 'text-gray-500'}`,
-        key: 'time'
-      }, message.time)
-    ])
-  );
+      key: 'message-bubble',
+      className: `flex ${message.sender === 'You' ? 'justify-end' : 'justify-start'}`
+    },
+      e('div', {
+        className: `max-w-xs rounded-lg p-3 ${
+          message.sender === 'You' 
+            ? 'bg-blue-500 text-white rounded-br-none' 
+            : 'bg-gray-200 text-gray-900 rounded-bl-none'
+        }`
+      }, [
+        // Show sender name only in group chats
+        isGroup && message.sender !== 'You' && e('div', { 
+          className: 'text-xs font-medium mb-1 text-gray-700',
+          key: 'sender'
+        }, message.sender),
+        e('div', { 
+          className: 'text-sm',
+          key: 'content'
+        }, message.content),
+        e('div', { 
+          className: `text-xs mt-1 ${message.sender === 'You' ? 'text-blue-100' : 'text-gray-500'}`,
+          key: 'time'
+        }, message.time.includes(', ') ? message.time.split(', ')[1] : message.time.includes(',') ? message.time.split(',')[1] : message.time)
+      ])
+    )
+  ]);
 };
 
 // Updated ConversationItem to show participants in group chats
@@ -314,6 +423,9 @@ const MessageContent = ({ isMaximized, windowSize }) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
 
+    const now = new Date();
+    const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
     const updatedConversation = {
       ...selectedConversation,
       messages: [
@@ -322,7 +434,8 @@ const MessageContent = ({ isMaximized, windowSize }) => {
           id: selectedConversation.messages.length + 1,
           sender: 'You',
           content: newMessage,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          time: timeString,
+          timestamp: now.toISOString()
         }
       ],
       lastMessage: newMessage
@@ -360,11 +473,12 @@ const MessageContent = ({ isMaximized, windowSize }) => {
         key: 'messages',
         className: 'flex-1 p-4 overflow-y-auto'
       },
-        selectedConversation.messages.map(message => 
+        selectedConversation.messages.map((message, index) => 
           e(Message, {
             key: message.id,
             message,
-            isGroup: selectedConversation.participants.length > 1
+            isGroup: selectedConversation.participants.length > 1,
+            showDivider: shouldShowDivider(selectedConversation.messages, index)
           })
         )
       ),
