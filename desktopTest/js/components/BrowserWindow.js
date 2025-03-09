@@ -1,26 +1,44 @@
 // js/components/BrowserWindow.js
-const { useState, useRef } = React;
+const { useState, useRef, useEffect } = React;
 const { createElement: e } = React;
 
 import { WindowFrame } from './WindowFrame.js';
 
 // BrowserContent Component - Separated from window frame
 const BrowserContent = ({ isMaximized, windowSize }) => {
-  const [url, setUrl] = useState('https://www.wonder-tonic.com/geocitiesizer/');
-  const [history, setHistory] = useState(['https://www.cheese.com']);
+  const initialUrl = 'https://www.wonder-tonic.com/geocitiesizer/';
+  const [url, setUrl] = useState(initialUrl);
+  const [history, setHistory] = useState([initialUrl]);
   const [historyIndex, setHistoryIndex] = useState(0);
   const [bookmarks, setBookmarks] = useState([
     { id: 2, title: 'Weather', url: 'https://weather.gov' },
     { id: 3, title: 'Sacred Sanguin', url: 'https://en.m.wikipedia.org/wiki/Sanguinaria' },
     { id: 4, title: 'i\'m spooked', url: 'https://www.dreamymonkey.com/art/quantum-entanglement' },
     { id: 5, title: 'What\'s in the box', url: 'https://stardewvalleywiki.com/Mystery_Box' },
+    { id: 6, title: 'Storyportal 1', url: 'https://storyportal.github.io/about_storyportal_1.html'}
   ]);
   const [isAddingBookmark, setIsAddingBookmark] = useState(false);
   const [newBookmarkTitle, setNewBookmarkTitle] = useState('');
   const iframeRef = useRef(null);
 
+  // Effect to update the iframe when URL changes
+  useEffect(() => {
+    if (iframeRef.current) {
+      console.log(`Browser: Setting iframe src to ${url}`);
+      iframeRef.current.src = url;
+    }
+  }, [url]);
+
   // Navigation functions
   const navigateTo = (newUrl) => {
+    // Don't add to history if it's the same URL
+    if (newUrl === url) {
+      console.log("Browser: URL is the same, not navigating");
+      return;
+    }
+    
+    console.log(`Browser: Navigating to ${newUrl}`);
+    
     // Remove any entries after current index if we navigated back
     const newHistory = history.slice(0, historyIndex + 1);
     newHistory.push(newUrl);
@@ -28,19 +46,30 @@ const BrowserContent = ({ isMaximized, windowSize }) => {
     setUrl(newUrl);
     setHistory(newHistory);
     setHistoryIndex(newHistory.length - 1);
+    
+    console.log(`Browser: History is now:`, newHistory);
+    console.log(`Browser: History index is now: ${newHistory.length - 1}`);
   };
 
   const goBack = () => {
     if (historyIndex > 0) {
-      setHistoryIndex(historyIndex - 1);
-      setUrl(history[historyIndex - 1]);
+      const newIndex = historyIndex - 1;
+      console.log(`Browser: Going back to index ${newIndex}: ${history[newIndex]}`);
+      setHistoryIndex(newIndex);
+      setUrl(history[newIndex]);
+    } else {
+      console.log("Browser: Can't go back, at oldest history entry");
     }
   };
 
   const goForward = () => {
     if (historyIndex < history.length - 1) {
-      setHistoryIndex(historyIndex + 1);
-      setUrl(history[historyIndex + 1]);
+      const newIndex = historyIndex + 1;
+      console.log(`Browser: Going forward to index ${newIndex}: ${history[newIndex]}`);
+      setHistoryIndex(newIndex);
+      setUrl(history[newIndex]);
+    } else {
+      console.log("Browser: Can't go forward, at newest history entry");
     }
   };
 
@@ -73,7 +102,10 @@ const BrowserContent = ({ isMaximized, windowSize }) => {
       setUrl(processedUrl);
     }
     
-    navigateTo(processedUrl);
+    // Check if this is actually a navigation to a new URL
+    if (processedUrl !== history[historyIndex]) {
+      navigateTo(processedUrl);
+    }
   };
 
   return e('div', {
@@ -125,7 +157,13 @@ const BrowserContent = ({ isMaximized, windowSize }) => {
       // Refresh button
       e('button', {
         key: 'refresh',
-        onClick: () => navigateTo(url),
+        onClick: () => {
+          // For refresh, we want to reload the current URL without adding to history
+          if (iframeRef.current) {
+            // Reload the iframe content
+            iframeRef.current.src = url;
+          }
+        },
         className: 'p-1 rounded hover:bg-gray-200'
       }, 
         e('svg', {
@@ -234,7 +272,15 @@ const BrowserContent = ({ isMaximized, windowSize }) => {
         src: url,
         className: 'w-full h-full border-none',
         sandbox: 'allow-same-origin allow-scripts allow-forms',
-        title: 'Browser Content'
+        title: 'Browser Content',
+        onLoad: () => {
+          // When the iframe loads, make sure the URL state is in sync
+          // This helps with redirects or final URLs after navigation
+          if (iframeRef.current && iframeRef.current.contentWindow) {
+            // Update if needed, but don't do this in production without security considerations
+            // For the simulation, this is fine
+          }
+        }
       })
     )
   ]);
