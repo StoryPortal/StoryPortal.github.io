@@ -4,12 +4,12 @@ const { createElement: e } = React;
 
 import { WindowFrame } from './WindowFrame.js';
 
-// Email data with folder property
+// Enhanced mock email data with folder property
 const initialEmails = [
   {
     id: 1,
     from: 'sanguisMD@kaiser.com',
-    to: 'APellegrinFalcon@hotmail.com',
+    to: 'you@example.com',
     subject: 'Results',
     body: `Dear Mr. Pell,
 
@@ -21,22 +21,76 @@ Dr. Sanguis, MD
 Hematology  
 Kaiser Hemostatic Center`,
     date: '2025-01-07',
-    folder: 'inbox'
+    folder: 'inbox',
+    isRead: false
   },
   {
-    id: 100,
-    from: 'APellegrinFalcon@hotmail.com',
-    to: 'sanguisMD@kaiser.com',
-    subject: 'Need Help',
-    body: `Dear Dr. Sanguis,
+    id: 2,
+    from: 'notifications@healthcare-portal.com',
+    to: 'you@example.com',
+    subject: 'Your Appointment Reminder',
+    body: `Hello,
 
-I read over the report.  Please indicate what further blood testing we can do
+This is a reminder that you have an appointment scheduled with Dr. Ramsay tomorrow at 2:30 PM.
 
-Thanks,  
-Alex`,
-    date: '2025-01-07',
-    folder: 'sent'
+Please arrive 15 minutes early to complete any required paperwork.
+
+Thank you,
+Healthcare Portal Team`,
+    date: '2025-01-08',
+    folder: 'inbox',
+    isRead: true
   },
+  {
+    id: 3,
+    from: 'research@megacorp.com',
+    to: 'you@example.com',
+    subject: 'Product X Beta Program Update',
+    body: `Dear Beta Tester,
+
+Thank you for your continued participation in the Product X beta program. 
+
+We've received your feedback reports and wanted to check in on your experience. Would you be available for a brief follow-up interview about your testing experience?
+
+Best regards,
+MegaCorp Research Team`,
+    date: '2025-01-05',
+    folder: 'inbox',
+    isRead: false
+  },
+  {
+    id: 4,
+    from: 'you@example.com',
+    to: 'jen.lawyer@legalfirm.com',
+    subject: 'Legal Questions about Product Testing',
+    body: `Hi Jen,
+
+Hope you're doing well. I wanted to follow up on our conversation about some legal questions regarding my participation in the Product X beta testing program.
+
+I've been experiencing some concerning symptoms, but doctors aren't finding anything conclusive. Can we discuss my options?
+
+Thanks,
+Alex`,
+    date: '2025-01-06',
+    folder: 'sent',
+    isRead: true
+  },
+  {
+    id: 5,
+    from: 'you@example.com',
+    to: 'naomi@artcollective.org',
+    subject: 'Weekend Retreat Preparations',
+    body: `Hey Naomi,
+
+Just starting to pack for this weekend's retreat. I'm really looking forward to it.
+
+Is there anything specific I should bring besides the usual stuff?
+
+- Alex`,
+    date: '2025-01-07',
+    folder: 'drafts',
+    isRead: true
+  }
 ];
 
 // LookoutContent Component - Separated from window frame
@@ -48,16 +102,51 @@ const LookoutContent = ({ isMaximized, windowSize }) => {
   const [draftEmail, setDraftEmail] = useState(null);
   const [userEmail] = useState('you@example.com'); // User's email address
 
-  // Folder structure for email organization
+  // Folder structure for email organization with unread counts
   const folders = [
-    { id: 'inbox', name: 'Inbox', count: emails.filter(email => email.folder === 'inbox').length },
-    { id: 'sent', name: 'Sent', count: emails.filter(email => email.folder === 'sent').length },
-    { id: 'drafts', name: 'Drafts', count: emails.filter(email => email.folder === 'drafts').length },
-    { id: 'trash', name: 'Trash', count: emails.filter(email => email.folder === 'trash').length }
+    { 
+      id: 'inbox', 
+      name: 'Inbox', 
+      count: emails.filter(email => email.folder === 'inbox').length,
+      unread: emails.filter(email => email.folder === 'inbox' && !email.isRead).length
+    },
+    { 
+      id: 'sent', 
+      name: 'Sent', 
+      count: emails.filter(email => email.folder === 'sent').length 
+    },
+    { 
+      id: 'drafts', 
+      name: 'Drafts', 
+      count: emails.filter(email => email.folder === 'drafts').length 
+    },
+    { 
+      id: 'trash', 
+      name: 'Trash', 
+      count: emails.filter(email => email.folder === 'trash').length 
+    }
   ];
 
   // Filter emails based on selected folder
   const filteredEmails = emails.filter(email => email.folder === folderView);
+  
+        // Mark an email as read when selected
+  const markAsRead = (email) => {
+    if (!email.isRead) {
+      setEmails(emails.map(e => 
+        e.id === email.id ? {...e, isRead: true} : e
+      ));
+    }
+    setSelectedEmail(email);
+  };
+  
+  // Toggle read/unread status
+  const toggleReadStatus = (email, e) => {
+    e.stopPropagation(); // Prevent triggering the row click
+    setEmails(emails.map(e => 
+      e.id === email.id ? {...e, isRead: !e.isRead} : e
+    ));
+  };
 
   // Create a new email draft
   const createNewEmail = () => {
@@ -68,7 +157,8 @@ const LookoutContent = ({ isMaximized, windowSize }) => {
       subject: '',
       body: '',
       date: new Date().toISOString().split('T')[0],
-      folder: 'drafts'
+      folder: 'drafts',
+      isRead: true
     };
     
     setDraftEmail(newEmail);
@@ -272,11 +362,44 @@ const LookoutContent = ({ isMaximized, windowSize }) => {
               setComposeMode(false);
             }
           }, [
-            e('span', { key: 'name' }, folder.name),
-            folder.count > 0 && e('span', { 
-              key: 'count',
-              className: 'bg-blue-500 text-white text-xs rounded-full px-2 py-1'
-            }, folder.count)
+            e('div', {
+              key: 'folder-info',
+              className: 'flex items-center'
+            }, [
+              e('span', { 
+                key: 'folder-icon',
+                className: 'mr-2'
+              }, 
+                folder.id === 'inbox' ? '📥' : 
+                folder.id === 'sent' ? '📤' : 
+                folder.id === 'drafts' ? '📝' : 
+                folder.id === 'trash' ? '🗑️' : '📁'
+              ),
+              e('span', { 
+                key: 'name',
+                className: folder.unread && folder.unread > 0 ? 'font-bold' : ''
+              }, folder.name)
+            ]),
+            e('div', {
+              key: 'count-container',
+              className: 'flex items-center'
+            }, [
+              // Show unread count badge for inbox
+              folder.unread && folder.unread > 0 && e('span', { 
+                key: 'unread-count',
+                className: 'bg-blue-600 text-white text-xs font-bold rounded-full px-2 py-1 mr-1'
+              }, folder.unread),
+              
+              // Show total count badge for all folders
+              folder.count > 0 && e('span', { 
+                key: 'count',
+                className: `${
+                  folderView === folder.id 
+                    ? 'bg-blue-200 text-blue-800' 
+                    : 'bg-gray-200 text-gray-700'
+                } text-xs rounded-full px-2 py-1`
+              }, folder.count)
+            ])
           ])
         )
       ])
@@ -319,29 +442,55 @@ const LookoutContent = ({ isMaximized, windowSize }) => {
                     e('li', {
                       key: email.id,
                       className: `p-3 cursor-pointer hover:bg-gray-100 ${selectedEmail && selectedEmail.id === email.id ? 'bg-blue-50' : ''}`,
-                      onClick: () => setSelectedEmail(email),
+                      onClick: () => markAsRead(email),
                     }, [
                       e('div', {
-                        key: 'email-header',
-                        className: 'flex justify-between'
+                        key: 'email-wrapper',
+                        className: 'flex'
                       }, [
-                        e('span', {
-                          key: 'from',
-                          className: 'font-medium text-sm'
-                        }, folderView === 'sent' ? `To: ${email.to}` : `From: ${email.from}`),
-                        e('span', {
-                          key: 'date',
-                          className: 'text-xs text-gray-500'
-                        }, new Date(email.date).toLocaleDateString())
-                      ]),
-                      e('div', {
-                        key: 'subject',
-                        className: 'font-medium text-sm mt-1'
-                      }, email.subject),
-                      e('div', {
-                        key: 'preview',
-                        className: 'text-xs text-gray-500 mt-1 truncate'
-                      }, email.body.substring(0, 50) + '...')
+                        // Read/Unread indicator that can be toggled
+                        e('div', {
+                          key: 'read-indicator',
+                          className: 'mr-2 pt-1',
+                          onClick: (event) => toggleReadStatus(email, event),
+                          title: email.isRead ? 'Mark as unread' : 'Mark as read'
+                        }, !email.isRead ? 
+                          e('div', {
+                            className: 'w-3 h-3 rounded-full bg-blue-500 cursor-pointer hover:bg-blue-600'
+                          }) :
+                          e('div', {
+                            className: 'w-3 h-3 rounded-full border border-gray-300 cursor-pointer hover:border-blue-500'
+                          })
+                        ),
+                        
+                        // Email content
+                        e('div', {
+                          key: 'email-content',
+                          className: 'flex-1'
+                        }, [
+                          e('div', {
+                            key: 'email-header',
+                            className: 'flex justify-between items-baseline'
+                          }, [
+                            e('span', {
+                              key: 'from',
+                              className: `${!email.isRead ? 'font-bold' : 'font-medium'} text-sm`
+                            }, folderView === 'sent' ? `To: ${email.to}` : `From: ${email.from}`),
+                            e('span', {
+                              key: 'date',
+                              className: 'text-xs text-gray-500 ml-2 flex-shrink-0'
+                            }, new Date(email.date).toLocaleDateString())
+                          ]),
+                          e('div', {
+                            key: 'subject',
+                            className: `${!email.isRead ? 'font-bold text-black' : 'font-medium text-gray-800'} text-sm mt-1`
+                          }, email.subject),
+                          e('div', {
+                            key: 'preview',
+                            className: `${!email.isRead ? 'text-gray-700' : 'text-gray-500'} text-xs mt-1 truncate`
+                          }, email.body.substring(0, 50) + '...')
+                        ])
+                      ])
                     ])
                   ))
                 ) : 
