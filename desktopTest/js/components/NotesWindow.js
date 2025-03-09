@@ -6,7 +6,39 @@ import { WindowFrame } from './WindowFrame.js';
 
 // Notes Content Component - Separated from window frame
 const NotesContent = ({ isMaximized, windowSize }) => {
-  const [note, setNote] = useState('Write your note here...');
+  const [note, setNote] = useState(
+
+//~~~ Megacorp product X beta tested by character, simultaneously character develops (or has worsened?) symptoms related to chest pain, head/sensory issues, and joint pain in hands/wrist
+  //  >> character documents symptoms
+  //  >> Why the character pursued product x in the first place (general tech interest)
+
+//Character believes there might be a tie between symptoms and Megacorp product X, A: wants help from a doctor & B: wants compensation from Megacorp.  
+//Reasons for compensation might be inability to perform at job
+
+//Notes document interactions with lawyer relative to megacorp product and health (character documents symptoms); tie-in with separate conversations between character and doctor, where doctor is telling the character that
+//symptoms are psychosomatic ~~~
+
+//~~~ Meta: notes are written short form/personal to add color to character & demonstrate personality, note dates add timeline/progression to story  ~~~~
+
+   ` *Spoke with lawyer on Oct. 17, 2023*
+    Lawyer suggested documenting health-related issues, so here goes:
+
+    Oct 21:
+
+
+
+
+    Symptoms started months ago, but have progressively worsened to where it has become
+    difficult to perform day to day tasks.  Symptoms include:
+    -  Pain in hands and wrist
+    -  Chest pain
+    -  Chest palpitations
+    -  Impaired vision
+    -  
+    -  Extended periods of typing are difficult due to pain in my hands and wrists (interrupts work related to job as software dev)
+    -  Difficulty concentrating on most tasks due to chronic brain fog and anxiety, possibly induced by chest palpitations
+    -  
+    `);
   
   return e('textarea', {
     className: `w-full h-full p-4 focus:outline-none resize-none`,
