@@ -18,7 +18,7 @@ const initialConversations = [
         content: `Hello there! I am getting the farmhouse rooms sorted for our retreat this weekend.
          I'm giving you the special cupola room - great for star gazing. 
          Also, how did things go at the doctor? Sending good thoughts your way!`, 
-        time: '8:30 PM' 
+        time: 'Jan 8, 2024, 8:30 PM' 
       },
       { 
         id: 2, 
@@ -61,7 +61,7 @@ const initialConversations = [
         content: `Doctor said it's probably just stress. Psychosomatic? 
         Know anything about that? I really really think something is wrong.
         I'm gonna ask for another blood test. Or try someone else. Can you order something for me?`, 
-        time: '6:00 PM' 
+        time: 'Jan 8 2024, 6:00 PM' 
       },
       { 
         id: 2, 
@@ -115,7 +115,7 @@ const initialConversations = [
         taken a vacation in years. I really want to spend more quality time with 
         y'all and just get away from liiifee and chill. For the rest of my life 
         haha. I have so much to tell you.`, 
-        time: '4:03 AM' 
+        time: 'Jan 7 2024, 4:03 AM' 
       },
       { 
         id: 2, 
