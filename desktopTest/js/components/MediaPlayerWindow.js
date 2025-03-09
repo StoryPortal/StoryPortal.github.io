@@ -127,6 +127,23 @@ const Visualizer = ({ isPlaying, currentTime }) => {
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
   const lastBarsRef = useRef(null);
+  const lastTimeRef = useRef(0);
+  const smoothTimeRef = useRef(0);
+  
+  // Use a more consistent time variable instead of relying solely on prop updates
+  useEffect(() => {
+    // Update our internal smooth time reference, but don't jump directly to current time
+    // This provides continuity in animation even when currentTime updates are irregular
+    if (Math.abs(currentTime - lastTimeRef.current) > 5) {
+      // If time jumps significantly (like when changing tracks), reset directly
+      smoothTimeRef.current = currentTime;
+    } else {
+      // Smooth transition to new time
+      const blend = 0.1; // Blend factor - smaller means smoother transitions
+      smoothTimeRef.current = lastTimeRef.current + blend * (currentTime - lastTimeRef.current);
+    }
+    lastTimeRef.current = currentTime;
+  }, [currentTime]);
   
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -141,96 +158,109 @@ const Visualizer = ({ isPlaying, currentTime }) => {
       lastBarsRef.current = Array(bars).fill(0.1);
     }
     
-    const drawVisualizer = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Independent animation timing that doesn't rely on React rendering cycle
+    let lastFrameTime = 0;
+    
+    const drawVisualizer = (timestamp) => {
+      // Calculate time delta for smoother animations regardless of frame rate
+      const deltaTime = timestamp - lastFrameTime;
+      lastFrameTime = timestamp;
       
-      // Background
-      ctx.fillStyle = '#000';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      if (isPlaying) {
-        // Generate bars heights with a mix of time-based and random values
-        const newBars = [];
+      // Only update animation at a sensible rate
+      if (deltaTime > 0 && deltaTime < 100) { // Skip extreme frame time jumps
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        for (let i = 0; i < bars; i++) {
-          // Different formulas for each group of bars to create varied movement
-          let nextHeight;
+        // Background
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        if (isPlaying) {
+          // Use our smoothed time reference for visualization
+          const animTime = smoothTimeRef.current;
           
-          if (i % 4 === 0) {
-            // Bass frequencies - more dramatic, slower changes
-            nextHeight = Math.abs(Math.sin(currentTime * 2.1 + i * 0.3)) * 0.7 + 0.2;
-            // Add random spike occasionally for bass beat simulation
-            if (Math.random() < 0.03) nextHeight = 0.9;
-          } else if (i % 3 === 0) {
-            // Mid frequencies - moderate changes
-            nextHeight = Math.abs(Math.sin(currentTime * 3.3 + i * 0.5)) * 0.6 + 0.3;
-            if (Math.random() < 0.05) nextHeight *= 1.3;
-          } else if (i % 2 === 0) {
-            // High-mid frequencies
-            nextHeight = Math.abs(Math.cos(currentTime * 4.2 + i * 0.7)) * 0.5 + 0.3;
-            if (Math.random() < 0.08) nextHeight *= 1.2;
-          } else {
-            // High frequencies - more rapid changes
-            nextHeight = Math.abs(Math.sin(currentTime * 5.5 + i * 1.1)) * 0.4 + 0.2;
-            if (Math.random() < 0.1) nextHeight *= 1.4;
+          // Generate bars with more consistent timing
+          const newBars = [];
+          
+          for (let i = 0; i < bars; i++) {
+            // Different formulas for each group of bars to create varied movement
+            let nextHeight;
+            const phaseOffset = i * 0.3; // Different phase for each bar
+            
+            if (i % 4 === 0) {
+              // Bass frequencies - use consistent timing based on animTime
+              nextHeight = Math.abs(Math.sin(animTime + phaseOffset)) * 0.7 + 0.2;
+              // Add random spike occasionally for bass beat simulation - less random
+              if (Math.random() < 0.01) nextHeight = 0.9;
+            } else if (i % 3 === 0) {
+              // Mid frequencies 
+              nextHeight = Math.abs(Math.sin(animTime * 1.5 + phaseOffset)) * 0.6 + 0.3;
+              if (Math.random() < 0.01) nextHeight *= 1.3;
+            } else if (i % 2 === 0) {
+              // High-mid frequencies
+              nextHeight = Math.abs(Math.cos(animTime * 2 + phaseOffset)) * 0.5 + 0.3;
+              if (Math.random() < 0.01) nextHeight *= 1.2;
+            } else {
+              // High frequencies
+              nextHeight = Math.abs(Math.sin(animTime * 2.5 + phaseOffset)) * 0.4 + 0.2;
+              if (Math.random() < 0.01) nextHeight *= 1.4;
+            }
+            
+            // Consistent smoothing with frame-time independence
+            const lastHeight = lastBarsRef.current[i];
+            const smoothingFactor = Math.min(0.2, deltaTime / 1000); // Time-based smoothing
+            const smoothedHeight = lastHeight + smoothingFactor * (nextHeight - lastHeight);
+            
+            newBars.push(smoothedHeight);
+            
+            // Draw the bar
+            const height = smoothedHeight * canvas.height;
+            
+            // Gradient coloring based on height
+            const greenIntensity = Math.floor(170 + smoothedHeight * 85);
+            ctx.fillStyle = `rgb(0, ${greenIntensity}, 0)`;
+            
+            ctx.fillRect(
+              i * (barWidth + gap),
+              canvas.height - height,
+              barWidth,
+              height
+            );
           }
           
-          // Add some random spikes for more natural look
-          if (Math.random() < 0.02) {
-            nextHeight = Math.min(0.9, nextHeight * (1.5 + Math.random()));
+          // Save the current bars for the next frame
+          lastBarsRef.current = newBars;
+        } else {
+          // Static low bars when not playing, with gentle movement
+          for (let i = 0; i < bars; i++) {
+            // Gentle idle animation - use actual timestamp for consistent animation
+            const idleTime = timestamp / 1000;
+            const height = (Math.sin(idleTime * 0.5 + i * 0.4) * 0.05 + 0.1) * canvas.height;
+            ctx.fillStyle = i % 2 === 0 ? '#1a5c1a' : '#0d3d0d';
+            ctx.fillRect(
+              i * (barWidth + gap),
+              canvas.height - height,
+              barWidth,
+              height
+            );
           }
-          
-          // Smooth transition from previous state (inertia effect)
-          const lastHeight = lastBarsRef.current[i];
-          const smoothingFactor = 0.3; // Lower = smoother transition
-          const smoothedHeight = lastHeight + smoothingFactor * (nextHeight - lastHeight);
-          
-          newBars.push(smoothedHeight);
-          
-          // Draw the bar
-          const height = smoothedHeight * canvas.height;
-          
-          // Gradient coloring based on height
-          const greenIntensity = Math.floor(170 + smoothedHeight * 85);
-          ctx.fillStyle = `rgb(0, ${greenIntensity}, 0)`;
-          
-          ctx.fillRect(
-            i * (barWidth + gap),
-            canvas.height - height,
-            barWidth,
-            height
-          );
-        }
-        
-        // Save the current bars for the next frame
-        lastBarsRef.current = newBars;
-      } else {
-        // Static low bars when not playing, with gentle movement
-        for (let i = 0; i < bars; i++) {
-          // Gentle idle animation
-          const time = Date.now() / 1000;
-          const height = (Math.sin(time * 0.5 + i * 0.4) * 0.05 + 0.1) * canvas.height;
-          ctx.fillStyle = i % 2 === 0 ? '#1a5c1a' : '#0d3d0d';
-          ctx.fillRect(
-            i * (barWidth + gap),
-            canvas.height - height,
-            barWidth,
-            height
-          );
         }
       }
       
+      // Always continue the animation loop
       animationRef.current = requestAnimationFrame(drawVisualizer);
     };
     
-    drawVisualizer();
+    // Start the animation loop
+    animationRef.current = requestAnimationFrame(drawVisualizer);
     
+    // Clean up - ensure animation stops when component unmounts
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
       }
     };
-  }, [isPlaying, currentTime]);
+  }, [isPlaying]); // Only depend on isPlaying state, not currentTime
   
   return e('canvas', {
     ref: canvasRef,
@@ -238,189 +268,6 @@ const Visualizer = ({ isPlaying, currentTime }) => {
     height: 50,
     className: 'border border-gray-800'
   });
-};
-
-// Equalizer Component with animated sliders
-const Equalizer = ({ isPlaying, currentTime }) => {
-  const [eqValues, setEqValues] = useState({
-    preamp: 50,
-    band1: 50,
-    band2: 60,
-    band3: 70,
-    band4: 55,
-    band5: 45,
-    band6: 60,
-    band7: 65,
-    band8: 45,
-    band9: 50,
-    band10: 40
-  });
-  
-  // Animated values for auto-EQ mode
-  const lastValuesRef = useRef(null);
-  
-  useEffect(() => {
-    // Initialize last values if not set
-    if (!lastValuesRef.current) {
-      lastValuesRef.current = { ...eqValues };
-    }
-    
-    if (!isPlaying) return;
-    
-    // Animation frame to update EQ values
-    const animateEQ = () => {
-      // New target values based on various rhythmic patterns
-      const newTargets = {};
-      
-      // Different patterns for each frequency band
-      newTargets.band1 = 40 + Math.abs(Math.sin(currentTime * 0.8)) * 40; // Bass - slow rhythm
-      newTargets.band2 = 30 + Math.abs(Math.sin(currentTime * 1.1 + 0.5)) * 50; // Bass
-      newTargets.band3 = 40 + Math.abs(Math.sin(currentTime * 1.4 + 1.0)) * 35; // Low mid
-      newTargets.band4 = 35 + Math.abs(Math.sin(currentTime * 1.7 + 1.5)) * 40; // Low mid
-      newTargets.band5 = 45 + Math.abs(Math.sin(currentTime * 2.0 + 2.0)) * 30; // Mid
-      newTargets.band6 = 50 + Math.abs(Math.sin(currentTime * 2.3 + 2.5)) * 25; // Mid
-      newTargets.band7 = 40 + Math.abs(Math.sin(currentTime * 2.6 + 3.0)) * 35; // High mid
-      newTargets.band8 = 35 + Math.abs(Math.sin(currentTime * 2.9 + 3.5)) * 40; // High mid
-      newTargets.band9 = 30 + Math.abs(Math.sin(currentTime * 3.2 + 4.0)) * 30; // High
-      newTargets.band10 = 25 + Math.abs(Math.sin(currentTime * 3.5 + 4.5)) * 40; // High
-      
-      // Add occasional randomized spikes to make it look more responsive
-      const randomBand = 'band' + Math.floor(Math.random() * 10 + 1);
-      if (Math.random() < 0.05) {
-        newTargets[randomBand] = Math.min(90, newTargets[randomBand] * 1.5);
-      }
-      
-      // Smooth transition to targets
-      const smoothedValues = { ...eqValues };
-      const smoothingFactor = 0.15; // Lower = smoother
-      
-      for (const band in newTargets) {
-        if (eqValues.hasOwnProperty(band)) {
-          smoothedValues[band] = Math.round(
-            lastValuesRef.current[band] + 
-            smoothingFactor * (newTargets[band] - lastValuesRef.current[band])
-          );
-        }
-      }
-      
-      // Keep preamp mostly stable
-      smoothedValues.preamp = 50 + Math.sin(currentTime * 0.3) * 5;
-      
-      // Update last values
-      lastValuesRef.current = smoothedValues;
-      
-      // Update state
-      setEqValues(smoothedValues);
-    };
-    
-    // Update values periodically when playing
-    const interval = setInterval(animateEQ, 50);
-    
-    return () => clearInterval(interval);
-  }, [isPlaying, currentTime, eqValues]);
-  
-  const handleEqChange = (band, value) => {
-    setEqValues(prev => ({
-      ...prev,
-      [band]: parseInt(value)
-    }));
-    
-    // Update last values reference too
-    lastValuesRef.current = {
-      ...lastValuesRef.current,
-      [band]: parseInt(value)
-    };
-  };
-  
-  return e('div', {
-    className: 'flex flex-col bg-gray-800 border border-gray-700 p-2 rounded'
-  }, [
-    e('div', {
-      key: 'eq-title',
-      className: 'text-green-400 font-bold text-xs border-b border-gray-700 pb-1 mb-2'
-    }, 'EQUALIZER'),
-    e('div', {
-      key: 'eq-sliders',
-      className: 'flex justify-between items-end'
-    }, [
-      // Preamp slider
-      e('div', {
-        key: 'preamp',
-        className: 'flex flex-col items-center'
-      }, [
-        e('div', {
-          className: 'h-16 w-6 bg-gray-900 relative',
-          style: { borderRadius: '2px' }
-        }, [
-          e('div', {
-            className: 'absolute bottom-0 left-0 right-0 bg-green-500',
-            style: { 
-              height: `${eqValues.preamp}%`,
-              borderRadius: '2px',
-              transition: 'height 0.1s ease-out'
-            }
-          }),
-          e('input', {
-            type: 'range',
-            min: 0,
-            max: 100,
-            value: eqValues.preamp,
-            onChange: (evt) => handleEqChange('preamp', evt.target.value),
-            className: 'absolute inset-0 w-full h-full opacity-0 cursor-pointer',
-            style: { 
-              WebkitAppearance: 'slider-vertical',
-              writingMode: 'bt-lr'
-            }
-          })
-        ]),
-        e('div', {
-          className: 'text-green-400 text-xs mt-1'
-        }, 'PRE')
-      ]),
-      
-      // EQ bands
-      e('div', {
-        key: 'bands',
-        className: 'flex'
-      }, [
-        ...[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(band => 
-          e('div', {
-            key: `band${band}`,
-            className: 'flex flex-col items-center mx-1'
-          }, [
-            e('div', {
-              className: 'h-16 w-3 bg-gray-900 relative',
-              style: { borderRadius: '2px' }
-            }, [
-              e('div', {
-                className: 'absolute bottom-0 left-0 right-0 bg-green-500',
-                style: { 
-                  height: `${eqValues[`band${band}`]}%`,
-                  borderRadius: '2px',
-                  transition: 'height 0.1s ease-out'
-                }
-              }),
-              e('input', {
-                type: 'range',
-                min: 0,
-                max: 100,
-                value: eqValues[`band${band}`],
-                onChange: (evt) => handleEqChange(`band${band}`, evt.target.value),
-                className: 'absolute inset-0 w-full h-full opacity-0 cursor-pointer',
-                style: { 
-                  WebkitAppearance: 'slider-vertical',
-                  writingMode: 'bt-lr'
-                }
-              })
-            ]),
-            e('div', {
-              className: 'text-green-400 text-xs mt-1'
-            }, band)
-          ])
-        )
-      ])
-    ])
-  ])
 };
 
 // WinampStyleMediaPlayer Content Component
@@ -436,7 +283,6 @@ const WinampStyleMediaPlayer = ({ isMaximized, windowSize }) => {
   const [showPlaylist, setShowPlaylist] = useState(true);
   const [isShuffleOn, setIsShuffleOn] = useState(false);
   const [isRepeatOn, setIsRepeatOn] = useState(false);
-  const [showEqualizer, setShowEqualizer] = useState(false);
   
   const iframeRef = useRef(null);
   const progressRef = useRef(null);
@@ -739,11 +585,6 @@ const WinampStyleMediaPlayer = ({ isMaximized, windowSize }) => {
           className: 'flex space-x-1'
         }, [
           e('button', {
-            key: 'eq-button',
-            onClick: () => setShowEqualizer(!showEqualizer),
-            className: `w-6 h-6 flex items-center justify-center rounded ${showEqualizer ? 'bg-green-600' : 'bg-gray-600'} text-xs text-white hover:bg-green-500`
-          }, 'EQ'),
-          e('button', {
             key: 'pl-button',
             onClick: () => setShowPlaylist(!showPlaylist),
             className: `w-6 h-6 flex items-center justify-center rounded ${showPlaylist ? 'bg-green-600' : 'bg-gray-600'} text-xs text-white hover:bg-green-500`
@@ -754,190 +595,177 @@ const WinampStyleMediaPlayer = ({ isMaximized, windowSize }) => {
       // Main player interface
       e('div', {
         key: 'player-main',
-        className: 'flex bg-gray-900 border border-gray-700 rounded p-2 mb-2'
+        className: 'flex flex-col bg-gray-900 border border-gray-700 rounded p-2 mb-2'
       }, [
-        // Left section: album art
+        // Top section: album art and track info
         e('div', {
-          key: 'left-section',
-          className: 'mr-3 w-24 h-24 border border-gray-800 bg-black flex-shrink-0'
-        }, currentTrack?.artworkUrl && e('img', {
-          src: currentTrack.artworkUrl,
-          alt: currentTrack.title,
-          className: 'w-full h-full object-cover'
-        })),
-        
-        // Middle section: track info and controls
-        e('div', {
-          key: 'middle-section',
-          className: 'flex-1 flex flex-col justify-between'
+          key: 'top-section',
+          className: 'flex mb-2'
         }, [
-          // Track info with scrolling effect
+          // Left section: album art
+          e('div', {
+            key: 'album-art',
+            className: 'mr-3 w-24 h-24 border border-gray-800 bg-black flex-shrink-0'
+          }, currentTrack?.artworkUrl && e('img', {
+            src: currentTrack.artworkUrl,
+            alt: currentTrack.title,
+            className: 'w-full h-full object-cover'
+          })),
+          
+          // Right section: track info
           e('div', {
             key: 'track-info',
-            className: 'bg-black border border-gray-800 p-1 mb-1 truncate overflow-hidden'
+            className: 'flex-1 flex flex-col'
           }, [
+            // Track info with scrolling effect
             e('div', {
-              key: 'title-artist',
-              className: 'text-green-400 text-xs whitespace-nowrap',
-              style: {
-                animation: currentTrack ? 'marquee 10s linear infinite' : 'none'
-              }
-            }, currentTrack ? `${currentTrack.title} - ${currentTrack.artist}` : 'No track loaded')
-          ]),
-          
-          // Time and bitrate display
-          e('div', {
-            key: 'time-display',
-            className: 'flex justify-between text-xs text-green-400 mb-1'
-          }, [
-            e('div', {
-              key: 'time',
-              className: 'bg-black border border-gray-800 px-2 py-1'
-            }, formatTime(currentTime)),
-            e('div', {
-              key: 'duration',
-              className: 'bg-black border border-gray-800 px-2 py-1'
-            }, currentTrack ? formatTime(currentTrack.duration) : '0:00'),
-            e('div', {
-              key: 'bitrate',
-              className: 'bg-black border border-gray-800 px-2 py-1'
-            }, '320kbps')
-          ]),
-          
-          // Progress bar
-          e('div', {
-            key: 'progress-container',
-            className: 'bg-black border border-gray-800 h-3 mb-2',
-            ref: progressRef,
-            onClick: handleProgressClick
-          }, 
-            e('div', {
-              className: 'bg-green-500 h-full',
-              style: { 
-                width: `${
-                  currentTrack && currentTrack.duration 
-                    ? (currentTime / currentTrack.duration) * 100 
-                    : 0
-                }%` 
-              }
-            })
-          ),
-          
-          // Playback controls
-          e('div', {
-            key: 'playback-controls',
-            className: 'flex justify-between px-1'
-          }, [
-            // Control buttons
-            e('div', {
-              key: 'controls',
-              className: 'flex items-center space-x-1'
+              key: 'track-display',
+              className: 'bg-black border border-gray-800 p-1 mb-1 truncate overflow-hidden'
             }, [
-              // Previous
-              e('button', {
-                key: 'prev',
-                onClick: playPreviousTrack,
-                className: 'bg-gray-700 hover:bg-gray-600 rounded w-6 h-6 flex items-center justify-center text-green-400'
-              }, '⏮'),
-              
-              // Play/Pause
-              e('button', {
-                key: 'play-pause',
-                onClick: togglePlayPause,
-                className: 'bg-gray-700 hover:bg-gray-600 rounded w-7 h-6 flex items-center justify-center text-green-400'
-              }, isPlaying ? '⏸' : '▶'),
-              
-              // Stop
-              e('button', {
-                key: 'stop',
-                onClick: () => {
-                  if (widgetApi) {
-                    widgetApi.pause();
-                    widgetApi.seekTo(0);
-                    setIsPlaying(false);
-                    setCurrentTime(0);
-                  }
-                },
-                className: 'bg-gray-700 hover:bg-gray-600 rounded w-6 h-6 flex items-center justify-center text-green-400'
-              }, '⏹'),
-              
-              // Next
-              e('button', {
-                key: 'next',
-                onClick: playNextTrack,
-                className: 'bg-gray-700 hover:bg-gray-600 rounded w-6 h-6 flex items-center justify-center text-green-400'
-              }, '⏭')
+              e('div', {
+                key: 'title-artist',
+                className: 'text-green-400 text-xs whitespace-nowrap',
+                style: {
+                  animation: currentTrack ? 'marquee 10s linear infinite' : 'none'
+                }
+              }, currentTrack ? `${currentTrack.title} - ${currentTrack.artist}` : 'No track loaded')
             ]),
             
-            // Extra controls
+            // Time and bitrate display
             e('div', {
-              key: 'extra-controls',
-              className: 'flex items-center space-x-1'
+              key: 'time-display',
+              className: 'flex justify-between text-xs text-green-400 mb-1'
             }, [
-              // Shuffle
-              e('button', {
-                key: 'shuffle',
-                onClick: () => setIsShuffleOn(!isShuffleOn),
-                className: `bg-gray-700 hover:bg-gray-600 rounded w-6 h-6 flex items-center justify-center ${isShuffleOn ? 'text-green-400' : 'text-gray-400'}`
-              }, '🔀'),
-              
-              // Repeat
-              e('button', {
-                key: 'repeat',
-                onClick: () => setIsRepeatOn(!isRepeatOn),
-                className: `bg-gray-700 hover:bg-gray-600 rounded w-6 h-6 flex items-center justify-center ${isRepeatOn ? 'text-green-400' : 'text-gray-400'}`
-              }, '🔁')
-            ])
+              e('div', {
+                key: 'time',
+                className: 'bg-black border border-gray-800 px-2 py-1'
+              }, formatTime(currentTime)),
+              e('div', {
+                key: 'duration',
+                className: 'bg-black border border-gray-800 px-2 py-1'
+              }, currentTrack ? formatTime(currentTrack.duration) : '0:00'),
+              e('div', {
+                key: 'bitrate',
+                className: 'bg-black border border-gray-800 px-2 py-1'
+              }, '320kbps')
+            ]),
+            
+            // Progress bar
+            e('div', {
+              key: 'progress-container',
+              className: 'bg-black border border-gray-800 h-3 mb-1',
+              ref: progressRef,
+              onClick: handleProgressClick
+            }, 
+              e('div', {
+                className: 'bg-green-500 h-full',
+                style: { 
+                  width: `${
+                    currentTrack && currentTrack.duration 
+                      ? (currentTime / currentTrack.duration) * 100 
+                      : 0
+                  }%` 
+                }
+              })
+            ),
+            
+            // Volume control
+            e('div', {
+              key: 'volume-control',
+              className: 'flex-1 flex items-center space-x-1'
+            }, [
+              e('span', { className: 'text-green-400 text-xs' }, 'Vol'),
+              e('div', {
+                className: 'relative flex-1 h-3 bg-gray-900 border border-gray-800 rounded'
+              }, [
+                e('div', {
+                  className: 'absolute top-0 left-0 bottom-0 bg-green-500 rounded-l',
+                  style: { width: `${volume * 100}%` }
+                }),
+                e('input', {
+                  type: 'range',
+                  min: 0,
+                  max: 1,
+                  step: 0.01,
+                  value: volume,
+                  onChange: (e) => {
+                    const newVolume = parseFloat(e.target.value);
+                    setVolume(newVolume);
+                    if (widgetApi) {
+                      widgetApi.setVolume(newVolume * 100);
+                    }
+                  },
+                  className: 'absolute inset-0 w-full h-full opacity-0 cursor-pointer'
+                })
+              ])
+            ]),
           ])
         ]),
         
-        // Right section: volume and balance controls
+        // Playback controls
         e('div', {
-          key: 'right-section',
-          className: 'ml-3 w-16 flex flex-col'
+          key: 'playback-controls',
+          className: 'flex justify-between px-1'
         }, [
-          // Volume slider
+          // Control buttons
           e('div', {
-            key: 'volume-control',
-            className: 'flex flex-col items-center mb-2'
+            key: 'controls',
+            className: 'flex items-center space-x-1'
           }, [
-            e('label', {
-              className: 'text-green-400 text-xs mb-1',
-            }, 'VOL'),
-            e('div', {
-              className: 'bg-gray-800 border border-gray-700 rounded h-16 w-4 relative'
-            }, [
-              e('div', {
-                className: 'absolute bottom-0 left-0 right-0 bg-green-500',
-                style: { height: `${volume * 100}%` }
-              }),
-              e('input', {
-                type: 'range',
-                min: 0,
-                max: 1,
-                step: 0.01,
-                value: volume,
-                onChange: (e) => setVolume(parseFloat(e.target.value)),
-                className: 'absolute inset-0 w-full h-full opacity-0 cursor-pointer'
-              })
-            ])
+            // Previous
+            e('button', {
+              key: 'prev',
+              onClick: playPreviousTrack,
+              className: 'bg-gray-700 hover:bg-gray-600 rounded w-6 h-6 flex items-center justify-center text-green-400'
+            }, '⏮'),
+            
+            // Play/Pause
+            e('button', {
+              key: 'play-pause',
+              onClick: togglePlayPause,
+              className: 'bg-gray-700 hover:bg-gray-600 rounded w-7 h-6 flex items-center justify-center text-green-400'
+            }, isPlaying ? '⏸' : '▶'),
+            
+            // Stop
+            e('button', {
+              key: 'stop',
+              onClick: () => {
+                if (widgetApi) {
+                  widgetApi.pause();
+                  widgetApi.seekTo(0);
+                  setIsPlaying(false);
+                  setCurrentTime(0);
+                }
+              },
+              className: 'bg-gray-700 hover:bg-gray-600 rounded w-6 h-6 flex items-center justify-center text-green-400'
+            }, '⏹'),
+            
+            // Next
+            e('button', {
+              key: 'next',
+              onClick: playNextTrack,
+              className: 'bg-gray-700 hover:bg-gray-600 rounded w-6 h-6 flex items-center justify-center text-green-400'
+            }, '⏭')
           ]),
           
-          // Balance control
+          // Extra controls
           e('div', {
-            key: 'balance-control',
-            className: 'flex flex-col items-center'
+            key: 'extra-controls',
+            className: 'flex items-center space-x-1'
           }, [
-            e('label', {
-              className: 'text-green-400 text-xs mb-1',
-            }, 'BAL'),
-            e('div', {
-              className: 'bg-gray-800 border border-gray-700 rounded h-2 w-full mt-1'
-            }, [
-              e('div', {
-                className: 'bg-green-500 h-full w-1/2'
-              })
-            ])
+            // Shuffle
+            e('button', {
+              key: 'shuffle',
+              onClick: () => setIsShuffleOn(!isShuffleOn),
+              className: `bg-gray-700 hover:bg-gray-600 rounded w-6 h-6 flex items-center justify-center ${isShuffleOn ? 'text-green-400' : 'text-gray-400'}`
+            }, '🔀'),
+            
+            // Repeat
+            e('button', {
+              key: 'repeat',
+              onClick: () => setIsRepeatOn(!isRepeatOn),
+              className: `bg-gray-700 hover:bg-gray-600 rounded w-6 h-6 flex items-center justify-center ${isRepeatOn ? 'text-green-400' : 'text-gray-400'}`
+            }, '🔁')
           ])
         ])
       ]),
@@ -947,12 +775,6 @@ const WinampStyleMediaPlayer = ({ isMaximized, windowSize }) => {
         key: 'visualizer',
         className: 'bg-black border border-gray-700 rounded p-1'
       }, e(Visualizer, { isPlaying, currentTime })),
-      
-      // Equalizer (collapsible)
-      showEqualizer && e('div', {
-        key: 'equalizer',
-        className: 'mt-2'
-      }, e(Equalizer, { isPlaying, currentTime })),
       
       // URL input form in Winamp style
       e('form', {
