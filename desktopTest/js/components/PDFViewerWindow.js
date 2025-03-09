@@ -6,10 +6,12 @@ import { WindowFrame } from './WindowFrame.js';
 
 // Mock PDF data
 const mockPDFs = [
-  { id: 1, title: 'Medical Report', path: './Documents/medical_report.pdf' },
-  { id: 2, title: 'Strange Journal', path: './Documents/strange_journal.pdf' },
-  { id: 3, title: 'Daily Schedule', path: './Documents/schedule.pdf' },
-  { id: 4, title: 'Story Draft', path: './js/Documents/storyDraftV2.pdf' }
+  { id: 1, title: 'Mythical Man Month', path: './Documents/MythicalManMonth.pdf' },
+  { id: 2, title: 'Origin of Species', path: './Documents/Origin_of_Species.pdf' },
+  { id: 3, title: 'Volleyball Schedule', path: './Documents/volleyball_sched.pdf' },
+  { id: 4, title: 'Story Draft', path: './js/Documents/storyDraftV2.pdf' }, 
+  { id: 5, title: 'Data Structures', path: './js/Documents/JAVA3elatest.pdf' }, 
+
 ];
 
 // PDFViewerContent Component
