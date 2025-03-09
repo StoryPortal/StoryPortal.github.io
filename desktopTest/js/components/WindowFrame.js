@@ -22,17 +22,69 @@ export const WindowFrame = ({
     windowBorder: 'border-gray-200'
   }
 }) => {
+  // Constrain initial position to ensure window is visible
+  const dockHeight = 48; // Height of the dock
+  const titleBarHeight = 40; // Approximate height of the title bar
+  
+  const constrainedInitialPosition = {
+    x: Math.max(Math.min(initialPosition.x, window.innerWidth - 100), -initialSize.width + 100),
+    y: Math.max(
+      Math.min(initialPosition.y, window.innerHeight - dockHeight - titleBarHeight),
+      0
+    ) // Ensure window doesn't start above the top of the screen or below the dock
+  };
+  
   // Window position and state
-  const [position, setPosition] = useState(initialPosition);
+  const [position, setPosition] = useState(constrainedInitialPosition);
   const [size, setSize] = useState(initialSize);
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [resizeDirection, setResizeDirection] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isMaximized, setIsMaximized] = useState(false);
-  const [previousState, setPreviousState] = useState({ position: initialPosition, size: initialSize });
+  const [previousState, setPreviousState] = useState({ position: constrainedInitialPosition, size: initialSize });
   
   const windowRef = useRef(null);
+
+  // Handle window resize events
+  useEffect(() => {
+    const handleResize = () => {
+      const dockHeight = 48; // Height of the dock
+      const titleBarHeight = 40; // Approximate height of the title bar
+      
+      // If window is maximized, adjust size to new viewport
+      if (isMaximized) {
+        setSize({ 
+          width: window.innerWidth, 
+          height: window.innerHeight - dockHeight // Account for dock
+        });
+      } 
+      // If window is beyond screen bounds, constrain it
+      else {
+        let needsUpdate = false;
+        let newPosition = { ...position };
+        
+        // Check right edge
+        if (position.x + 100 > window.innerWidth) {
+          newPosition.x = window.innerWidth - 100;
+          needsUpdate = true;
+        }
+        
+        // Check bottom edge
+        if (position.y + titleBarHeight > window.innerHeight - dockHeight) {
+          newPosition.y = window.innerHeight - dockHeight - titleBarHeight;
+          needsUpdate = true;
+        }
+        
+        if (needsUpdate) {
+          setPosition(newPosition);
+        }
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isMaximized, position]);
 
   // Handle click to bring window to front
   const handleWindowClick = () => {
@@ -58,9 +110,34 @@ export const WindowFrame = ({
   const handleDrag = (e) => {
     if (!isDragging) return;
     
+    // Calculate new position
+    let newX = e.clientX - dragOffset.x;
+    let newY = e.clientY - dragOffset.y;
+    
+    
+    // Constrain to viewport boundaries
+    // Prevent title bar from going above the top edge of the screen
+    newY = Math.max(newY, 0);
+    
+    // Prevent window from going below the dock
+    // Make sure at least the title bar is visible above the dock (48px height)
+    const dockHeight = 48; // Height of the dock
+    const titleBarHeight = 40; // Approximate height of the title bar
+    const maxY = window.innerHeight - dockHeight - titleBarHeight;
+    newY = Math.min(newY, maxY);
+    
+    // Prevent window from going too far to the left
+    newX = Math.max(newX, -size.width + 100);
+    
+    // Prevent window from going too far to the right
+    // (allow at least 100px to remain visible)
+    const maxX = window.innerWidth - 100;
+    newX = Math.min(newX, maxX);
+    
+    // Set the constrained position
     setPosition({
-      x: e.clientX - dragOffset.x,
-      y: e.clientY - dragOffset.y
+      x: newX,
+      y: newY
     });
   };
 
@@ -128,6 +205,40 @@ export const WindowFrame = ({
         break;
       default:
         break;
+    }
+    
+    // Constrain position to prevent window from going off-screen
+    // Ensure top of window is not above the viewport
+    newPosition.y = Math.max(newPosition.y, 0);
+    
+    // Ensure window doesn't go below the dock
+    const dockHeight = 48; // Height of the dock
+    const titleBarHeight = 40; // Approximate height of the title bar
+    if (newPosition.y + titleBarHeight > window.innerHeight - dockHeight) {
+      newPosition.y = window.innerHeight - dockHeight - titleBarHeight;
+    }
+    
+    // Ensure left edge of window is not too far left
+    // (allow at least 100px to remain visible)
+    newPosition.x = Math.max(newPosition.x, -newSize.width + 100);
+    
+    // Ensure right edge of window is not too far right
+    if (newPosition.x + newSize.width > window.innerWidth) {
+      // If window is wider than viewport, ensure some portion is visible
+      if (newSize.width > window.innerWidth) {
+        newPosition.x = -newSize.width + 100;
+      } else {
+        // Otherwise ensure right edge doesn't go beyond viewport
+        newPosition.x = Math.min(newPosition.x, window.innerWidth - 100);
+      }
+    }
+    
+    // Also limit the window height if it would extend beyond the bottom of the screen
+    if (newPosition.y + newSize.height > window.innerHeight - dockHeight) {
+      // If window is being resized from the bottom, limit the height
+      if (resizeDirection.includes('s')) {
+        newSize.height = window.innerHeight - dockHeight - newPosition.y;
+      }
     }
     
     setPosition(newPosition);
