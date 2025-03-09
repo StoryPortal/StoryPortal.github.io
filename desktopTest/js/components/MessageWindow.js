@@ -95,13 +95,14 @@ const initialConversations = [
         content: `im a doctor. just send me ur recs. im rushing 2 work. will respond when i can`, 
         time: '6:32 PM' 
       }
+      
     ]
   },
   {
     id: 3,
     name: 'Banana Bonanza Bros',
     participants: ['Rob', 'Naomi Rosalyn'],
-    lastMessage: `Ok!!! See you at 12.    ʕ·͡ᴥ·ʔ`,
+    lastMessage: `Please no Doritos. And I'm good on snacks. I don't eat after 4pm on weekdays anyways. See you in a bit!`,
     messages: [
       { 
         id: 1, 
@@ -180,6 +181,42 @@ const initialConversations = [
         sender: 'You', 
         content: `Ok!!! See you at 12.   ʕ·͡ᴥ·ʔ`, 
         time: '9:01 AM' 
+      },
+      { 
+        id: 11, 
+        sender: 'Rob Blanchett', 
+        content: `sorry was sleeping and just saw this. still sleeping but will phone in.`, 
+        time: '11:25 AM' 
+      },
+      { 
+        id: 12, 
+        sender: 'Naomi Rosalyn', 
+        content: `I'm heading over to the studio now. Any snack requests for the road?`, 
+        time: 'Jan 10, 2024, 6:33 PM' 
+      }, 
+      { 
+        id: 13, 
+        sender: 'Rob Blanchett', 
+        content: `Dr. Pepper`, 
+        time: '6:34 PM' 
+      },
+      { 
+        id: 14, 
+        sender: 'Rob Blanchett', 
+        content: `Cheetos. Purple Doritos. Apple chips.`, 
+        time: '6:34 PM' 
+      },
+      { 
+        id: 15, 
+        sender: 'Rob Blanchett', 
+        content: `Pedialyte. Sun glasses.`, 
+        time: '6:34 PM' 
+      },
+      { 
+        id: 16, 
+        sender: 'You', 
+        content: `Please no Doritos. And I'm good on snacks. I don't eat after 4pm on weekdays anyways. See you in a bit!`, 
+        time: '6:45 PM' 
       }
     ]
   }
