@@ -6,9 +6,9 @@ import { WindowFrame } from './WindowFrame.js';
 
 // Mock PDF data
 const mockPDFs = [
-  { id: 1, title: 'Mythical Man Month', path: './Documents/MythicalManMonth.pdf' },
-  { id: 2, title: 'Origin of Species', path: './Documents/Origin_of_Species.pdf' },
-  { id: 3, title: 'Volleyball Schedule', path: './Documents/volleyball_sched.pdf' },
+  { id: 1, title: 'Mythical Man', path: './js/Documents/MythicalManMonth.pdf' },
+  { id: 2, title: 'Origin of Species', path: './js/Documents/Origin_of_Species.pdf' },
+  { id: 3, title: 'Volleyball Schedule', path: './js/Documents/volleyball_sched.pdf' },
   { id: 4, title: 'Story Draft', path: './js/Documents/storyDraftV2.pdf' }, 
   { id: 5, title: 'Data Structures', path: './js/Documents/JAVA3elatest.pdf' }, 
 
@@ -56,6 +56,7 @@ const PDFViewerContent = ({ isMaximized, windowSize }) => {
         renderPage(pdf, 1);
       } catch (error) {
         console.error('Error loading PDF:', error);
+        alert('Failed to load PDF. Please check the file path and try again.');
       }
     };
     
@@ -73,6 +74,7 @@ const PDFViewerContent = ({ isMaximized, windowSize }) => {
         renderPage(pdf, currentPage);
       } catch (error) {
         console.error('Error rendering page:', error);
+        alert('Failed to render PDF page. Please check the file path and try again.');
       }
     };
     
