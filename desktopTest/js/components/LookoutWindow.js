@@ -9,7 +9,7 @@ const initialEmails = [
   {
     id: 1,
     from: 'sanguisMD@kaiser.com',
-    to: 'you@example.com',
+    to: 'APellegrinFalcon@hotmail.com',
     subject: 'Results',
     body: `Dear Mr. Pell,
 
@@ -24,19 +24,16 @@ Kaiser Hemostatic Center`,
     folder: 'inbox'
   },
   {
-    id: 1,
-    from: 'sanguisMD@kaiser.com',
-    to: 'you@example.com',
-    subject: 'Results',
-    body: `Dear Mr. Pell,
+    id: 100,
+    from: 'APellegrinFalcon@hotmail.com',
+    to: 'sanguisMD@kaiser.com',
+    subject: 'Need Help',
+    body: `Dear Dr. Sanguis,
 
-Your bloodwork analysis is completed. You can review the report in the attachment I've provided here. 
-Please let me know if you have any questions.
+I read over the report.  Please indicate what further blood testing we can do
 
 Thanks,  
-Dr. Sanguis, MD  
-Hematology  
-Kaiser Hemostatic Center`,
+Alex`,
     date: '2025-01-07',
     folder: 'sent'
   },
