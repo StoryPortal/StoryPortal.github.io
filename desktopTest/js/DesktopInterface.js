@@ -17,6 +17,7 @@ import { LookoutIcon } from './icons/LookoutIcon.js';
 import { BrowserIcon } from './icons/BrowserIcon.js';
 import { PDFIcon } from './icons/PDFIcon.js';
 import { MusicIcon } from './icons/MusicIcon.js';
+import { HomeIcon } from './icons/HomeIcon.js';
 
 // Enhanced DockIcon component
 const DockIcon = ({ icon: Icon, label, isOpen, isMinimized, onClick, customClass = '' }) => {
@@ -37,6 +38,20 @@ const DockIcon = ({ icon: Icon, label, isOpen, isMinimized, onClick, customClass
       key: 'tooltip',
       className: 'absolute bottom-full mb-2 px-2 py-1 bg-black bg-opacity-75 text-white text-xs rounded hidden group-hover:block whitespace-nowrap',
     }, isMinimized ? 'Click to restore' : label)
+  ]);
+};
+
+// Home Button Component (special case for story landing page navigation)
+const HomeButton = () => {
+  return e('button', {
+    className: 'relative w-14 h-14 rounded-full bg-blue-700 flex items-center justify-center hover:bg-blue-800 transition-colors group mr-4',
+    onClick: () => window.location.href = 'https://storyportal.github.io'
+  }, [
+    e(HomeIcon),
+    e('div', {
+      key: 'tooltip',
+      className: 'absolute bottom-full mb-2 px-2 py-1 bg-black bg-opacity-75 text-white text-xs rounded hidden group-hover:block whitespace-nowrap',
+    }, 'Go to Story Portal')
   ]);
 };
 
@@ -373,8 +388,14 @@ const DesktopInterface = () => {
       style: { zIndex: 9999 }
     },
       e('div', {
-        className: 'max-w-screen-lg mx-auto p-2 flex items-center justify-center space-x-4'
+        className: 'relative w-full px-4 py-2 flex items-center justify-center'
       }, [
+        // Home Button (new) - positioned absolutely on the left
+        e('div', {
+          className: 'absolute left-4',
+          style: { zIndex: 10000 }
+        }, e(HomeButton, { key: 'home-button' })),
+        
         e(DockIcon, {
           key: 'dock-messages',
           icon: MessageIcon,
@@ -509,4 +530,3 @@ const DesktopInterface = () => {
 // Render the app
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(e(DesktopInterface));
-
