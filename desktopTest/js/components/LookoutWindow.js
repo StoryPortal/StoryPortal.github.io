@@ -9,42 +9,41 @@ const initialEmails = [
   {
     id: 1,
     from: 'sanguisMD@kaiser.com',
-    to: 'you@example.com',
+    to: 'adampell@gmail.com',
     subject: 'Results',
     body: `Dear Mr. Pell,
 
-Your bloodwork analysis is completed. You can review the report in the attachment I've provided here. 
-Please let me know if you have any questions.
+You can review the report from your visit today in the health portal. 
+Please let me know if you have any questions. Hope you have a good weekend and get some REST. 
 
 Thanks,  
-Dr. Sanguis, MD  
-Hematology  
-Kaiser Hemostatic Center`,
-    date: '2025-01-07',
+Dr. Sanguis, MD   
+Kaiser Center`,
+    date: '2024-01-11',
     folder: 'inbox',
     isRead: false
   },
   {
     id: 2,
     from: 'notifications@healthcare-portal.com',
-    to: 'you@example.com',
+    to: 'adampell@gmail.com',
     subject: 'Your Appointment Reminder',
     body: `Hello,
 
-This is a reminder that you have an appointment scheduled with Dr. Ramsay tomorrow at 2:30 PM.
+This is a reminder that you have an appointment scheduled with Dr. Sanguis tomorrow at 2:30 PM.
 
 Please arrive 15 minutes early to complete any required paperwork.
 
 Thank you,
 Healthcare Portal Team`,
-    date: '2025-01-08',
+    date: '2024-01-09',
     folder: 'inbox',
     isRead: true
   },
   {
     id: 3,
     from: 'research@megacorp.com',
-    to: 'you@example.com',
+    to: 'adampell@gmail.com',
     subject: 'Product X Beta Program Update',
     body: `Dear Beta Tester,
 
@@ -54,14 +53,14 @@ We've received your feedback reports and wanted to check in on your experience. 
 
 Best regards,
 MegaCorp Research Team`,
-    date: '2025-01-05',
+    date: '2024-01-05',
     folder: 'inbox',
-    isRead: false
+    isRead: true
   },
   {
     id: 4,
-    from: 'you@example.com',
-    to: 'jen.lawyer@legalfirm.com',
+    from: 'adampell@gmail.com',
+    to: 'jenroman@gladlaw.com',
     subject: 'Legal Questions about Product Testing',
     body: `Hi Jen,
 
@@ -71,23 +70,27 @@ I've been experiencing some concerning symptoms, but doctors aren't finding anyt
 
 Thanks,
 Alex`,
-    date: '2025-01-06',
+    date: '2024-01-03',
     folder: 'sent',
     isRead: true
   },
   {
     id: 5,
-    from: 'you@example.com',
-    to: 'naomi@artcollective.org',
+    from: 'adampell@gmail.com',
+    to: 'naomi@scorpioartcollective.org',
     subject: 'Weekend Retreat Preparations',
     body: `Hey Naomi,
 
 Just starting to pack for this weekend's retreat. I'm really looking forward to it.
 
-Is there anything specific I should bring besides the usual stuff?
+Is there anything specific I should bring besides the usual stuff? 
+I'm working on a story right now, so I might bring some writing materials. 
+I'm not sure what direction it's taking or really how to describe it, so I'd love to get yours and Adam's opinions. 
+Maybe we can do a little writing workshop session this weekend. Do you have a printer at the farmhouse? 
+Otherwise, I'll get it printed at the library. I'll forward you a digital copy too. 
 
 - Alex`,
-    date: '2025-01-07',
+    date: '2025-01-10',
     folder: 'drafts',
     isRead: true
   }

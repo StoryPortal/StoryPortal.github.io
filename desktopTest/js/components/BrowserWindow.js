@@ -15,7 +15,10 @@ const BrowserContent = ({ isMaximized, windowSize }) => {
     { id: 3, title: 'Sacred Sanguin', url: 'https://en.m.wikipedia.org/wiki/Sanguinaria' },
     { id: 4, title: 'i\'m spooked', url: 'https://www.dreamymonkey.com/art/quantum-entanglement' },
     { id: 5, title: 'What\'s in the box', url: 'https://stardewvalleywiki.com/Mystery_Box' },
-    { id: 6, title: 'Storyportal 1', url: 'https://storyportal.github.io/about_storyportal_1.html'}
+    { id: 6, title: 'Storyportal 1', url: 'https://storyportal.github.io/about_storyportal_1.html'},
+    { id: 7, title: 'talk2text', url: 'https://www.joshwcomeau.com/blog/hands-free-coding/'},
+    { id: 8, title: 'The Brutalist Report', url: 'https://brutalist.report/'}
+
   ]);
   const [isAddingBookmark, setIsAddingBookmark] = useState(false);
   const [newBookmarkTitle, setNewBookmarkTitle] = useState('');

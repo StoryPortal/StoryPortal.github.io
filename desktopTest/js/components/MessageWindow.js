@@ -16,17 +16,17 @@ const initialConversations = [
         id: 1, 
         sender: 'Naomi Rosalyn', 
         content: `Hello there! I am getting the farmhouse rooms sorted for our retreat this weekend.
-         I'm giving you the special cupola room - great for star gazing. 
+         I'm giving you the special room with the balcony - great for star gazing. 
          Also, how did things go at the doctor? Sending good thoughts your way!`, 
-        time: 'Jan 8, 2024, 8:30 PM',
-        timestamp: '2024-01-08T20:30:00'
+        time: 'Jan 10, 2024, 8:30 PM',
+        timestamp: '2024-01-10T20:30:00'
       },
       { 
         id: 2, 
         sender: 'Naomi Rosalyn', 
         content: ':-)', 
         time: '8:31 PM',
-        timestamp: '2024-01-08T20:31:00'
+        timestamp: '2024-01-10T20:31:00'
       },
       { 
         id: 3, 
@@ -35,7 +35,7 @@ const initialConversations = [
         Am I exercising and sleeping? Anyways, I booked an appointment with another doctor to get a second (more like 6th opinion).
         Also - I'm so excited for this weekend! Thanks again for hosting us!! ⛷️🌲🐓`, 
         time: '9:00 PM',
-        timestamp: '2024-01-08T21:00:00'
+        timestamp: '2024-01-10T21:00:00'
       }, 
       { 
         id: 4, 
@@ -43,14 +43,14 @@ const initialConversations = [
         content: `Omg I so understand and support you. You've got to take health matters into your own hands sometimes. 
         I'm excited too. Meet me and Rob at the studio at 7 to head over.`, 
         time: '9:48 PM',
-        timestamp: '2024-01-08T21:48:00'
+        timestamp: '2024-01-10T21:48:00'
       },
       { 
         id: 5, 
         sender: 'Naomi Rosalyn', 
         content: `Ta ta.`, 
         time: '9:49 PM',
-        timestamp: '2024-01-08T21:49:00'
+        timestamp: '2024-01-10T21:49:00'
       }
     ]
   },
@@ -66,15 +66,15 @@ const initialConversations = [
         content: `Doctor said it's probably just stress. Psychosomatic? 
         Know anything about that? I really really think something is wrong.
         I'm gonna ask for another blood test. Or try someone else. Can you order something for me?`, 
-        time: 'Jan 8 2024, 6:00 PM',
-        timestamp: '2024-01-08T18:00:00'
+        time: 'Jan 10 2024, 6:00 PM',
+        timestamp: '2024-01-10T18:00:00'
       },
       { 
         id: 2, 
         sender: 'Rob Blanchett', 
         content: `not my expertise but u can send me ur recrds for 2nd opinion.`, 
         time: '6:10 PM',
-        timestamp: '2024-01-08T18:10:00'
+        timestamp: '2024-01-10T18:10:00'
       },
       { 
         id: 3, 
@@ -82,7 +82,7 @@ const initialConversations = [
         content: `i saw a crazy doc about psychosomatic disorder...
         patients come in all the time for stress stuff.`, 
         time: '6:10 PM',
-        timestamp: '2024-01-08T18:10:30'
+        timestamp: '2024-01-10T18:10:30'
       },
       { 
         id: 4, 
@@ -90,21 +90,21 @@ const initialConversations = [
         content: `ur 2 young to be so stressed. 
         take soem time off work. get off the internet.`, 
         time: '6:10 PM',
-        timestamp: '2024-01-08T18:11:00'
+        timestamp: '2024-01-10T18:11:00'
       },
       {
         id: 5, 
         sender: 'You', 
         content: `We're literally the same age....and you're the most stressed out person I know`, 
         time: '6:20 PM',
-        timestamp: '2024-01-08T18:20:00'
+        timestamp: '2024-01-10T18:20:00'
       },
       { 
         id: 6, 
         sender: 'Rob Blanchett', 
         content: `im a doctor. just send me ur recs. im rushing 2 work. will respond when i can`, 
         time: '6:32 PM',
-        timestamp: '2024-01-08T18:32:00'
+        timestamp: '2024-01-10T18:32:00'
       }
     ]
   },
@@ -126,8 +126,8 @@ const initialConversations = [
         taken a vacation in years. I really want to spend more quality time with 
         y'all and just get away from liiifee and chill. For the rest of my life 
         haha. I have so much to tell you.`, 
-        time: 'Jan 7 2024, 4:03 AM',
-        timestamp: '2024-01-07T04:03:00'
+        time: 'Jan 6 2024, 4:03 AM',
+        timestamp: '2024-01-06T04:03:00'
       },
       { 
         id: 2, 
@@ -135,14 +135,14 @@ const initialConversations = [
         content: `(ok I reread my texts and I'm panicking because I sound crazy.
          I swear I'm not drunk. Or on any drugs. Totally sober - unless you count Diet Coke.).`, 
         time: '4:10 AM',
-        timestamp: '2024-01-07T04:10:00'
+        timestamp: '2024-01-06T04:10:00'
       },
       { 
         id: 3, 
         sender: 'You', 
         content: `A few ideas for our getaway trip....check your email.`, 
         time: '4:11 AM',
-        timestamp: '2024-01-07T04:11:00'
+        timestamp: '2024-01-06T04:11:00'
       },
       { 
         id: 4, 
@@ -152,35 +152,35 @@ const initialConversations = [
           Are you free for coffee or lunch to discuss? 
           Zomg let's go to Sea Wolf… I would kill for a savory croissant right now. `, 
         time: '4:15 AM',
-        timestamp: '2024-01-07T04:15:00'
+        timestamp: '2024-01-06T04:15:00'
       },
       { 
         id: 5, 
         sender: 'Rob Blanchett', 
         content: 'jst got off work. im fred.', 
         time: '7:07 AM',
-        timestamp: '2024-01-07T07:07:00'
+        timestamp: '2024-01-06T07:07:00'
       },
       { 
         id: 6, 
         sender: 'Rob Blanchett', 
         content: 'fried.', 
         time: '7:07 AM',
-        timestamp: '2024-01-07T07:07:30'
+        timestamp: '2024-01-06T07:07:30'
       },
       { 
         id: 7, 
         sender: 'Rob Blanchett', 
         content: 'wtf????? ', 
         time: '7:30 AM',
-        timestamp: '2024-01-07T07:30:00'
+        timestamp: '2024-01-06T07:30:00'
       },
       { 
         id: 8, 
         sender: 'Rob Blanchett', 
         content: `lol i'm down `, 
         time: '7:31 AM',
-        timestamp: '2024-01-07T07:31:00'
+        timestamp: '2024-01-06T07:31:00'
       },
       { 
         id: 9, 
@@ -193,21 +193,21 @@ const initialConversations = [
         On a serious note...Alex are you okay??
         I'm in the studio all day, but why don't we meet grab coffee nearby at 12 and we can migrate to the studio if we need some privacy to chat. `, 
         time: '9:00 AM',
-        timestamp: '2024-01-07T09:00:00'
+        timestamp: '2024-01-06T09:00:00'
       },
       { 
         id: 10, 
         sender: 'You', 
         content: `Ok!!! See you at 12.   ʕ·͡ᴥ·ʔ`, 
         time: '9:01 AM',
-        timestamp: '2024-01-07T09:01:00'
+        timestamp: '2024-01-06T09:01:00'
       },
       { 
         id: 11, 
         sender: 'Rob Blanchett', 
         content: `sorry was sleeping and just saw this. still sleeping but will phone in.`, 
         time: '11:25 AM',
-        timestamp: '2024-01-07T11:25:00'
+        timestamp: '2024-01-06T11:25:00'
       },
       { 
         id: 12, 
@@ -221,28 +221,28 @@ const initialConversations = [
         sender: 'Rob Blanchett', 
         content: `Dr. Pepper`, 
         time: '6:34 PM',
-        timestamp: '2024-01-10T18:34:00'
+        timestamp: '2024-01-12T18:34:00'
       },
       { 
         id: 14, 
         sender: 'Rob Blanchett', 
         content: `Cheetos. Purple Doritos. Apple chips.`, 
         time: '6:34 PM',
-        timestamp: '2024-01-10T18:34:30'
+        timestamp: '2024-01-12T18:34:30'
       },
       { 
         id: 15, 
         sender: 'Rob Blanchett', 
         content: `Pedialyte. Sun glasses.`, 
         time: '6:34 PM',
-        timestamp: '2024-01-10T18:34:45'
+        timestamp: '2024-01-12T18:34:45'
       },
       { 
         id: 16, 
         sender: 'You', 
         content: `Please no Doritos. And I'm good on snacks. I don't eat after 4pm on weekdays anyways. See you in a bit!`, 
         time: '6:45 PM',
-        timestamp: '2024-01-10T18:45:00'
+        timestamp: '2024-01-12T18:45:00'
       }
     ]
   }
