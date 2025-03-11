@@ -10,7 +10,7 @@ const initialConversations = [
     id: 1,
     name: 'Naomi Rosalyn',
     participants: ['Naomi Rosalyn'],
-    lastMessage: 'Ta ta.',
+    lastMessage: 'Ta ta! :-)',
     messages: [
       { 
         id: 1, 
@@ -18,7 +18,7 @@ const initialConversations = [
         content: `Hello there! I am getting the farmhouse rooms sorted for our retreat this weekend.
          I'm giving you the special room with the balcony - great for star gazing. 
          Also, how did things go at the doctor? Sending good thoughts your way!`, 
-        time: 'Jan 10, 2024, 8:30 PM',
+        time: '8:30 PM',
         timestamp: '2024-01-10T20:30:00'
       },
       { 
@@ -48,7 +48,7 @@ const initialConversations = [
       { 
         id: 5, 
         sender: 'Naomi Rosalyn', 
-        content: `Ta ta.`, 
+        content: `Ta ta! :-)`, 
         time: '9:49 PM',
         timestamp: '2024-01-10T21:49:00'
       }
@@ -72,7 +72,7 @@ const initialConversations = [
       { 
         id: 2, 
         sender: 'Rob Blanchett', 
-        content: `not my expertise but u can send me ur recrds for 2nd opinion.`, 
+        content: `not my expertise but u can send me ur recs for 2nd opinion.`, 
         time: '6:10 PM',
         timestamp: '2024-01-10T18:10:00'
       },
@@ -87,22 +87,22 @@ const initialConversations = [
       { 
         id: 4, 
         sender: 'Rob Blanchett', 
-        content: `ur 2 young to be so stressed. 
-        take soem time off work. get off the internet.`, 
+        content: `you're too young to have stress. 
+        take time off work. get off the internet.`, 
         time: '6:10 PM',
         timestamp: '2024-01-10T18:11:00'
       },
       {
         id: 5, 
         sender: 'You', 
-        content: `We're literally the same age....and you're the most stressed out person I know`, 
+        content: `We're literally the same age and you're the most stressed out person I know...`, 
         time: '6:20 PM',
         timestamp: '2024-01-10T18:20:00'
       },
       { 
         id: 6, 
         sender: 'Rob Blanchett', 
-        content: `im a doctor. just send me ur recs. im rushing 2 work. will respond when i can`, 
+        content: `im a dr. just send me ur recs. im rushing 2 work. will respond when i can`, 
         time: '6:32 PM',
         timestamp: '2024-01-10T18:32:00'
       }
@@ -133,14 +133,14 @@ const initialConversations = [
         id: 2, 
         sender: 'You', 
         content: `(ok I reread my texts and I'm panicking because I sound crazy.
-         I swear I'm not drunk. Or on any drugs. Totally sober - unless you count Diet Coke.).`, 
+         I swear I'm not drunk. Or on any drugs. Totally sober - unless you count Diet Coke).`, 
         time: '4:10 AM',
         timestamp: '2024-01-06T04:10:00'
       },
       { 
         id: 3, 
         sender: 'You', 
-        content: `A few ideas for our getaway trip....check your email.`, 
+        content: `A few ideas for our getaway trip....1) Paris, 2) Under the Sea, 3) Vancouver, 4) The Moon`, 
         time: '4:11 AM',
         timestamp: '2024-01-06T04:11:00'
       },
@@ -150,7 +150,7 @@ const initialConversations = [
         content: `Sorry for all the texts I'm just so excited.
          I think it's best if we talk tomorrow in person about this.
           Are you free for coffee or lunch to discuss? 
-          Zomg let's go to Sea Wolf… I would kill for a savory croissant right now. `, 
+          Omg let's go to Sea Wolf… I would kill for a savory croissant right now. `, 
         time: '4:15 AM',
         timestamp: '2024-01-06T04:15:00'
       },
@@ -171,15 +171,22 @@ const initialConversations = [
       { 
         id: 7, 
         sender: 'Rob Blanchett', 
-        content: 'wtf????? ', 
+        content: 'what is going on????? ', 
         time: '7:30 AM',
         timestamp: '2024-01-06T07:30:00'
       },
       { 
         id: 8, 
         sender: 'Rob Blanchett', 
-        content: `lol i'm down `, 
+        content: `oops wrong group chat. `, 
         time: '7:31 AM',
+        timestamp: '2024-01-06T07:31:00'
+      },
+      { 
+        id: 8, 
+        sender: 'Rob Blanchett', 
+        content: `lol i'm down `, 
+        time: '7:32 AM',
         timestamp: '2024-01-06T07:31:00'
       },
       { 
@@ -213,8 +220,8 @@ const initialConversations = [
         id: 12, 
         sender: 'Naomi Rosalyn', 
         content: `I'm heading over to the studio now. Any snack requests for the road?`, 
-        time: 'Jan 10, 2024, 6:33 PM',
-        timestamp: '2024-01-10T18:33:00'
+        time: '6:33 PM',
+        timestamp: '2024-01-12T18:33:00'
       }, 
       { 
         id: 13, 

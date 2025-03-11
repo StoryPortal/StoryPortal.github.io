@@ -84,10 +84,9 @@ Alex`,
 Just starting to pack for this weekend's retreat. I'm really looking forward to it.
 
 Is there anything specific I should bring besides the usual stuff? 
-I'm working on a story right now, so I might bring some writing materials. 
-I'm not sure what direction it's taking or really how to describe it, so I'd love to get yours and Adam's opinions. 
-Maybe we can do a little writing workshop session this weekend. Do you have a printer at the farmhouse? 
-Otherwise, I'll get it printed at the library. I'll forward you a digital copy too. 
+I'm working on a story right now. Would you want to read it?
+
+I'll print out a few copies before I leave. It's kind of in a crazy state right now, but I'd love to get a fresh pair of eyes on it. 
 
 - Alex`,
     date: '2025-01-10',

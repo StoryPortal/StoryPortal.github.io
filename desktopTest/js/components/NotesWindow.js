@@ -10,22 +10,54 @@ const initialNotes = [
     id: 1,
     title: 'Symptoms',
     content: `*Spoke with lawyer on Oct. 17, 2023*
-Lawyer suggested documenting health-related issues, so here goes:
 
-Oct 21:
+Since Oct I've been experiencing bouts of chest pain and heart palpitations, along with other hand and wrist pain. I've developed anxiety....sometimes panic attacks, brain fog, and difficulty sleeping as time has gone on.  
 
-Symptoms started months ago, but have progressively worsened to where it has become
-difficult to perform day to day tasks. Symptoms include:
-- Pain in hands and wrist
-- Chest pain
-- Chest palpitations
-- Impaired vision
-- 
-- Extended periods of typing are difficult due to pain in my hands and wrists (interrupts work related to job as software dev)
-- Difficulty concentrating on most tasks due to chronic brain fog and anxiety, possibly induced by chest palpitations
-- `,
-    createdAt: '2023-10-21T14:32:00',
-    updatedAt: '2023-10-21T15:12:00'
+Lawyer suggested documenting health-related issues, so here goes. 
+I'm porting notes from a bunch of different places...need to clean this up later. 
+
+Oct 8, 2023:
+
+X trial started. Rob was right about the application: emphasize willingness to spend time with the device.
+Idk how Rob is so comfortable with bending the truth...confirms my suspicions that MDs are not normal. 
+
+First pass with the device was that it's sort of unremarkable, but I do find myself thinking about it a lot.
+Maybe I'll turn Rob into a truth teller after all...I might give it more time this evening after dinner (egg salad btw). 
+
+egg salad for dinner and the blood orange gelato I made for dessert, and now I get to play with this new tech??
+
+Oct 21, 2023: 
+
+walked to work and experienced chest pain (level 7-8). had to sit down and rest for ~20 minutes.
+skipped my morning meetings and had difficulty focusing on tasks the rest of the day. ami dying???
+
+Oct 31, 2023: 
+
+feeling good most of the time but had a few long days at work and symptoms flared up again. 
+Heart palpitations, chest pain, then the hand and wrist pain. could be phantom pain?? 
+Happy Halloween.
+
+Dec 2: 
+Went to the doctor today for a full physical, bloodwork, listened to my heart. Doctor asked if heartburn or anxiety run in my family. 
+Doesn't it run in everyone's family??! Dr seemed more concerned about my haircut than my health.
+Getting weird vibes...look into another doctor. Can I see a specialist without a referral? 
+How can I talk about the device without talking about the device also. 
+
+To do: 1) ask Rob for dr recommendations, 2) call insurance, 3) read NDA
+
+Dec 3: 
+Thinking of taking a few days off work. The hand and wrist pain is getting worse. Consistent level 8-9 pain even when I code for <1 hour. 
+Doesn't feel like carpal tunnel...more burning and then that chest pain comes on. Haven't been sleeping much. 
+Lying with the scarf wrapped tight around my arms and chest helps a little. 
+
+To do: look into some talk2test options for software devs.
+
+Dec 10: 
+Saw a new doctor today. Same old story: everything looks normal. Won't refer me out. Suggested it could be psychosomatic.
+I'll take the doctor's advice this time and try to relax.`,
+
+createdAt: '2023-10-17T14:32:00',
+    updatedAt: '2023-12-10T15:12:00'
   },
   {
     id: 2,
@@ -43,42 +75,16 @@ Will continue testing tomorrow. Need to document everything for the feedback sub
   },
   {
     id: 3,
-    title: 'Doctor Visit Notes',
-    content: `Doctor's appointment - Sept 28
-
-Dr. Ramsay said my blood work "looks normal" again. Suggested it could be psychosomatic.
-Asked if I've been under stress at work. Recommended therapy and reducing screen time.
-
-I told him about the chest pain and wrist issues, and how they seem to flare up when using Product X.
-He didn't seem interested in the connection. Just prescribed more anti-inflammatories.
-
-Need to get a second opinion. This is getting worse, not better.`,
-    createdAt: '2023-09-28T16:20:00',
-    updatedAt: '2023-09-28T17:15:00'
-  },
-  {
-    id: 4,
-    title: 'Legal Questions',
-    content: `Questions for cousin Jen (the lawyer):
-
-1. If a product causes health issues that doctors can't diagnose, what kind of evidence do I need?
-2. Is it worth pursuing a case if medical tests show "normal" results?
-3. Can I request internal testing data from MegaCorp about Product X?
-4. What's the statute of limitations on this kind of case?
-5. Should I stop using the product completely? (beta contract says I need to use it 3x weekly)
-
-Call her next Tuesday.`,
-    createdAt: '2023-10-18T20:14:00',
-    updatedAt: '2023-10-19T08:22:00'
-  },
-  {
-    id: 5,
     title: 'Weekend Plans',
     content: `Retreat with friends this weekend:
 - Pack light - Naomi said the farmhouse has everything
-- No tech! Going to leave all devices behind (except emergency phone)
+- No tech! Going to leave all devices behind. That includes Product X. 
 - Might be good to reset and see if symptoms improve without Product X nearby
-- Remember to bring Rob's hiking boots I borrowed`,
+- Remember to bring Rob's hiking boots I borrowed
+- Print WIP Story before leaving town. Any other reading materials? 
+- Bring plenty of pens, highlighters, paper, sticky notes for workshopping material 
+- Check weather for Saturday hike`,
+ 
     createdAt: '2024-01-08T22:37:00',
     updatedAt: '2024-01-08T22:41:00'
   }
