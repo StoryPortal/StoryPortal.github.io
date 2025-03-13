@@ -60,10 +60,10 @@ const HomeButton = () => {
 // Simplified Window Manager without z-index handling
 const useWindowManager = () => {
   const [windows, setWindows] = useState({
-    message: { isOpen: true, isMinimized: false },
+    message: { isOpen: false, isMinimized: false },
     notes: { isOpen: false, isMinimized: false },
     photoAlbum: { isOpen: false, isMinimized: false },
-    lookout: { isOpen: true, isMinimized: false },
+    lookout: { isOpen: false, isMinimized: false },
     browser: { isOpen: false, isMinimized: false },
     mediaPlayer: { isOpen: false, isMinimized: false },
     pdfViewer: { isOpen: false, isMinimized: false },

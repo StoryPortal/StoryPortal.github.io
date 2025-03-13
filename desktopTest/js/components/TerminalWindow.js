@@ -30,14 +30,18 @@ const TerminalContent = ({ isMaximized, windowSize }) => {
             'personal': {
               type: 'directory',
               content: {
-                'notes.txt': {
+                'server_notes.txt': {
                   type: 'file',
-                  content: 'Remember to review the Product X documentation again.\nLook for any references to side effects or health warnings.\nPassword for secure portal: s4ngu1s\n\nAccessing MegaCorp systems:\n1. Navigate to the megacorp directory\n2. Run the access portal script with connection flag\n3. Use the password above when prompted'
+                  content: 'MEGACORP SERVER ACCESS ATTEMPTS\n===========================\n\nAttempt #1: Basic employee portal - no useful information\nAttempt #2: Research database - credentials invalid\nAttempt #3: VPN access - blocked\n\nNew approach: Created terminal access script to try direct connection.\nRemember basic access creds: user=alex / pass=password123\n\nThe real target is their secure testing database. Dr. Sanguis\' name keeps coming up in my research. According to a forum post, "Sanguis" is Latin for blood. Latin? Med school reference? Trying variations...\n\nClosest theory so far: The test they kept running was a blood enzyme panel with some code number. Maybe S4 panel? Enzyme N61? Something like that.\n\nI\'m getting close. Just need to find the right combination.',
+                },
+                'access_attempts.log': {
+                  type: 'file',
+                  content: '2024-01-01 14:23 - Access attempt: Failed\n2024-01-01 15:47 - Access attempt: Failed\n2024-01-02 02:13 - Access attempt: Failed\n2024-01-02 03:41 - Access attempt: Failed\n2024-01-03 22:17 - Access attempt: Failed\n2024-01-05 01:28 - Found reference to "S4NGU1" in MegaCorp documentation\n2024-01-05 01:35 - Access attempt with modified credentials: Partial success\n2024-01-05 02:42 - Discovered additional character needed\n2024-01-05 03:19 - Access attempt: SUCCESS\n2024-01-05 03:20 - Connection terminated - possible security alert\n2024-01-05 03:22 - Data partially retrieved: subject testing database\n\nNEXTSTEPS: Need to retrieve full database + access the portal when ready'
                 },
                 'symptoms.txt': {
                   type: 'file',
-                  content: 'Day 12: Tingling in fingers persists.\nDay 15: Headaches are getting worse after extended use.\nDay 23: Strange dreams. Chest pain?'
-                }
+                  content: 'Day 12: Tingling in fingers persists.\nDay 15: Headaches are getting worse after extended use.\nDay 23: Strange dreams. Chest pain?\nDay 30: Doctor says it\'s stress. Blood work normal. This can\'t be right.\nDay 42: Found out Dr. Sanguis works for MegaCorp. Coincidence?\nDay 45: Need to access MegaCorp\'s data. Maybe there\'s something in the research files they\'re not telling us.'
+                },
               }
             },
             'megacorp': {
@@ -453,7 +457,7 @@ const TerminalContent = ({ isMaximized, windowSize }) => {
           { type: 'system', content: 'All privileged access has been revoked.' }
         ];
       }
-    }
+    },
   };
 
   // Helper function to resolve a path (similar to Unix path resolution)
