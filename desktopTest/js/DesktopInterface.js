@@ -10,6 +10,7 @@ import { LookoutWindow } from './components/LookoutWindow.js';
 import { BrowserWindow } from './components/BrowserWindow.js';
 import { PDFViewerWindow } from './components/PDFViewerWindow.js';
 import { MediaPlayerWindow } from './components/MediaPlayerWindow.js';
+import { TerminalWindow } from './components/TerminalWindow.js';
 import { MessageIcon } from './icons/MessageIcon.js';
 import { NotesIcon } from './icons/NotesIcon.js';
 import { PhotoIcon } from './icons/PhotoIcon.js';
@@ -17,6 +18,7 @@ import { LookoutIcon } from './icons/LookoutIcon.js';
 import { BrowserIcon } from './icons/BrowserIcon.js';
 import { PDFIcon } from './icons/PDFIcon.js';
 import { MusicIcon } from './icons/MusicIcon.js';
+import { TerminalIcon } from './icons/TerminalIcon.js';
 import { HomeIcon } from './icons/HomeIcon.js';
 
 // Enhanced DockIcon component
@@ -64,7 +66,8 @@ const useWindowManager = () => {
     lookout: { isOpen: true, isMinimized: false },
     browser: { isOpen: false, isMinimized: false },
     mediaPlayer: { isOpen: false, isMinimized: false },
-    pdfViewer: { isOpen: false, isMinimized: false }
+    pdfViewer: { isOpen: false, isMinimized: false },
+    terminal: { isOpen: false, isMinimized: false }
   });
   
   const createWindowStateHelpers = (windowKey) => ({
@@ -108,7 +111,8 @@ const useWindowManager = () => {
     lookoutHelpers: createWindowStateHelpers('lookout'),
     browserHelpers: createWindowStateHelpers('browser'),
     mediaPlayerHelpers: createWindowStateHelpers('mediaPlayer'),
-    pdfViewerHelpers: createWindowStateHelpers('pdfViewer')
+    pdfViewerHelpers: createWindowStateHelpers('pdfViewer'),
+    terminalHelpers: createWindowStateHelpers('terminal')
   };
 };
 
@@ -121,13 +125,14 @@ const DesktopInterface = () => {
     lookoutHelpers,
     browserHelpers,
     mediaPlayerHelpers,
-    pdfViewerHelpers
+    pdfViewerHelpers,
+    terminalHelpers
   } = useWindowManager();
   
   // NEW: Keep track of window order for rendering
   const [windowOrder, setWindowOrder] = useState([
     'message', 'notes', 'photoAlbum', 'lookout', 
-    'browser', 'mediaPlayer', 'pdfViewer'
+    'browser', 'mediaPlayer', 'pdfViewer', 'terminal'
   ]);
   
   // NEW: Function to bring window to front by changing DOM order
@@ -241,6 +246,19 @@ const DesktopInterface = () => {
                 onMinimize: pdfViewerHelpers.minimize,
                 isMinimized: pdfViewerHelpers.getState().isMinimized,
                 onActivate: () => bringToFront('pdfViewer')
+              })
+            );
+          }
+          break;
+        case 'terminal':
+          if (terminalHelpers.getState().isOpen) {
+            windowComponents.push(
+              e(TerminalWindow, {
+                key: 'terminal-window',
+                onClose: terminalHelpers.close,
+                onMinimize: terminalHelpers.minimize,
+                isMinimized: terminalHelpers.getState().isMinimized,
+                onActivate: () => bringToFront('terminal')
               })
             );
           }
@@ -375,6 +393,22 @@ const DesktopInterface = () => {
         e('span', {
           className: 'mt-1 text-xs text-center text-white group-hover:text-gray-200 bg-black bg-opacity-40 px-2 py-1 rounded'
         }, 'Documents')
+      ]),
+      // Terminal Icon
+      e('div', {
+        key: 'terminal-icon',
+        className: 'flex flex-col items-center w-20 group cursor-pointer',
+        onClick: () => {
+          terminalHelpers.open();
+          bringToFront('terminal');
+        }
+      }, [
+        e('div', {
+          className: 'w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center'
+        }, e(TerminalIcon)),
+        e('span', {
+          className: 'mt-1 text-xs text-center text-white group-hover:text-gray-200 bg-black bg-opacity-40 px-2 py-1 rounded'
+        }, 'Terminal')
       ]),
     ]),
 
@@ -519,6 +553,24 @@ const DesktopInterface = () => {
             } else {
               pdfViewerHelpers.open();
               bringToFront('pdfViewer');
+            }
+          }
+        }),
+        e(DockIcon, {
+          key: 'dock-terminal',
+          icon: TerminalIcon,
+          label: 'Terminal',
+          isOpen: terminalHelpers.getState().isOpen,
+          isMinimized: terminalHelpers.getState().isMinimized,
+          onClick: () => {
+            if (terminalHelpers.getState().isMinimized) {
+              terminalHelpers.restore();
+              bringToFront('terminal');
+            } else if (terminalHelpers.getState().isOpen) {
+              bringToFront('terminal');
+            } else {
+              terminalHelpers.open();
+              bringToFront('terminal');
             }
           }
         })
