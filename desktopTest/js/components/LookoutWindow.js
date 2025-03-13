@@ -84,9 +84,9 @@ Alex`,
 Just starting to pack for this weekend's retreat. I'm really looking forward to it.
 
 Is there anything specific I should bring besides the usual stuff? 
-I'm working on a story right now. Would you want to read it?
+I made a bunch of edits to our new story btw. It's kind of in a crazed state right now, but would be fun for you, me, and Rob to workshop this over the weekend.
 
-I'll print out a few copies before I leave. It's kind of in a crazy state right now, but I'd love to get a fresh pair of eyes on it. 
+I'll print out a few copies before I leave. 
 
 - Alex`,
     date: '2025-01-10',
