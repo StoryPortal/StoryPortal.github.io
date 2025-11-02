@@ -1,0 +1,40 @@
+
+    "megacorp-connect": {
+      description: "Connect to MegaCorp Product X Portal",
+      usage: "megacorp-connect",
+      execute: () => {
+        if (megacorpConnected) {
+          return [
+            { type: "error", content: "Already connected to MegaCorp Portal." },
+            { type: "system", content: `Access level: ${megacorpAccessLevel}` },
+            { type: "system", content: 'Use "megacorp-disconnect" to logout.' }
+          ];
+        }
+
+        return [
+          { type: "system", content: "Connecting to MegaCorp servers..." },
+          { type: "system", content: "Connection established!" },
+          { type: "system", content: "Login as subject (credentials in welcome_email.txt)" }
+        ];
+      }
+    },
+
+    "megacorp-disconnect": {
+      description: "Disconnect from MegaCorp Portal",
+      usage: "megacorp-disconnect",
+      execute: () => {
+        if (!megacorpConnected) {
+          return [{ type: "error", content: "Not connected to MegaCorp Portal." }];
+        }
+
+        const accessLevel = megacorpAccessLevel;
+        setMegacorpConnected(false);
+        setMegacorpAccessLevel(null);
+
+        return [
+          { type: "system", content: "Disconnecting from MegaCorp Portal..." },
+          { type: "system", content: `Logged out from ${accessLevel} portal.` },
+          { type: "system", content: "Connection closed." }
+        ];
+      }
+    },
