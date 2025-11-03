@@ -9,8 +9,7 @@ const TerminalContent = ({ isMaximized, windowSize }) => {
   const [commandHistory, setCommandHistory] = useState([]);
   const [currentCommand, setCurrentCommand] = useState("");
   const [terminalOutput, setTerminalOutput] = useState([
-    { type: "system", content: "MegaCorp Secure Terminal v3.9.2" },
-    { type: "system", content: "© 2024 MegaCorp Advanced Technologies" },
+    { type: "system", content: "Brain Bash Shell v3.9.2" },
     { type: "system", content: "" },
     { type: "system", content: 'Type "help" for available commands.' },
     { type: "system", content: "Note: Terminal is case-sensitive" },
@@ -35,20 +34,38 @@ const TerminalContent = ({ isMaximized, windowSize }) => {
   const audioRef = useRef(null);
   const playbackIntervalRef = useRef(null);
   const visualizerIntervalRef = useRef(null);
+  const liveUpdateIntervalRef = useRef(null);
+  const liveVisualizationStartIndex = useRef(null);
 
   // Helper functions for audio visualization
-  const generateWaveform = (frame) => {
-    // Create animated ASCII waveform
-    const patterns = [
-      "▂▃▅▇█▇▅▃▂",
-      "▃▅▇█▇▅▃▂▃",
-      "▅▇█▇▅▃▂▃▅",
-      "▇█▇▅▃▂▃▅▇",
-      "█▇▅▃▂▃▅▇█",
-      "▇▅▃▂▃▅▇█▇",
-      "▅▃▂▃▅▇█▇▅",
-      "▃▂▃▅▇█▇▅▃",
-    ];
+  const generateWaveform = (frame, recordingId = 1) => {
+    // Different pattern sets for different recordings
+    const patternSets = {
+      1: [
+        // slot_machine_short - more erratic, sharp patterns
+        "▂▃▅█▇▅▂▁▃",
+        "▃▅█▇▃▁▂▅▇",
+        "▅█▇▂▁▃▇█▅",
+        "█▇▃▁▂▅█▇▃",
+        "▇▂▁▃▇█▅▂▁",
+        "▃▁▂▅█▇▃▁▂",
+        "▁▃▇█▅▂▁▃▅",
+        "▂▅▇█▃▁▂▅█",
+      ],
+      2: [
+        // there_and_back_again - smoother, wave-like patterns
+        "▁▂▃▅▇█▇▅▃",
+        "▂▃▅▇█▇▅▃▂",
+        "▃▅▇█▇▅▃▂▁",
+        "▅▇█▇▅▃▂▁▂",
+        "▇█▇▅▃▂▁▂▃",
+        "█▇▅▃▂▁▂▃▅",
+        "▇▅▃▂▁▂▃▅▇",
+        "▅▃▂▁▂▃▅▇█",
+      ],
+    };
+
+    const patterns = patternSets[recordingId] || patternSets[1];
     const patternIndex = frame % patterns.length;
     return patterns[patternIndex].repeat(4);
   };
@@ -128,6 +145,73 @@ const TerminalContent = ({ isMaximized, windowSize }) => {
       };
     }
   }, [isPlaying, isPaused]);
+
+  // Effect to update terminal output with live visualization
+  useEffect(() => {
+    if (isPlaying && !isPaused && audioRef.current && currentRecording) {
+      // Update terminal output every 500ms for smoother animation
+      liveUpdateIntervalRef.current = setInterval(() => {
+        if (audioRef.current && currentRecording) {
+          const duration = audioRef.current.duration || 0;
+          const currentTime = audioRef.current.currentTime || 0;
+
+          // Use the recording ID and faster frame updates for waveform
+          const frame = Math.floor(Date.now() / 100) % 8; // Update frame every 100ms
+          const waveform = generateWaveform(frame, currentRecording.id);
+          const progressBar = generateProgressBar(currentTime, duration);
+          const analysis = getNeuralAnalysis(currentTime, duration);
+
+          const newVisualization = [
+            { type: "system", content: "" },
+            { type: "system", content: `${waveform}` },
+            {
+              type: "system",
+              content: `${progressBar} ${formatTime(currentTime)} / ${formatTime(duration)}`,
+            },
+            { type: "system", content: "" },
+            { type: "system", content: "Neural Pattern Analysis:" },
+            { type: "system", content: `- Theta waves: ${analysis.theta}` },
+            { type: "system", content: `- Delta patterns: ${analysis.delta}` },
+            {
+              type: "system",
+              content: `- Cardiac sync: ${analysis.heartRate}`,
+            },
+            { type: "system", content: "" },
+          ];
+
+          setTerminalOutput((prev) => {
+            // If there's a previous visualization, remove it
+            if (liveVisualizationStartIndex.current !== null) {
+              const beforeVisualization = prev.slice(
+                0,
+                liveVisualizationStartIndex.current,
+              );
+              liveVisualizationStartIndex.current = beforeVisualization.length;
+              return [...beforeVisualization, ...newVisualization];
+            } else {
+              // First visualization - record where it starts
+              liveVisualizationStartIndex.current = prev.length;
+              return [...prev, ...newVisualization];
+            }
+          });
+        }
+      }, 500); // Update every 500ms for smooth animation
+
+      return () => {
+        if (liveUpdateIntervalRef.current) {
+          clearInterval(liveUpdateIntervalRef.current);
+        }
+      };
+    } else {
+      // Clear interval when not playing
+      if (liveUpdateIntervalRef.current) {
+        clearInterval(liveUpdateIntervalRef.current);
+        liveUpdateIntervalRef.current = null;
+      }
+      // Reset the visualization start index
+      liveVisualizationStartIndex.current = null;
+    }
+  }, [isPlaying, isPaused, currentRecording]);
 
   // File system structure
   const [fileSystem, setFileSystem] = useState({
@@ -490,35 +574,24 @@ const TerminalContent = ({ isMaximized, windowSize }) => {
                                                   {
                                                     id: 1,
                                                     filename:
-                                                      "2024-01-08_session_042.wav",
+                                                      "2024-01-08_slot_machine_short.wav",
                                                     duration: "3:47",
                                                     date: "2024-01-08",
                                                     notes:
                                                       "High stress markers, elevated theta waves",
                                                     audioPath:
-                                                      "./neural_recordings/session_042.wav",
+                                                      "./neural_recordings/slot_machine_short.wav",
                                                   },
                                                   {
                                                     id: 2,
                                                     filename:
-                                                      "2024-01-05_session_038.wav",
+                                                      "2024-01-05_there_and_back_again.wav",
                                                     duration: "4:12",
                                                     date: "2024-01-05",
                                                     notes:
                                                       "Subvocalization detected during session",
                                                     audioPath:
-                                                      "./neural_recordings/session_038.wav",
-                                                  },
-                                                  {
-                                                    id: 3,
-                                                    filename:
-                                                      "2023-12-28_session_031.wav",
-                                                    duration: "2:58",
-                                                    date: "2023-12-28",
-                                                    notes:
-                                                      "Baseline neural patterns, pre-symptom onset",
-                                                    audioPath:
-                                                      "./neural_recordings/session_031.wav",
+                                                      "./neural_recordings/there_and_back_again.wav",
                                                   },
                                                 ];
 
@@ -633,6 +706,12 @@ const TerminalContent = ({ isMaximized, windowSize }) => {
                                                       err,
                                                     );
                                                   });
+
+                                                // Trigger the ending - set flag that recording was played
+                                                localStorage.setItem(
+                                                  "megacorp_recording_played",
+                                                  "true",
+                                                );
 
                                                 setIsPlaying(true);
                                                 setIsPaused(false);
@@ -1146,6 +1225,9 @@ const TerminalContent = ({ isMaximized, windowSize }) => {
         }
         if (visualizerIntervalRef.current) {
           clearInterval(visualizerIntervalRef.current);
+        }
+        if (liveUpdateIntervalRef.current) {
+          clearInterval(liveUpdateIntervalRef.current);
         }
 
         return [
