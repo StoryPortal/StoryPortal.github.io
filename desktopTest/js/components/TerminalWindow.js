@@ -83,41 +83,91 @@ const TerminalContent = ({ isMaximized, windowSize }) => {
     return `[${"█".repeat(filled)}${"░".repeat(empty)}]`;
   };
 
-  const getNeuralAnalysis = (time, duration) => {
-    // Generate different messages based on playback time
+  const getNeuralAnalysis = (time, duration, recordingId = 1) => {
+    // Generate different messages based on playback time and recording type
     const progress = time / duration;
 
-    if (progress < 0.2) {
-      return {
-        theta: "ELEVATED",
-        delta: "NORMAL",
-        heartRate: "138 BPM",
-      };
-    } else if (progress < 0.4) {
-      return {
-        theta: "CRITICAL",
-        delta: "ABNORMAL",
-        heartRate: "142 BPM",
-      };
-    } else if (progress < 0.6) {
-      return {
-        theta: "CRITICAL",
-        delta: "ABNORMAL",
-        heartRate: "145 BPM",
-      };
-    } else if (progress < 0.8) {
-      return {
-        theta: "DANGEROUS",
-        delta: "CRITICAL",
-        heartRate: "148 BPM",
-      };
-    } else {
-      return {
-        theta: "EXTREME",
-        delta: "CRITICAL",
-        heartRate: "151 BPM",
-      };
-    }
+    // Different analysis patterns for different brain regions
+    const analysisPatterns = {
+      1: {
+        // anterior_pretectal_broad - high activity, fluctuating attention
+        region: "Anterior Pretectal",
+        metric1: "Visual processing",
+        metric2: "Spatial attention",
+        metric3: "Oculomotor tracking",
+        progressions: [
+          { m1: "HIGH", m2: "FLUCTUATING", m3: "ACTIVE" },
+          { m1: "ELEVATED", m2: "UNSTABLE", m3: "RAPID" },
+          { m1: "CRITICAL", m2: "ERRATIC", m3: "CHAOTIC" },
+          { m1: "EXTREME", m2: "DYSREGULATED", m3: "IMPAIRED" },
+          { m1: "CRITICAL", m2: "FAILING", m3: "Blackout imminent" },
+        ],
+      },
+      2: {
+        // anterior_pretectal_sparse - low activity, stable but weak
+        region: "Anterior Pretectal",
+        metric1: "Visual processing",
+        metric2: "Firing rate",
+        metric3: "Oculomotor tracking",
+        progressions: [
+          { m1: "LOW", m2: "SPARSE", m3: "STABLE" },
+          { m1: "MINIMAL", m2: "INTERMITTENT", m3: "REDUCED" },
+          { m1: "SUPPRESSED", m2: "SPORADIC", m3: "SLUGGISH" },
+          { m1: "WEAK", m2: "RARE", m3: "IMPAIRED" },
+          { m1: "DEGRADED", m2: "FAILING", m3: "MINIMAL" },
+        ],
+      },
+      3: {
+        // ventral_tegmental_broad - strong reward response, high drive
+        region: "Ventral Tegmental",
+        metric1: "Dopamine release",
+        metric2: "Reward response",
+        metric3: "Behavioral drive",
+        progressions: [
+          { m1: "ELEVATED", m2: "RESPONSIVE", m3: "STRONG" },
+          { m1: "HIGH", m2: "HEIGHTENED", m3: "COMPULSIVE" },
+          { m1: "SURGING", m2: "INTENSE", m3: "OBSESSIVE" },
+          { m1: "FLOODING", m2: "EXTREME", m3: "MANIC" },
+          { m1: "SATURATED", m2: "PATHOLOGICAL", m3: "Overdose risk" },
+        ],
+      },
+      4: {
+        // ventral_tegmental_lowWave - slow oscillations, baseline activity
+        region: "Ventral Tegmental",
+        metric1: "Dopamine release",
+        metric2: "Low-freq oscillation",
+        metric3: "Tonic activity",
+        progressions: [
+          { m1: "STEADY", m2: "0.5 Hz", m3: "BASELINE" },
+          { m1: "RHYTHMIC", m2: "0.8 Hz", m3: "SUSTAINED" },
+          { m1: "PULSING", m2: "1.2 Hz", m3: "ELEVATED" },
+          { m1: "WAVERING", m2: "1.8 Hz", m3: "HIGH" },
+          { m1: "UNSTABLE", m2: "2.3 Hz", m3: "EXCESSIVE" },
+        ],
+      },
+    };
+
+    const pattern = analysisPatterns[recordingId] || analysisPatterns[1];
+
+    // Determine which stage based on progress
+    let stage = 0;
+    if (progress < 0.2) stage = 0;
+    else if (progress < 0.4) stage = 1;
+    else if (progress < 0.6) stage = 2;
+    else if (progress < 0.8) stage = 3;
+    else stage = 4;
+
+    const currentProgression = pattern.progressions[stage];
+
+    return {
+      region: pattern.region,
+      metric1: pattern.metric1,
+      metric1Value: currentProgression.m1,
+      metric2: pattern.metric2,
+      metric2Value: currentProgression.m2,
+      metric3: pattern.metric3,
+      metric3Value: currentProgression.m3,
+    };
   };
 
   // Effect to update playback visualization
@@ -159,7 +209,11 @@ const TerminalContent = ({ isMaximized, windowSize }) => {
           const frame = Math.floor(Date.now() / 100) % 8; // Update frame every 100ms
           const waveform = generateWaveform(frame, currentRecording.id);
           const progressBar = generateProgressBar(currentTime, duration);
-          const analysis = getNeuralAnalysis(currentTime, duration);
+          const analysis = getNeuralAnalysis(
+            currentTime,
+            duration,
+            currentRecording.id,
+          );
 
           const newVisualization = [
             { type: "system", content: "" },
@@ -169,12 +223,21 @@ const TerminalContent = ({ isMaximized, windowSize }) => {
               content: `${progressBar} ${formatTime(currentTime)} / ${formatTime(duration)}`,
             },
             { type: "system", content: "" },
-            { type: "system", content: "Neural Pattern Analysis:" },
-            { type: "system", content: `- Theta waves: ${analysis.theta}` },
-            { type: "system", content: `- Delta patterns: ${analysis.delta}` },
             {
               type: "system",
-              content: `- Cardiac sync: ${analysis.heartRate}`,
+              content: `Neural Pattern Analysis [${analysis.region}]:`,
+            },
+            {
+              type: "system",
+              content: `- ${analysis.metric1}: ${analysis.metric1Value}`,
+            },
+            {
+              type: "system",
+              content: `- ${analysis.metric2}: ${analysis.metric2Value}`,
+            },
+            {
+              type: "system",
+              content: `- ${analysis.metric3}: ${analysis.metric3Value}`,
             },
             { type: "system", content: "" },
           ];
@@ -574,24 +637,46 @@ const TerminalContent = ({ isMaximized, windowSize }) => {
                                                   {
                                                     id: 1,
                                                     filename:
-                                                      "2024-01-08_slot_machine_short.wav",
-                                                    duration: "3:47",
-                                                    date: "2024-01-08",
+                                                      "anterior_pretectal_broad.wav",
+                                                    duration: "0:00",
+                                                    date: "2024-01-15",
                                                     notes:
-                                                      "High stress markers, elevated theta waves",
+                                                      "Anterior pretectal nucleus - broad spectrum capture",
                                                     audioPath:
-                                                      "./neural_recordings/slot_machine_short.wav",
+                                                      "./neural_recordings/anterior_pretectal_broad.wav",
                                                   },
                                                   {
                                                     id: 2,
                                                     filename:
-                                                      "2024-01-05_there_and_back_again.wav",
-                                                    duration: "4:12",
-                                                    date: "2024-01-05",
+                                                      "anterior_pretectal_sparse.wav",
+                                                    duration: "0:00",
+                                                    date: "2024-01-15",
                                                     notes:
-                                                      "Subvocalization detected during session",
+                                                      "Anterior pretectal nucleus - sparse activity pattern",
                                                     audioPath:
-                                                      "./neural_recordings/there_and_back_again.wav",
+                                                      "./neural_recordings/anterior_pretectal_sparse.wav",
+                                                  },
+                                                  {
+                                                    id: 3,
+                                                    filename:
+                                                      "ventral_tegmental_broad.wav",
+                                                    duration: "0:00",
+                                                    date: "2024-01-16",
+                                                    notes:
+                                                      "Ventral tegmental area - broad spectrum dopamine response",
+                                                    audioPath:
+                                                      "./neural_recordings/ventral_tegmental_broad.wav",
+                                                  },
+                                                  {
+                                                    id: 4,
+                                                    filename:
+                                                      "ventral_tegmental_lowWave.wav",
+                                                    duration: "0:00",
+                                                    date: "2024-01-16",
+                                                    notes:
+                                                      "Ventral tegmental area - low frequency wave patterns",
+                                                    audioPath:
+                                                      "./neural_recordings/ventral_tegmental_lowWave.wav",
                                                   },
                                                 ];
 
@@ -1294,9 +1379,13 @@ const TerminalContent = ({ isMaximized, windowSize }) => {
 
         const duration = audioRef.current.duration || 0;
         const currentTime = playbackTime;
-        const waveform = generateWaveform(visualizerFrame);
+        const waveform = generateWaveform(visualizerFrame, currentRecording.id);
         const progressBar = generateProgressBar(currentTime, duration);
-        const analysis = getNeuralAnalysis(currentTime, duration);
+        const analysis = getNeuralAnalysis(
+          currentTime,
+          duration,
+          currentRecording.id,
+        );
 
         return [
           { type: "system", content: "" },
@@ -1312,10 +1401,22 @@ const TerminalContent = ({ isMaximized, windowSize }) => {
             content: `${progressBar} ${formatTime(currentTime)} / ${formatTime(duration)}`,
           },
           { type: "system", content: "" },
-          { type: "system", content: "Neural Pattern Analysis:" },
-          { type: "system", content: `- Theta waves: ${analysis.theta}` },
-          { type: "system", content: `- Delta patterns: ${analysis.delta}` },
-          { type: "system", content: `- Cardiac sync: ${analysis.heartRate}` },
+          {
+            type: "system",
+            content: `Neural Pattern Analysis [${analysis.region}]:`,
+          },
+          {
+            type: "system",
+            content: `- ${analysis.metric1}: ${analysis.metric1Value}`,
+          },
+          {
+            type: "system",
+            content: `- ${analysis.metric2}: ${analysis.metric2Value}`,
+          },
+          {
+            type: "system",
+            content: `- ${analysis.metric3}: ${analysis.metric3Value}`,
+          },
           { type: "system", content: "" },
           { type: "system", content: isPaused ? "[PAUSED]" : "[PLAYING]" },
           { type: "system", content: "" },
