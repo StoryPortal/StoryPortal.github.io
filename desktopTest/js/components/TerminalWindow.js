@@ -637,46 +637,46 @@ const TerminalContent = ({ isMaximized, windowSize }) => {
                                                   {
                                                     id: 1,
                                                     filename:
-                                                      "anterior_pretectal_broad.wav",
+                                                      "anterior_pretectal_broad.mp3",
                                                     duration: "0:00",
                                                     date: "2024-01-15",
                                                     notes:
                                                       "Anterior pretectal nucleus - broad spectrum capture",
                                                     audioPath:
-                                                      "./neural_recordings/anterior_pretectal_broad.wav",
+                                                      "./neural_recordings/anterior_pretectal_broad.mp3",
                                                   },
                                                   {
                                                     id: 2,
                                                     filename:
-                                                      "anterior_pretectal_sparse.wav",
+                                                      "anterior_pretectal_sparse.mp3",
                                                     duration: "0:00",
                                                     date: "2024-01-15",
                                                     notes:
                                                       "Anterior pretectal nucleus - sparse activity pattern",
                                                     audioPath:
-                                                      "./neural_recordings/anterior_pretectal_sparse.wav",
+                                                      "./neural_recordings/anterior_pretectal_sparse.mp3",
                                                   },
                                                   {
                                                     id: 3,
                                                     filename:
-                                                      "ventral_tegmental_broad.wav",
+                                                      "ventral_tegmental_broad.mp3",
                                                     duration: "0:00",
                                                     date: "2024-01-16",
                                                     notes:
                                                       "Ventral tegmental area - broad spectrum dopamine response",
                                                     audioPath:
-                                                      "./neural_recordings/ventral_tegmental_broad.wav",
+                                                      "./neural_recordings/ventral_tegmental_broad.mp3",
                                                   },
                                                   {
                                                     id: 4,
                                                     filename:
-                                                      "ventral_tegmental_lowWave.wav",
+                                                      "ventral_tegmental_lowWave.mp3",
                                                     duration: "0:00",
                                                     date: "2024-01-16",
                                                     notes:
                                                       "Ventral tegmental area - low frequency wave patterns",
                                                     audioPath:
-                                                      "./neural_recordings/ventral_tegmental_lowWave.wav",
+                                                      "./neural_recordings/ventral_tegmental_lowWave.mp3",
                                                   },
                                                 ];
 
